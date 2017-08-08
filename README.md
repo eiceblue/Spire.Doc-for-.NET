@@ -23,7 +23,6 @@ Spire.Doc for .NET enables developers to process pre-existing Word documents. It
   
 By using Spire.Doc, developers can build any type of a 32-bit or 64-bit .NET application including C#, VB.NET, ASP.NET, Web Services and WinForms for .NET Framework version from 2.0 to 4.5.
 
------------------------------------------------------------------------
 
 Check here for detailed information:
 https://www.e-iceblue.com/Introduce/word-for-net-introduce.html
