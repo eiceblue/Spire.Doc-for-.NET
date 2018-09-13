@@ -1,7 +1,7 @@
 Spire.Doc-for-.NET
 =======================
 
-Spire.Doc for .NET is a proven reliable MS Word API for .NET which enables to perform many Word document processing tasks. It supports C#, VB.NET, ASP.NET and ASP.NET MVC. Spire.Doc supports Word 97-2003 /2007/2010/2013 and it has the ability to convert them to commonly used file formats like XML, RTF, TXT, XPS, EPUB, EMF, HTML and vice versa. Furthermore, it supports to convert Word Doc/Docx to PDF using C#, Word to SVG in high quality.
+Spire.Doc for .NET is a proven reliable MS Word API for .NET which enables to perform many Word document processing tasks. It supports C#, VB.NET, ASP.NET，.NET Core and ASP.NET MVC. Spire.Doc supports Word 97-2003 /2007/2010/2013 and it has the ability to convert them to commonly used file formats like XML, RTF, TXT, XPS, EPUB, EMF, HTML and vice versa. Furthermore, it supports to convert Word Doc/Docx to PDF using C#, Word to SVG in high quality.
 
 <b>Only Spire.Doc, No Microsoft Office Automation</b>
 
@@ -21,7 +21,7 @@ Spire.Doc for .NET enables developers to process pre-existing Word documents. It
 
 <b>Other Technical Features</b>
   
-By using Spire.Doc, developers can build any type of a 32-bit or 64-bit .NET application including C#, VB.NET, ASP.NET, Web Services and WinForms for .NET Framework version from 2.0 to 4.5.
+By using Spire.Doc, developers can build any type of a 32-bit or 64-bit .NET application including C#, VB.NET, ASP.NET, Web Services and WinForms for .NET Framework version from 2.0 to 4.5, .NET Standard 2.0
 
 
 Check here for detailed information:
