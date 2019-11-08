@@ -18,11 +18,11 @@ namespace FindAndHighlight
             //Create word document
             Document document = new Document();
 
-            //load a document
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\FindAndReplace.doc");
+            //Load the document from disk.
+            document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
             //Find text
-            TextSelection[] textSelections = document.FindAllString(this.textBox1.Text, true, true);
+            TextSelection[] textSelections = document.FindAllString("word", false, true);
 
             //Set hightlight
             foreach(TextSelection selection in textSelections)
@@ -31,10 +31,10 @@ namespace FindAndHighlight
             }
 
             //Save doc file.
-            document.SaveToFile("Sample.doc", FileFormat.Doc);
+            document.SaveToFile("Sample.docx", FileFormat.Docx);
 
-            //Launching the MS Word file.
-            WordDocViewer("Sample.doc");
+            //Launching the  Word file.
+            WordDocViewer("Sample.docx");
         }
 
         private void WordDocViewer(string fileName)
