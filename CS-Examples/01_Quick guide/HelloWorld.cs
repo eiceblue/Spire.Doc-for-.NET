@@ -17,7 +17,7 @@ namespace HelloWorld
             //Create word document
             Document document = new Document();
 
-            //Create a new secition
+            //Create a new section
             Section section = document.AddSection();
 
             //Create a new paragraph
@@ -27,10 +27,10 @@ namespace HelloWorld
             paragraph.AppendText("Hello World!");
 
             //Save doc file.
-            document.SaveToFile("Sample.doc",FileFormat.Doc);
+            document.SaveToFile("Sample.docx",FileFormat.Docx);
 
-            //Launching the MS Word file.
-            WordDocViewer("Sample.doc");
+            //Launching the Word file.
+            WordDocViewer("Sample.docx");
 
 
         }
