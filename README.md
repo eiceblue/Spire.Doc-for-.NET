@@ -1,5 +1,4 @@
-# Spire.Doc-for-.NET
-## .NET Library to Create, Manipulate & Convert Word Documents
+# Spire.Doc-for-.NET .NET Library to Create, Manipulate & Convert Word Documents
 
 [![Foo](https://i.imgur.com/LYStJdY.png)](https://www.e-iceblue.com/Introduce/word-for-net-introduce.html)
 
