@@ -18,24 +18,31 @@ namespace SetColumnWidth
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document and load file
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+         
+			// Create a new document object
+			Document document = new Document();
 
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
+			// Load a document from a file, specified by the file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
 
-            //Traverse the first column
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                //Set the cell width type
-                table.Rows[i].Cells[0].CellWidthType = CellWidthType.Point;
-                //Set the value
-                table.Rows[i].Cells[0].Width = 200;
-            }
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            //Save to file
-            document.SaveToFile(@"ColumnWidth.docx", FileFormat.Docx);
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
+
+			// Set the width of the first column in each row to 200 points
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				table.Rows[i].Cells[0].SetCellWidth(200, CellWidthType.Point);
+			}
+
+			// Save the modified document to a file with the name "ColumnWidth.docx", using Docx format
+			document.SaveToFile(@"ColumnWidth.docx", FileFormat.Docx);
+
+			// Dispose of the document object
+			document.Dispose();
+			
             //Launch the document
             FileViewer("ColumnWidth.docx");
         }

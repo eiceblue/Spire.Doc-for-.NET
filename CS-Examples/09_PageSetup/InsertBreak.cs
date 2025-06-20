@@ -16,109 +16,131 @@ namespace InsertBreak
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            Section section = document.AddSection();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //page setup
-            SetPage(section);
+			// Set page settings for the section
+			SetPage(section);
 
-            //Add cover.
-            InsertCover(section);
+			// Insert a cover page in the section
+			InsertCover(section);
 
-            //insert a break code
-            section = document.AddSection();
-            section.AddParagraph().InsertSectionBreak(SectionBreakType.NewPage);
+			// Add another section to the document
+			section = document.AddSection();
 
-            //add content
-            InsertContent(section);
+			// Insert a section break at the beginning of the section
+			section.AddParagraph().InsertSectionBreak(SectionBreakType.NewPage);
 
-            //Save as doc file.
-            document.SaveToFile("Sample.docx", FileFormat.Docx);
+			// Insert content into the section
+			InsertContent(section);
+
+			// Save the document to a file named "Sample.docx" in DOCX format
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Release the resources used by the document object
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");
         }
 
-        private void SetPage(Section section)
-        {
-            //the unit of all measures below is point, 1point = 0.3528 mm
-            section.PageSetup.PageSize = PageSize.A4;
-            section.PageSetup.Margins.Top = 72f;
-            section.PageSetup.Margins.Bottom = 72f;
-            section.PageSetup.Margins.Left = 89.85f;
-            section.PageSetup.Margins.Right = 89.85f;
-        }
+        private static void SetPage(Section section)
+		{
+			// Set the page size of the section to A4
+			section.PageSetup.PageSize = PageSize.A4;
 
-        private void InsertCover(Section section)
-        {
-            ParagraphStyle small = new ParagraphStyle(section.Document);
-            small.Name = "small";
-            small.CharacterFormat.FontName = "Arial";
-            small.CharacterFormat.FontSize = 9;
-            small.CharacterFormat.TextColor = Color.Gray;
-            section.Document.Styles.Add(small);
+			// Set the top margin of the section to 72 points
+			section.PageSetup.Margins.Top = 72f;
 
-            Paragraph paragraph = section.AddParagraph();
-            paragraph.AppendText("The sample demonstrates how to insert section break.");
-            paragraph.ApplyStyle(small.Name);
+			// Set the bottom margin of the section to 72 points
+			section.PageSetup.Margins.Bottom = 72f;
 
-            Paragraph title = section.AddParagraph();
-            TextRange text = title.AppendText("Field Types Supported by Spire.Doc");
-            text.CharacterFormat.FontName = "Arial";
-            text.CharacterFormat.FontSize = 20;
-            text.CharacterFormat.Bold = true;
-            title.Format.BeforeSpacing
-                = section.PageSetup.PageSize.Height / 2 - 3 * section.PageSetup.Margins.Top;
-            title.Format.AfterSpacing = 8;
-            title.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
+			// Set the left margin of the section to 89.85 points
+			section.PageSetup.Margins.Left = 89.85f;
 
-            paragraph = section.AddParagraph();
-            paragraph.AppendText("e-iceblue Spire.Doc team.");
-            paragraph.ApplyStyle(small.Name);
-            paragraph.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
-        }
+			// Set the right margin of the section to 89.85 points
+			section.PageSetup.Margins.Right = 89.85f;
+		}
 
-        private void InsertContent(Section section)
-        {
-            ParagraphStyle list = new ParagraphStyle(section.Document);
-            list.Name = "list";
-            list.CharacterFormat.FontName = "Arial";
-            list.CharacterFormat.FontSize = 11;
-            list.ParagraphFormat.LineSpacing = 1.5F * 12F;
-            list.ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
-            section.Document.Styles.Add(list);
+		private static void InsertCover(Section section)
+		{
+			// Create a paragraph style for small text
+			ParagraphStyle small = new ParagraphStyle(section.Document);
+			small.Name = "small";
+			small.CharacterFormat.FontName = "Arial";
+			small.CharacterFormat.FontSize = 9;
+			small.CharacterFormat.TextColor = Color.Gray;
+			section.Document.Styles.Add(small);
 
-            Paragraph title = section.AddParagraph();
-            TextRange text = title.AppendText("Field type list:");
-            title.ApplyStyle(list.Name);
+			// Add a paragraph with small text
+			Paragraph paragraph = section.AddParagraph();
+			paragraph.AppendText("The sample demonstrates how to insert section break.");
+			paragraph.ApplyStyle(small.Name);
 
-            bool first = true;
-            foreach (FieldType type in Enum.GetValues(typeof(FieldType)))
-            {
-                if (type == FieldType.FieldUnknown
-                    || type == FieldType.FieldNone || type == FieldType.FieldEmpty)
-                {
-                    continue;
-                }
-                Paragraph paragraph = section.AddParagraph();
-                paragraph.AppendText(String.Format("{0} is supported in Spire.Doc", type));
+			// Add a title paragraph
+			Paragraph title = section.AddParagraph();
+			TextRange text = title.AppendText("Field Types Supported by Spire.Doc");
+			text.CharacterFormat.FontName = "Arial";
+			text.CharacterFormat.FontSize = 20;
+			text.CharacterFormat.Bold = true;
 
-                if (first)
-                {
-                    paragraph.ListFormat.ApplyNumberedStyle();
-                    first = false;
-                }
-                else
-                {
-                    paragraph.ListFormat.ContinueListNumbering();
-                }
-                paragraph.ApplyStyle(list.Name);
-            }
-        }
+			// Set formatting for the title paragraph
+			title.Format.BeforeSpacing = section.PageSetup.PageSize.Height / 2 - 3 * section.PageSetup.Margins.Top;
+			title.Format.AfterSpacing = 8;
+			title.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
+
+			// Add a paragraph with small text after the title
+			paragraph = section.AddParagraph();
+			paragraph.AppendText("e-iceblue Spire.Doc team.");
+			paragraph.ApplyStyle(small.Name);
+			paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
+		}
+
+		private static void InsertContent(Section section)
+		{
+			// Create a paragraph style for the list items
+			ParagraphStyle list = new ParagraphStyle(section.Document);
+			list.Name = "list";
+			list.CharacterFormat.FontName = "Arial";
+			list.CharacterFormat.FontSize = 11;
+			list.ParagraphFormat.LineSpacing = 1.5F * 12F;
+			list.ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
+			section.Document.Styles.Add(list);
+
+			// Add a title paragraph for the field type list
+			Paragraph title = section.AddParagraph();
+			TextRange text = title.AppendText("Field type list:");
+			title.ApplyStyle(list.Name);
+
+			bool first = true;
+			foreach (FieldType type in Enum.GetValues(typeof(FieldType)))
+			{
+				// Skip unsupported or invalid field types
+				if (type == FieldType.FieldUnknown || type == FieldType.FieldNone || type == FieldType.FieldEmpty)
+				{
+					continue;
+				}
+
+				// Add a paragraph for each supported field type
+				Paragraph paragraph = section.AddParagraph();
+				paragraph.AppendText(String.Format("{0} is supported in Spire.Doc", type));
+
+				// Apply numbered or continued numbering list formatting
+				if (first)
+				{
+					paragraph.ListFormat.ApplyNumberedStyle();
+					first = false;
+				}
+				else
+				{
+					paragraph.ListFormat.ContinueListNumbering();
+				}
+				paragraph.ApplyStyle(list.Name);
+			}
+		}
 
         private void WordDocViewer(string fileName)
         {

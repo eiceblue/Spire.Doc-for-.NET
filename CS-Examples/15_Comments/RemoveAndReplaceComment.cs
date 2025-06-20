@@ -14,20 +14,28 @@ namespace RemoveAndReplaceComment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\CommentSample.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Replace the content of the first comment
-            doc.Comments[0].Body.Paragraphs[0].Replace("This is the title", "This comment is changed.", false, false);
+			//Create a word document
+			Document doc = new Document();
 
-            //Remove the second comment
-            doc.Comments.RemoveAt(1);
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch
-            string output = "RemoveAndReplaceComment.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Replace the content of the first comment
+			doc.Comments[0].Body.Paragraphs[0].Replace("This is the title", "This comment is changed.", false, false);
+
+			//Remove the second comment
+			doc.Comments.RemoveAt(1);
+			
+			string output = "RemoveAndReplaceComment.docx";
+			
+			//Save the document
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

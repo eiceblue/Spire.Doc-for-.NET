@@ -17,53 +17,59 @@ namespace RemoveContentWithComment
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the document from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Comments.docx");
+			//Load the document from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Comments.docx");
 
-            //Get the first comment
-            Comment comment = document.Comments[0];
+			//Get the first comment
+			Comment comment = document.Comments[0];
 
-            //Get the paragraph of obtained comment
-            Paragraph para = comment.OwnerParagraph;
+			//Get the paragraph of obtained comment
+			Paragraph para = comment.OwnerParagraph;
 
-            //Get index of the CommentMarkStart 
-            int startIndex = para.ChildObjects.IndexOf(comment.CommentMarkStart);
+			//Get index of the CommentMarkStart 
+			int startIndex = para.ChildObjects.IndexOf(comment.CommentMarkStart);
 
-            //Get index of the CommentMarkEnd
-            int endIndex = para.ChildObjects.IndexOf(comment.CommentMarkEnd);
+			//Get index of the CommentMarkEnd
+			int endIndex = para.ChildObjects.IndexOf(comment.CommentMarkEnd);
 
-            //Create a list
-            List<TextRange> list = new List<TextRange>();
+			//Create a list
+			List<TextRange> list = new List<TextRange>();
 
-            //Get TextRanges between the indexes
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                if (para.ChildObjects[i] is TextRange)
-                {
-                    list.Add(para.ChildObjects[i] as TextRange);
-                }
-            }
+			//Get TextRanges between the indexes
+			for (int i = startIndex; i < endIndex; i++)
+			{
+				if (para.ChildObjects[i] is TextRange)
+				{
 
-            //Insert a new TextRange
-            TextRange textRange = new TextRange(document);
+					//Add the text range
+					list.Add(para.ChildObjects[i] as TextRange);
+				}
+			}
 
-            //Set text is null
-            textRange.Text = null;
+			//Insert a new TextRange
+			TextRange textRange = new TextRange(document);
 
-            //Insert the new textRange
-            para.ChildObjects.Insert(endIndex, textRange);
+			//clear the text
+			textRange.Text = null;
 
-            //Remove previous TextRanges
-            for (int i = 0; i < list.Count; i++)
-            {
-                para.ChildObjects.Remove(list[i]);
-            }
+			//Insert the new textRange
+			para.ChildObjects.Insert(endIndex, textRange);
 
-            String result = "Output.docx";
-            //Save the document.
-            document.SaveToFile(result, FileFormat.Docx);
+			//Remove previous TextRanges
+			for (int i = 0; i < list.Count; i++)
+			{
+				para.ChildObjects.Remove(list[i]);
+			}
+
+			string result = "Output.docx";
+			
+			//Save the document.
+			document.SaveToFile(result, FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer(result);

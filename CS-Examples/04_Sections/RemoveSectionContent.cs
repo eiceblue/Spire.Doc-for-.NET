@@ -20,24 +20,33 @@ namespace RemoveSectionContent
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Word file from disk
+            // Create a new instance of the Document class.
             Document doc = new Document();
+
+            // Load a Word document from a specified file path using the LoadFromFile method.
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_N3.docx");
 
-            //Loop through all sections
+            // Iterate through each section in the document.
             foreach (Section section in doc.Sections)
             {
-                //Remove header content
+                // Clear the child objects in the header of the current section.
                 section.HeadersFooters.Header.ChildObjects.Clear();
-                //Remove body content
+
+                // Clear the child objects in the body of the current section.
                 section.Body.ChildObjects.Clear();
-                //Remove footer content
+
+                // Clear the child objects in the footer of the current section.
                 section.HeadersFooters.Footer.ChildObjects.Clear();
             }
 
-            //Save the Word file
-            string output="RemoveSectionContent_out.docx";
+            // Specify the output file name for the section content removal document.
+            string output = "RemoveSectionContent_out.docx";
+
+            // Save the document to a file with the specified output file name and Docx2013 format.
             doc.SaveToFile(output, FileFormat.Docx2013);
+
+            // Release system resources used by the document.
+            doc.Dispose();
 
             //Launch the file
             FileViewer(output);

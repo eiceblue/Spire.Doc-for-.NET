@@ -20,15 +20,18 @@ namespace RtfToPdf
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_RtfFile.rtf", FileFormat.Rtf);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_RtfFile.rtf", FileFormat.Rtf);
 
-            String result = "Result-RtfToPdf.pdf";
+			string result = "Result-RtfToPdf.pdf";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.PDF);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.PDF);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

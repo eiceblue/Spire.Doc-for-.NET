@@ -19,16 +19,20 @@ namespace AddBarcodeImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
+            //Load a document from disk
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
 
-            string imgPath = @"..\..\..\..\..\..\Data\barcode.png";
+			//Specidied the image path
+			string imgPath = @"..\..\..\..\..\..\Data\barcode.png";
 
-            //Add barcode image
-            DocPicture picture = document.Sections[0].AddParagraph().AppendPicture(Image.FromFile(imgPath));
-     
-            //Save to file
-            document.SaveToFile("result.docx", FileFormat.Docx);
+			//Add barcode image
+			DocPicture picture = document.Sections[0].AddParagraph().AppendPicture(Image.FromFile(imgPath));
+
+			//Save to file
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.docx");

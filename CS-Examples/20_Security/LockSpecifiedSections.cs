@@ -19,27 +19,34 @@ namespace LockSpecifiedSections
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+      
+			// Create a new Document object
+			Document document = new Document();
 
-            //Add new sections.
-            Section s1 = document.AddSection();
-            Section s2 = document.AddSection();
-           
-            //Append some text to section 1 and section 2.
-            s1.AddParagraph().AppendText("Spire.Doc demo, section 1");
-            s2.AddParagraph().AppendText("Spire.Doc demo, section 2");
+			// Add two sections to the document
+			Section s1 = document.AddSection();
+			Section s2 = document.AddSection();
 
-            //Protect the document with AllowOnlyFormFields protection type.
-            document.Protect(ProtectionType.AllowOnlyFormFields, "123");
+			// Add a paragraph with text to section 1
+			s1.AddParagraph().AppendText("Spire.Doc demo, section 1");
 
-            //Unprotect section 2
-            s2.ProtectForm = false;
+			// Add a paragraph with text to section 2
+			s2.AddParagraph().AppendText("Spire.Doc demo, section 2");
 
-            String result = "Result-LockSpecifiedSections.docx";
+			// Protect the document with a password and allow only form fields
+			document.Protect(ProtectionType.AllowOnlyFormFields, "123");
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Disable form field protection for section 2
+			s2.ProtectForm = false;
+
+			// Specify the output file path for the locked document
+			string result = "Result-LockSpecifiedSections.docx";
+
+			// Save the locked document to the output file path in DOCX format (compatible with Word 2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the document object to free up resources
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

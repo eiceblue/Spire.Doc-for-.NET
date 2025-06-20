@@ -19,24 +19,29 @@ namespace AcceptOrRejectTrackedChange
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\AcceptOrRejectTrackedChanges.docx");
+			// Load a Word document from the specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\AcceptOrRejectTrackedChanges.docx");
 
-            //Get the first section and the paragraph we want to accept/reject the changes.
-            Section sec = document.Sections[0];
-            Paragraph para = sec.Paragraphs[0];
+			// Get the first Section of the document.
+			Section sec = document.Sections[0];
 
-            //Accept the changes or reject the changes.
-            para.Document.AcceptChanges();
-            //para.Document.RejectChanges();
+			// Get the first Paragraph of the Section.
+			Paragraph para = sec.Paragraphs[0];
 
-            String result = "Result-AcceptOrRejectTrackedChanges.docx";
+			// Accept all changes made in the document.
+			para.Document.AcceptChanges();
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Specify the output file name for the modified document.
+			String result = "Result-AcceptOrRejectTrackedChanges.docx";
+
+			// Save the document with accepted changes to the specified file format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the Document object to free up resources.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

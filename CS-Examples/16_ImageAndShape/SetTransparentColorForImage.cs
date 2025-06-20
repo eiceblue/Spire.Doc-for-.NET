@@ -19,27 +19,35 @@ namespace SetTransparentColorForImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\ImageTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first paragraph in the first section
-            Paragraph paragraph = doc.Sections[0].Paragraphs[0];
+			//Create a word document
+			Document doc = new Document();
 
-            //Set the blue color of the image(s) in the paragraph to transperant
-            foreach (DocumentObject obj in paragraph.ChildObjects)
-            {
-                if (obj is DocPicture)
-                {
-                    DocPicture picture = obj as DocPicture;
-                    picture.TransparentColor = Color.Blue;
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "SetTransparentColorForImage.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first paragraph in the first section
+			Paragraph paragraph = doc.Sections[0].Paragraphs[0];
+
+			//Loop through the child objects of the paragraph
+			foreach (DocumentObject obj in paragraph.ChildObjects)
+			{
+				if (obj is DocPicture)
+				{
+					//Set the blue color of the image(s) in the paragraph to transperant
+					DocPicture picture = obj as DocPicture;
+					picture.TransparentColor = Color.Blue;
+				}
+			}
+
+			//Save the document
+			string output = "SetTransparentColorForImage.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

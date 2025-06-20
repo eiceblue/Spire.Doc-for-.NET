@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Spire.Doc;
-using Spire.Doc.Fields.OMath;
 using Spire.Doc.Documents;
-using System.IO;
+using Spire.Doc.Fields.OMath;
+
 namespace GetMathEquation
 {
     public partial class Form1 : Form
@@ -37,13 +35,14 @@ namespace GetMathEquation
                             mathEquations.Add(obj as OfficeMath);
                         }
                     }
-
                 }
             }
-            string output ="MathMLCode.txt";
+            string output = "MathMLCode.txt";
             File.WriteAllText(output, stringBuilder.ToString());
+			
             WordDocViewer(output);
         }
+
         private void WordDocViewer(string fileName)
         {
             try
@@ -52,5 +51,6 @@ namespace GetMathEquation
             }
             catch { }
         }
+
     }
 }

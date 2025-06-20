@@ -20,12 +20,17 @@ namespace ToPDF
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
-           
-            //Save the document to a PDF file.
-            document.SaveToFile("Sample.pdf", FileFormat.PDF);
+            // Create a new Document object
+			Document document = new Document();
+
+			// Load a Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+			// Save the document as a PDF file with the name "Sample.pdf"
+			document.SaveToFile("Sample.pdf", FileFormat.PDF);
+
+			// Dispose of the Document object to free up resources
+			document.Dispose();
 
             //Launching the pdf reader to open.
             FileViewer("Sample.pdf");

@@ -14,41 +14,43 @@ namespace FromParagraphToTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create the first document
+            // Create a new source document and load it from a file
             Document sourceDocument = new Document();
-
-            //Load the source document from disk.
             sourceDocument.LoadFromFile(@"..\..\..\..\..\..\Data\IncludingTable.docx");
 
-            //Create a destination document
+            // Create a new destination document
             Document destinationDoc = new Document();
 
-            //Add a section
+            // Add a section to the destination document
             Section destinationSection = destinationDoc.AddSection();
 
-            //Extract the content from the first paragraph to the first table
+            // Extract content by table from the source document to the destination document
             ExtractByTable(sourceDocument, destinationDoc, 1, 1);
 
-            //Save the document.
+            // Save the destination document to a file named "Output.docx"
             destinationDoc.SaveToFile("Output.docx", FileFormat.Docx);
 
-            //Launch the Word file.
+            // Dispose of the source and destination documents
+            sourceDocument.Dispose();
+            destinationDoc.Dispose();
+
+            // Launch the Word file for viewing
             WordDocViewer("Output.docx");
         }
 
+        // Extracts content by table from the source document to the destination document
         private static void ExtractByTable(Document sourceDocument, Document destinationDocument, int startPara, int tableNo)
         {
-            //Get the table from the source document
+            // Get the specified table from the source document
             Table table = sourceDocument.Sections[0].Tables[tableNo - 1] as Table;
 
-            //Get the table index
+            // Get the index of the table in the source document
             int index = sourceDocument.Sections[0].Body.ChildObjects.IndexOf(table);
+
+            // Copy each child object from the source document to the destination document
             for (int i = startPara - 1; i <= index; i++)
             {
-                //Clone the ChildObjects of source document
                 DocumentObject doobj = sourceDocument.Sections[0].Body.ChildObjects[i].Clone();
-
-                //Add to destination document 
                 destinationDocument.Sections[0].Body.ChildObjects.Add(doobj);
             }
         }

@@ -16,106 +16,216 @@ namespace FontAndColor
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Initialize a document
-            Document document = new Document();
-            Section sec = document.AddSection();
-            Paragraph titleParagraph = sec.AddParagraph();
-            titleParagraph.AppendText("Font Styles and Effects ");
-            titleParagraph.ApplyStyle(BuiltinStyle.Title);
+            //Create a Word document.
+			Document document = new Document();
 
-            Paragraph paragraph = sec.AddParagraph();
-            TextRange tr = paragraph.AppendText("Strikethough Text");
-            tr.CharacterFormat.IsStrikeout = true;
+			//Add a section
+			Section sec = document.AddSection();
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Shadow Text");
-            tr.CharacterFormat.IsShadow = true;
+			//Add a paragraph
+			Paragraph titleParagraph = sec.AddParagraph();
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Small caps Text");
-            tr.CharacterFormat.IsSmallCaps = true;
+			//Append text
+			titleParagraph.AppendText("Font Styles and Effects ");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Double Strikethough Text");
-            tr.CharacterFormat.DoubleStrike = true;
+			//Apply the builtin style
+			titleParagraph.ApplyStyle(BuiltinStyle.Title);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Outline Text");
-            tr.CharacterFormat.IsOutLine = true;
+			//Add a new paragraph
+			Paragraph paragraph = sec.AddParagraph();
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("AllCaps Text");
-            tr.CharacterFormat.AllCaps = true;
+			//Append text
+			TextRange tr = paragraph.AppendText("Strikethough Text");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Text");
-            tr = paragraph.AppendText("SubScript");
-            tr.CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+			//Set strikeout style
+			tr.CharacterFormat.IsStrikeout = true;
 
-            tr = paragraph.AppendText("And");
-            tr = paragraph.AppendText("SuperScript");
-            tr.CharacterFormat.SubSuperScript = SubSuperScript.SuperScript;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Emboss Text");
-            tr.CharacterFormat.Emboss = true;
-            tr.CharacterFormat.TextColor = Color.White;
+			//Append text
+			tr = paragraph.AppendText("Shadow Text");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Hidden:");
-            tr = paragraph.AppendText("Hidden Text");
-            tr.CharacterFormat.Hidden = true;
+			//Set shadow property of text
+			tr.CharacterFormat.IsShadow = true;
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Engrave Text");
-            tr.CharacterFormat.Engrave = true;
-            tr.CharacterFormat.TextColor = Color.White;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("WesternFontsÖÐÎÄ×ÖÌå");
-            tr.CharacterFormat.FontNameAscii = "Calibri";
-            tr.CharacterFormat.FontNameNonFarEast = "Calibri";
-            tr.CharacterFormat.FontNameFarEast = "Simsun";
+			//Append text
+			tr = paragraph.AppendText("Small caps Text");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Font Size");
-            tr.CharacterFormat.FontSize = 20;
+			//Set IsSmallCaps property of text
+			tr.CharacterFormat.IsSmallCaps = true;
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Font Color");
-            tr.CharacterFormat.TextColor=Color.Red;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Bold Italic Text");
-            tr.CharacterFormat.Bold = true;
-            tr.CharacterFormat.Italic = true;
+			//Append text
+			tr = paragraph.AppendText("Double Strikethough Text");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Underline Style");
-            tr.CharacterFormat.UnderlineStyle = UnderlineStyle.Single;
+			//Set DoubleStrike property of text
+			tr.CharacterFormat.DoubleStrike = true;
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Highlight Text");
-            tr.CharacterFormat.HighlightColor = Color.Yellow;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Text has shading");
-            tr.CharacterFormat.TextBackgroundColor = Color.Green;
+			//Append text
+			tr = paragraph.AppendText("Outline Text");
+			tr.CharacterFormat.IsOutLine = true;
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Border Around Text");
-            tr.CharacterFormat.Border.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Text Scale");
-            tr.CharacterFormat.TextScale = 150;
+			//Append text
+			tr = paragraph.AppendText("AllCaps Text");
+			tr.CharacterFormat.AllCaps = true;
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            tr = paragraph.AppendText("Character Spacing is 2 point");
-            tr.CharacterFormat.CharacterSpacing = 2;
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            string filePath = "CharaterFormatting.docx";
-            document.SaveToFile(filePath, FileFormat.Docx);
+			//Append text
+			paragraph.AppendText("Text");
+			tr = paragraph.AppendText("SubScript");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+
+			//Append text
+			tr = paragraph.AppendText("And");
+			tr = paragraph.AppendText("SuperScript");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.SubSuperScript = SubSuperScript.SuperScript;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Emboss Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.Emboss = true;
+			tr.CharacterFormat.TextColor = Color.White;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			paragraph.AppendText("Hidden:");
+			tr = paragraph.AppendText("Hidden Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.Hidden = true;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Engrave Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.Engrave = true;
+			tr.CharacterFormat.TextColor = Color.White;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("WesternFontsâ•“â•¨â•¬â”€â•«â•“â• Ñ…");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.FontNameAscii = "Calibri";
+			tr.CharacterFormat.FontNameNonFarEast = "Calibri";
+			tr.CharacterFormat.FontNameFarEast = "Simsun";
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Font Size");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.FontSize = 20;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Font Color");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.TextColor = Color.Red;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Bold Italic Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.Bold = true;
+			tr.CharacterFormat.Italic = true;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Underline Style");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.UnderlineStyle = UnderlineStyle.Single;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Highlight Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.HighlightColor = Color.Yellow;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Text has shading");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.TextBackgroundColor = Color.Green;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Border Around Text");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.Border.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Text Scale");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.TextScale = 150;
+
+			//Append a line break
+			paragraph.AppendBreak(BreakType.LineBreak);
+
+			//Append text
+			tr = paragraph.AppendText("Character Spacing is 2 point");
+
+			//Apply CharacterFormat
+			tr.CharacterFormat.CharacterSpacing = 2;
+
+			string filePath = "CharaterFormatting.docx";
+			document.SaveToFile(filePath, FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
             WordDocViewer(filePath);
         }
 

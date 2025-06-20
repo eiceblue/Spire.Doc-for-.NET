@@ -19,19 +19,23 @@ namespace DifferentPageSetup
         private void button1_Click(object sender, EventArgs e)
         {
 
-            //Open a Word document
-            Document doc = new Document(@"..\..\..\..\..\..\Data\DifferentPageSetup.docx");
+            // Create a new instance of the Document class and load a Word document from a specific file path
+			Document doc = new Document(@"..\..\..\..\..\..\Data\DifferentPageSetup.docx");
 
-            //Get the second section 
-            Section SectionTwo = doc.Sections[1];
+			// Get the second section of the document
+			Section SectionTwo = doc.Sections[1];
 
-            //Set the orientation
-            SectionTwo.PageSetup.Orientation = PageOrientation.Landscape;
+			// Set the page orientation of the second section to Landscape
+			SectionTwo.PageSetup.Orientation = PageOrientation.Landscape;
 
-            //Set page size
-            //SectionTwo.PageSetup.PageSize = new SizeF(800, 800);
+			// Uncomment the following line to set a custom page size for the second section
+			// SectionTwo.PageSetup.PageSize = new SizeF(800, 800);
 
-            doc.SaveToFile("result.docx");
+			// Save the modified document to a file named "result.docx"
+			doc.SaveToFile("result.docx");
+
+			// Release the resources used by the document object
+			doc.Dispose();
 
             //Launch result file
             WordDocViewer("result.docx");

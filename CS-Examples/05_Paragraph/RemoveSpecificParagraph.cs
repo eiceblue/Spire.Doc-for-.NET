@@ -19,19 +19,23 @@ namespace RemoveSpecificParagraph
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new instance of the Document class.
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load a Word document from a specified file path.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Remove the first paragraph from the first section of the document.
+            // Remove the paragraph at index 0 from the first section of the document.
             document.Sections[0].Paragraphs.RemoveAt(0);
 
+            // Specify the file name for the resulting document.
             String result = "Result-RemoveSpecificParagraph.docx";
 
-            //Save to file.
+            // Save the modified document to a file with the specified file name and format (Docx2013).
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Clean up resources used by the document.
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

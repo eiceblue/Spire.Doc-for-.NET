@@ -17,42 +17,46 @@ namespace PictureCaptionCrossReference
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+            // Create a new instance of Document
             Document document = new Document();
 
-            //Create a new section
+            // Add a new section to the document
             Section section = document.AddSection();
 
-            //Add the first paragraph
+            // Add a paragraph to the section for the cross-reference
             Paragraph firstPara = section.AddParagraph();
 
-            //Add the first picture
+            // Add another paragraph to the section
             Paragraph par1 = section.AddParagraph();
             par1.Format.AfterSpacing = 10;
+
+            // Append an image (picture) to the paragraph from the specified file path
             DocPicture pic1 = par1.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
             pic1.Height = 120;
             pic1.Width = 120;
-            //Add caption to the picture
+
+            // Set the caption numbering format to "Number" and add a caption below the picture
             CaptionNumberingFormat format = CaptionNumberingFormat.Number;
             IParagraph captionParagraph = pic1.AddCaption("Figure", format, CaptionPosition.BelowItem);
-            section.AddParagraph();
 
-            //Add the second picture
+            // Add another paragraph to the section
             Paragraph par2 = section.AddParagraph();
+
+            // Append another image (picture) to the paragraph from the specified file path
             DocPicture pic2 = par2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
             pic2.Height = 120;
             pic2.Width = 120;
-            //Add caption to the picture
-            captionParagraph = pic2.AddCaption("Figure", format, CaptionPosition.BelowItem);
-            section.AddParagraph();
 
-            //Create a bookmark
+            // Add a caption below the second picture
+            captionParagraph = pic2.AddCaption("Figure", format, CaptionPosition.BelowItem);
+
+            // Add a bookmark at the specified location
             string bookmarkName = "Figure_2";
             Paragraph paragraph = section.AddParagraph();
             paragraph.AppendBookmarkStart(bookmarkName);
             paragraph.AppendBookmarkEnd(bookmarkName);
 
-            //Replace bookmark content
+            // Navigate to the bookmark and replace its content with the caption paragraph
             BookmarksNavigator navigator = new BookmarksNavigator(document);
             navigator.MoveToBookmark(bookmarkName);
             TextBodyPart part = navigator.GetBookmarkContent();
@@ -60,7 +64,7 @@ namespace PictureCaptionCrossReference
             part.BodyItems.Add(captionParagraph);
             navigator.ReplaceBookmarkContent(part);
 
-            //Create cross-reference field to point to bookmark "Figure_2"
+            // Create a cross-reference field for the bookmark
             Field field = new Field(document);
             field.Type = FieldType.FieldRef;
             field.Code = @"REF Figure_2 \p \h";
@@ -68,7 +72,7 @@ namespace PictureCaptionCrossReference
             FieldMark fieldSeparator = new FieldMark(document, FieldMarkType.FieldSeparator);
             firstPara.ChildObjects.Add(fieldSeparator);
 
-            //Set the display text of the field
+            // Add the text "Figure 2" as the reference text
             TextRange tr = new TextRange(document);
             tr.Text = "Figure 2";
             firstPara.ChildObjects.Add(tr);
@@ -76,12 +80,15 @@ namespace PictureCaptionCrossReference
             FieldMark fieldEnd = new FieldMark(document, FieldMarkType.FieldEnd);
             firstPara.ChildObjects.Add(fieldEnd);
 
-            //Update fields
+            // Enable field updating in the document
             document.IsUpdateFields = true;
 
-            //Save the file
+            // Specify the output file name and format (Docx)
             string output = "PictureCaptionCrossReference.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+            document.SaveToFile(output, FileFormat.Docx);
+
+            // Dispose of the document object when finished using it
+            document.Dispose();
 
             //Launching the file
             WordDocViewer(output);

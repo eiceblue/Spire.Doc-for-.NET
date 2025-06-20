@@ -20,22 +20,29 @@ namespace CountVariables
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
+			// Load a Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
 
-            //Get the number of variables in the document.
-            int number = document.Variables.Count;
+			// Get the number of variables present in the document
+			int number = document.Variables.Count;
 
-            StringBuilder content = new StringBuilder();
-            content.AppendLine("The number of variables is: " + number.ToString());
+			// Create a StringBuilder to hold the content for the result file
+			StringBuilder content = new StringBuilder();
 
-            String result = "Result-CountVariables.txt";
+			// Append the number of variables to the content
+			content.AppendLine("The number of variables is: " + number.ToString());
 
-            //Save to file.
-            File.WriteAllText(result,content.ToString());
+			// Specify the file name for the saved result file
+			string result = "Result-CountVariables.txt";
+
+			// Write the content to a text file
+			File.WriteAllText(result, content.ToString());
+
+			// Release the resources used by the document
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

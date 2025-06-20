@@ -18,26 +18,33 @@ namespace AddAlternativeText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\TableSample.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\TableSample.docx";
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Create a Word document
+			Document doc = new Document();
 
-            //Get the first table in the section
-            Table table = section.Tables[0] as Table;
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Add alternative text
-            //Add title
-            table.Title = "Table 1";
-            //Add description
-            table.TableDescription = "Description Text";
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "AddAlternativeText.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first table in the section
+			Table table = section.Tables[0] as Table;
+
+			//Set the table title
+			table.Title = "Table 1";
+			
+			//Add description
+			table.TableDescription = "Description Text";
+
+			//Save the document
+			string output = "AddAlternativeText.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

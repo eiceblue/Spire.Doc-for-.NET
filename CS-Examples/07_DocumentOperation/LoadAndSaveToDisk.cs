@@ -18,15 +18,24 @@ namespace LoadAndSaveToDisk
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\Data\Template.docx";
-            //Create a new document
-            Document doc = new Document();
-            // Load the document from the absolute/relative path on disk.
-            doc.LoadFromFile(input);
+            // Define the input file path using a relative path
+			String input = @"..\..\..\..\..\..\Data\Template.docx";
 
-            String result = "LoadAndSaveToDisk_out.docx";
-            // Save the document to disk
-            doc.SaveToFile(result,FileFormat.Docx);
+			// Create a new instance of the Document class
+			Document doc = new Document();
+
+			// Load the document from the specified input file
+			doc.LoadFromFile(input);
+
+			// Specify the output file name
+			String result = "LoadAndSaveToDisk_out.docx";
+
+			// Save the document to a file with the specified output file name and file format (Docx)
+			doc.SaveToFile(result, FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			doc.Dispose();
+			
             WordViewer(result);
         }
         private void WordViewer(string fileName)

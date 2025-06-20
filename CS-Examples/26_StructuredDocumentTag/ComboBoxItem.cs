@@ -14,34 +14,43 @@ namespace ComboBoxItem
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Create a new document and load from file
+          
+            // Specify the input file path
             string input = @"..\..\..\..\..\..\Data\ComboBox.docx";
+
+            // Create a new document object
             Document doc = new Document();
+
+            // Load the document from the specified file path
             doc.LoadFromFile(input);
 
-            //Get the combo box from the file
+            // Iterate through each section in the document
             foreach (Section section in doc.Sections)
             {
+                // Iterate through each document object in the section's body
                 foreach (DocumentObject bodyObj in section.Body.ChildObjects)
                 {
+                    // Check if the document object is a StructureDocumentTag
                     if (bodyObj.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
                     {
-                        //If SDTType is ComboBox
+                        // Check if the StructureDocumentTag is of type ComboBox
                         if ((bodyObj as StructureDocumentTag).SDTProperties.SDTType == SdtType.ComboBox)
                         {
+                            // Access the ComboBox control properties
                             SdtComboBox combo = (bodyObj as StructureDocumentTag).SDTProperties.ControlProperties as SdtComboBox;
-                            //Remove the second list item
+
+                            // Remove an item from the ComboBox
                             combo.ListItems.RemoveAt(1);
-                            //Add a new item
+
+                            // Create a new SdtListItem and add it to the ComboBox
                             SdtListItem item = new SdtListItem("D", "D");
                             combo.ListItems.Add(item);
 
-                            //If the value of list items is "D"
+                            // Set the selected value of the ComboBox based on the item value "D"
                             foreach (SdtListItem sdtItem in combo.ListItems)
                             {
                                 if (string.CompareOrdinal(sdtItem.Value, "D") == 0)
                                 {
-                                    //Select the item
                                     combo.ListItems.SelectedValue = sdtItem;
                                 }
                             }
@@ -50,9 +59,15 @@ namespace ComboBoxItem
                 }
             }
 
-            //Save the document and launch it
+            // Specify the output file name
             string output = "ComboBoxItem.docx";
+
+            // Save the modified document to a file in Docx 2013 format
             doc.SaveToFile(output, FileFormat.Docx2013);
+
+            // Dispose the document object
+            doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

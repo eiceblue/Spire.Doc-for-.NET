@@ -20,20 +20,25 @@ namespace InsertNoneField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document.
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
+            
+			// Load the document from a specified file path
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
 
-            //Get the first section
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            Paragraph par = section.AddParagraph();
+			// Add a paragraph to the section
+			Paragraph par = section.AddParagraph();
 
-            //Add a none field
-            Field field
-            = par.AppendField(String.Empty, FieldType.FieldNone);
+			// Append an empty field with no specific type
+			Field field = par.AppendField(String.Empty, FieldType.FieldNone);
 
-         
-            document.SaveToFile("result.docx", FileFormat.Docx);
+			// Save the modified document to a file with the specified name
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
+			
             //Launch result file
             WordDocViewer("result.docx");
 

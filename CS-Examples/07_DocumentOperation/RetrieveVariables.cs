@@ -20,30 +20,35 @@ namespace RetrieveVariables
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
 
-            //Retrieve name of the variable by index.
-            string s1 = document.Variables.GetNameByIndex(0);
+			// Get the name of the variable at index 0
+			string s1 = document.Variables.GetNameByIndex(0);
 
-            //Retrieve value of the variable by index.
-            string s2 = document.Variables.GetValueByIndex(0);
+			// Get the value of the variable at index 0
+			string s2 = document.Variables.GetValueByIndex(0);
 
-            //Retrieve the value of the variable by name.
-            string s3 = document.Variables["A1"];
+			// Get the value of the variable with the name "A1"
+			string s3 = document.Variables["A1"];
 
-            StringBuilder content = new StringBuilder();
-            content.AppendLine("The name of the variable retrieved by index 0 is: " + s1);
-            content.AppendLine("The vaule of the variable retrieved by index 0 is: " + s2);
-            content.AppendLine("The vaule of the variable retrieved by name \"A1\" is: " + s3);
+			// Create a StringBuilder to store the content
+			StringBuilder content = new StringBuilder();
+			content.AppendLine("The name of the variable retrieved by index 0 is: " + s1);
+			content.AppendLine("The value of the variable retrieved by index 0 is: " + s2);
+			content.AppendLine("The value of the variable retrieved by name \"A1\" is: " + s3);
 
-            String result = "Result-RetrieveVariables.txt";
+			// Specify the output file name
+			string result = "Result-RetrieveVariables.txt";
 
-            //Save to file.
-            File.WriteAllText(result,content.ToString());           
+			// Write the content to a text file
+			File.WriteAllText(result, content.ToString());
+
+			// Dispose the Document object to release resources
+			document.Dispose();           
 
             //Launch the file.
             WordDocViewer(result);

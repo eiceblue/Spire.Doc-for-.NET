@@ -18,40 +18,55 @@ namespace GetTablePosition
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
-            Document document = new Document();
-            //Load file
+      
+			// Create a new Document object
+			Document document = new Document();
+
+            // Load an existing Word document from a file
             document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample-Az.docx");
-            //Get the first section
+
+            // Get the first section of the document
             Section section = document.Sections[0];
-            //Get the first table
-            Table table = section.Tables[0] as Table;
 
-            StringBuilder stringBuidler = new StringBuilder();
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
 
-            //Verify whether the table uses "Around" text wrapping or not.
-            if (table.TableFormat.WrapTextAround)
-            {
-                RowFormat.TablePositioning positon = table.TableFormat.Positioning;
+			// Create a StringBuilder to store the output content
+			StringBuilder stringBuilder = new StringBuilder();
 
-                stringBuidler.AppendLine("Horizontal:");               
-                stringBuidler.AppendLine("Position:" + positon.HorizPosition +" pt");
-                stringBuidler.AppendLine("Absolute Position:" + positon.HorizPositionAbs + ", Relative to:" + positon.HorizRelationTo);
-                stringBuidler.AppendLine();
-                stringBuidler.AppendLine("Vertical:");
-                stringBuidler.AppendLine("Position:" + positon.VertPosition + " pt");
-                stringBuidler.AppendLine("Absolute Position:" + positon.VertPositionAbs + ", Relative to:" + positon.VertRelationTo);
-                stringBuidler.AppendLine();
-                stringBuidler.AppendLine("Distance from surrounding text:");
-                stringBuidler.AppendLine("Top:" + positon.DistanceFromTop + " pt, Left:" + positon.DistanceFromLeft + " pt");
-                stringBuidler.AppendLine("Bottom:" + positon.DistanceFromBottom + "pt, Right:" + positon.DistanceFromRight + " pt");
-            }
+			// Check if text wrapping is enabled around the table
+			if (table.Format.WrapTextAround)
+			{
+				// Get the positioning information for the table
+				TablePositioning position = table.Format.Positioning;
 
+				// Append horizontal positioning information to the output content
+				stringBuilder.AppendLine("Horizontal:");
+				stringBuilder.AppendLine("Position: " + position.HorizPosition + " pt");
+				stringBuilder.AppendLine("Absolute Position: " + position.HorizPositionAbs + ", Relative to: " + position.HorizRelationTo);
+				stringBuilder.AppendLine();
 
-            String result = "GetTablePosition_out.txt";
+				// Append vertical positioning information to the output content
+				stringBuilder.AppendLine("Vertical:");
+				stringBuilder.AppendLine("Position: " + position.VertPosition + " pt");
+				stringBuilder.AppendLine("Absolute Position: " + position.VertPositionAbs + ", Relative to: " + position.VertRelationTo);
+				stringBuilder.AppendLine();
 
-            //Save file.
-            File.WriteAllText(result, stringBuidler.ToString());
+				// Append distance from surrounding text information to the output content
+				stringBuilder.AppendLine("Distance from surrounding text:");
+				stringBuilder.AppendLine("Top: " + position.DistanceFromTop + " pt, Left: " + position.DistanceFromLeft + " pt");
+				stringBuilder.AppendLine("Bottom: " + position.DistanceFromBottom + " pt, Right: " + position.DistanceFromRight + " pt");
+			}
+
+			// Specify the output file path
+			string result = "GetTablePosition_out.txt";
+
+			// Write the output content to the output file
+			File.WriteAllText(result, stringBuilder.ToString());
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
+			
             //Launching the Word file.
             WordDocViewer(result);
         }

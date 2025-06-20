@@ -16,52 +16,54 @@ namespace AddRichTextContentControl
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
+      
+            // Create a new document object
             Document document = new Document();
 
-            //Add a new section.
+            // Add a section to the document
             Section section = document.AddSection();
 
-            //Add a paragraph
+            // Add a paragraph to the section
             Paragraph paragraph = section.AddParagraph();
 
-            //Append textRange for the paragraph
+            // Append text with an explanation to the paragraph
             TextRange txtRange = paragraph.AppendText("The following example shows how to add RichText content control in a Word document. \n");
 
-            //Append textRange 
+            // Append text indicating adding the RichText content control
             txtRange = paragraph.AppendText("Add RichText Content Control:  ");
 
-            //Set the font format
+            // Set the text range formatting to italic
             txtRange.CharacterFormat.Italic = true;
 
-            //Create StructureDocumentTagInline for document
+            // Create an inline structure document tag (SDT) and add it to the paragraph's child objects
             StructureDocumentTagInline sdt = new StructureDocumentTagInline(document);
-
-            //Add sdt in paragraph
             paragraph.ChildObjects.Add(sdt);
 
-            //Specify the type
+            // Set the SDT type to RichText
             sdt.SDTProperties.SDTType = SdtType.RichText;
 
-            //Set displaying text
+            // Create an instance of SdtText, set its multiline property, and assign it as the control properties for the SDT
             SdtText text = new SdtText(true);
             text.IsMultiline = true;
             sdt.SDTProperties.ControlProperties = text;
 
-            //Crate a TextRange
+            // Create a TextRange object and set its text and text color, then add it to the SDT's content
             TextRange rt = new TextRange(document);
             rt.Text = "Welcome to use ";
             rt.CharacterFormat.TextColor = Color.Green;
             sdt.SDTContent.ChildObjects.Add(rt);
 
+            // Create another TextRange object and set its text and text color, then add it to the SDT's content
             rt = new TextRange(document);
             rt.Text = "Spire.Doc";
             rt.CharacterFormat.TextColor = Color.OrangeRed;
             sdt.SDTContent.ChildObjects.Add(rt);
 
-            //Save the document.
+            // Save the document to a file in Docx format
             document.SaveToFile("Output.docx", FileFormat.Docx);
 
+            // Dispose the document object
+            document.Dispose();
             //Launch the Word file.
             WordDocViewer("Output.docx");
         }

@@ -20,32 +20,38 @@ namespace ReplaceTextWithMergeField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
+        
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
 
-            //Find the text that will be replaced
-            TextSelection ts =  document.FindString("Test",true, true);
+			// Find the text "Test" in the document
+			TextSelection ts = document.FindString("Test", true, true);
 
-            TextRange tr = ts.GetAsOneRange();
+			// Get the selected text as a single range
+			TextRange tr = ts.GetAsOneRange();
 
-            //Get the paragraph
-            Paragraph par = tr.OwnerParagraph;
+			// Get the paragraph that contains the selected text
+			Paragraph par = tr.OwnerParagraph;
 
-            //Get the index of the text in the paragraph
-            int index = par.ChildObjects.IndexOf(tr);
+			// Get the index of the selected text within its parent paragraph
+			int index = par.ChildObjects.IndexOf(tr);
 
-            //Create a new field
-            MergeField field = new MergeField(document);
-            field.FieldName = "MergeField";
+			// Create a new merge field
+			MergeField field = new MergeField(document);
+			field.FieldName = "MergeField";
 
-            //Insert field at specific position
-            par.ChildObjects.Insert(index, field);
+			// Insert the merge field at the same position as the selected text
+			par.ChildObjects.Insert(index, field);
 
-            //Remove the text
-            par.ChildObjects.Remove(tr);           
-          
-            //Save to file
-            document.SaveToFile("result.docx", FileFormat.Docx);
+			// Remove the selected text from the paragraph
+			par.ChildObjects.Remove(tr);
+
+			// Save the modified document to a new file
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			// Dispose of the document object
+			document.Dispose();
+			
             //Launch result file
             WordDocViewer("result.docx");
 

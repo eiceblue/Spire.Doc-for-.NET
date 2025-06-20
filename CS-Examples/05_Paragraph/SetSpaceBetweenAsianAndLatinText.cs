@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Spire.Doc;
 using Spire.Doc.Documents;
 using Spire.Doc.Fields;
-using Spire.Doc.Fields.Shape;
 
 namespace SetSpaceBetweenAsianAndLatinText
 {
@@ -16,24 +15,31 @@ namespace SetSpaceBetweenAsianAndLatinText
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {//Create Word document.
-            Document document = new Document();
+        {
+			// Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\SetSpaceBetweenAsianAndLatinText.docx");
+			// Load a Word document from a specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\SetSpaceBetweenAsianAndLatinText.docx");
 
-            Paragraph para = document.Sections[0].Paragraphs[0];
+			// Get the first paragraph of the first section in the document.
+			Paragraph para = document.Sections[0].Paragraphs[0];
 
-            //Set whether to automatically adjust space between Asian text and Latin text
-            para.Format.AutoSpaceDE = false;
-            //Set whether to automatically adjust space between Asian text and numbers
-            para.Format.AutoSpaceDN = true;
+			// Set whether to automatically adjust space between Asian text and Latin text.
+			para.Format.AutoSpaceDE = false;
 
-            String result = "Result.docx";
+			// Set whether to automatically adjust space between Asian text and numbers.
+			para.Format.AutoSpaceDN = true;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Specify the file name for the resulting document.
+			string result = "Result.docx";
 
+			// Save the modified document to a file with the specified file name and format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Clean up resources used by the document.
+			document.Dispose();
+			
             //Launching the MS Word file.
             WordDocViewer(result);
         }

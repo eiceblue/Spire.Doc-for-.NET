@@ -15,23 +15,27 @@ namespace FindAndHighlight
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+            // Create a new Document object
             Document document = new Document();
 
-            //Load the document from disk.
+            // Load an existing Word document from the specified file path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
-            //Find text
+            // Find all occurrences of the string "word" in the document and retrieve their TextSelections
             TextSelection[] textSelections = document.FindAllString("word", false, true);
 
-            //Set hightlight
-            foreach(TextSelection selection in textSelections)
+            // Iterate through each TextSelection
+            foreach (TextSelection selection in textSelections)
             {
+                // Get the entire range of the selection and set its CharacterFormat's HighlightColor property to Yellow
                 selection.GetAsOneRange().CharacterFormat.HighlightColor = Color.Yellow;
             }
 
-            //Save doc file.
+            // Save the modified document to a file named "Sample.docx" in Docx format
             document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+            // Dispose of the document object and release any associated resources
+            document.Dispose();
 
             //Launching the  Word file.
             WordDocViewer("Sample.docx");

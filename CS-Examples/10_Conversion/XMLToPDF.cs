@@ -19,16 +19,19 @@ namespace XMLToPDF
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_XmlFile.xml", FileFormat.Xml);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_XmlFile.xml", FileFormat.Xml);
 
-            String result = "Result-XMLToPDF.pdf";          
+			string result = "Result-XMLToPDF.pdf";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.PDF);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.PDF);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Pdf file.
             WordDocViewer(result);

@@ -20,28 +20,36 @@ namespace AddImageToEachPage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
+            //Load a Word document
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
 
-            string imgPath = @"..\..\..\..\..\..\Data\Spire.Doc.png";
+			//Specified the image path
+			string imgPath = @"..\..\..\..\..\..\Data\Spire.Doc.png";
 
-            //Add a picture in footer and set it's position
-            DocPicture picture = document.Sections[0].HeadersFooters.Footer.AddParagraph().AppendPicture(Image.FromFile(imgPath));
-            picture.VerticalOrigin = VerticalOrigin.Page;
-            picture.HorizontalOrigin = HorizontalOrigin.Page;
-            picture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
-            picture.TextWrappingStyle = TextWrappingStyle.None;
+			//Add a picture in footer 
+			DocPicture picture = document.Sections[0].HeadersFooters.Footer.AddParagraph().AppendPicture(Image.FromFile(imgPath));
 
-            //Add a textbox in footer and set it's positiion
+			//Set the picture's postion and style
+			picture.VerticalOrigin = VerticalOrigin.Page;
+			picture.HorizontalOrigin = HorizontalOrigin.Page;
+			picture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
+			picture.TextWrappingStyle = TextWrappingStyle.None;
+
+			//Add a textbox in footer
             Spire.Doc.Fields.TextBox textbox = document.Sections[0].HeadersFooters.Footer.AddParagraph().AppendTextBox(150, 20);
-            textbox.VerticalOrigin = VerticalOrigin.Page;
-            textbox.HorizontalOrigin = HorizontalOrigin.Page;
-            textbox.HorizontalPosition = 300;
-            textbox.VerticalPosition = 700;
-            textbox.Body.AddParagraph().AppendText("Welcome to E-iceblue");
-        
-            //Save to file
-            document.SaveToFile("result.docx", FileFormat.Docx);
+
+			//Set the textbox's postion and style
+			textbox.VerticalOrigin = VerticalOrigin.Page;
+			textbox.HorizontalOrigin = HorizontalOrigin.Page;
+			textbox.HorizontalPosition = 300;
+			textbox.VerticalPosition = 700;
+			textbox.Body.AddParagraph().AppendText("Welcome to E-iceblue");
+
+			//Save to file
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.docx");

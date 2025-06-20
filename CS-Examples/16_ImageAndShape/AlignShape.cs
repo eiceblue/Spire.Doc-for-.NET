@@ -15,31 +15,37 @@ namespace AlignShape
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\Shapes.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            Section section = doc.Sections[0];
+			//Create a word document
+			Document doc = new Document();
 
-            foreach (Paragraph para in section.Paragraphs)
-            {
-                foreach (DocumentObject obj in para.ChildObjects)
-                {
-                    if (obj is ShapeObject)
-                    {
-                        //Set the horizontal alignment as center
-                        (obj as ShapeObject).HorizontalAlignment = ShapeHorizontalAlignment.Center;
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-                        ////Set the vertical alignment as top
-                        //(obj as ShapeObject).VerticalAlignment = ShapeVerticalAlignment.Top;
-                    }
-                }
-            }
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "AlignShape.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Loop through the paragraphs in the section
+			foreach (Paragraph para in section.Paragraphs)
+			{
+				// Loop through the child objects in the paragraph
+				foreach (DocumentObject obj in para.ChildObjects)
+				{
+					if (obj is ShapeObject)
+					{
+						//Set the horizontal alignment as center
+						(obj as ShapeObject).HorizontalAlignment = ShapeHorizontalAlignment.Center;
+					}
+				}
+			}
+
+			//Save the document
+			string output = "AlignShape.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -14,21 +14,26 @@ namespace AllowLatinTextWrapInMiddleOfAWord
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new Document object
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load an existing document from the specified file path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\AllowLatinTextWrapInMiddleOfAWord.docx");
 
+            // Get the first paragraph in the first section of the document
             Paragraph para = document.Sections[0].Paragraphs[0];
 
-            //Allow Latin text to wrap in the middle of a word
-            para.Format.WordWrap = false;
+            // Allow Latin text to wrap in the middle of a word
+            para.Format.WordWrap = true;
 
-            String result = "AllowLatinTextWrapInMiddleOfAWord-Result.docx";
+            // Specify the filename for the resulting document
+            string result = "AllowLatinTextWrapInMiddleOfAWord-Result.docx";
 
-            //Save to file.
+            // Save the modified document to the specified file in the Docx2013 format
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Dispose of the document resources
+            document.Dispose();
           
             //Launching the Word file.
             WordDocViewer(result);

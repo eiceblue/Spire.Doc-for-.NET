@@ -13,23 +13,30 @@ namespace AdjustHeaderFooterHeight
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\HeaderAndFooter.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Create a word document
+			Document doc = new Document();
 
-            //Adjust the height of headers in the section
-            section.PageSetup.HeaderDistance = 100;
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Adjust the height of footers in the section
-            section.PageSetup.FooterDistance = 100;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "AdjustHeaderFooterHeight.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Adjust the height of headers in the section
+			section.PageSetup.HeaderDistance = 100;
+
+			//Adjust the height of footers in the section
+			section.PageSetup.FooterDistance = 100;
+
+			//Save the document
+			string output = "AdjustHeaderFooterHeight.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+
             Viewer(output);
         }
         private void Viewer(string fileName)

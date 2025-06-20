@@ -18,36 +18,43 @@ namespace CloneTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\TableTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\TableTemplate.docx";
 
-            //Get the first section
-            Section se = doc.Sections[0];
+			//Create a Word document
+			Document doc = new Document();
 
-            //Get the first table
-            Table original_Table = (Table)se.Tables[0];
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Copy the existing table to copied_Table via Table.clone()
-            Table copied_Table = original_Table.Clone();
-            string[] st = new string[] { "Spire.Presentation for .Net", "A professional " +
-                "PowerPoint® compatible library that enables developers to create, read, " +
-                "write, modify, convert and Print PowerPoint documents on any .NET framework, " +
-                ".NET Core platform." };
-            //Get the last row of table
-            TableRow lastRow = copied_Table.Rows[copied_Table.Rows.Count - 1];
-            //Change last row data
-            for (int i = 0; i < lastRow.Cells.Count - 1; i++)
-            {
-                lastRow.Cells[i].Paragraphs[0].Text = st[i];
-            }
-            //Add copied_Table in section
-            se.Tables.Add(copied_Table);
+			//Get the first section
+			Section se = doc.Sections[0];
 
-            //Save and launch document
-            string output = "CloneTable.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first table
+			Table original_Table = (Table)se.Tables[0];
+
+			//Copy the existing table to copied_Table via Table.clone()
+			Table copied_Table = original_Table.Clone();
+			string[] st = new string[] { "Spire.Presentation for .Net", "A professional " +
+				"PowerPoint® compatible library that enables developers to create, read, " +
+				"write, modify, convert and Print PowerPoint documents on any .NET framework, " +
+				".NET Core platform." };
+			//Get the last row of table
+			TableRow lastRow = copied_Table.Rows[copied_Table.Rows.Count - 1];
+
+			//Change last row's data
+			for (int i = 0; i < lastRow.Cells.Count - 1; i++)
+			{
+				lastRow.Cells[i].Paragraphs[0].Text = st[i];
+			}
+			//Add copied_Table to the section
+			se.Tables.Add(copied_Table);
+
+			//Save the document
+			string output = "CloneTable.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -21,54 +21,65 @@ namespace ExtractOLE
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create document and load file from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\OLEs.docx");
 
-            //Traverse through all sections of the word document    
-            foreach (Section sec in doc.Sections)
-            {
-                //Traverse through all Child Objects in the body of each section
-                foreach (DocumentObject obj in sec.Body.ChildObjects)
-                {
-                    //find the paragraph
-                    if (obj is Paragraph)
-                    {
-                        Paragraph par = obj as Paragraph;
-                        foreach (DocumentObject o in par.ChildObjects)
-                        {
-                            //check whether the object is OLE
-                            if (o.DocumentObjectType == DocumentObjectType.OleObject)
-                            {
-                                DocOleObject Ole = o as DocOleObject;
-                                string s = Ole.ObjectType;
+			// Create a new document object
+			Document doc = new Document();
 
-                                //check whether the object type is "Acrobat.Document.11"
-                                if (s == "AcroExch.Document.DC")
-                                {
-                                    //write the data of OLE into file
-                                    File.WriteAllBytes("Result.pdf", Ole.NativeData);
-                                    FileViewer("Result.pdf");
-                                }
+			// Load the document from a file
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\OLEs.docx");
 
-                                //check whether the object type is "Excel.Sheet.8"
-                                else if (s == "Excel.Sheet.8")
-                                {
-                                    File.WriteAllBytes("ExcelResult.xls", Ole.NativeData);
-                                    FileViewer("ExcelResult.xls");
-                                }
+			// Iterate through each section in the document
+			foreach (Section sec in doc.Sections)
+			{
+				// Iterate through each child object in the section's body
+				foreach (DocumentObject obj in sec.Body.ChildObjects)
+				{
+					// Check if the object is a paragraph
+					if (obj is Paragraph)
+					{
+						// Cast the object to a paragraph
+						Paragraph par = obj as Paragraph;
+						// Iterate through each child object in the paragraph
+						foreach (DocumentObject o in par.ChildObjects)
+						{
+							// Check if the child object is an OLE object
+							if (o.DocumentObjectType == DocumentObjectType.OleObject)
+							{
+								// Cast the object to a DocOleObject
+								DocOleObject Ole = o as DocOleObject;
+								// Get the type of the OLE object
+								string s = Ole.ObjectType;
 
-                                //check whether the object type is "PowerPoint.Show.12"
-                                else if (s == "PowerPoint.Show.12")
-                                {
-                                    File.WriteAllBytes("PPTResult.pptx", Ole.NativeData);
-                                    FileViewer("PPTResult.pptx");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+								// Perform actions based on the OLE object type
+								if (s == "AcroExch.Document.DC")
+								{
+									// Save the OLE object as a PDF file
+									File.WriteAllBytes("Result.pdf", Ole.NativeData);
+									// Open the PDF file with the default file viewer
+									FileViewer("Result.pdf");
+								}
+								else if (s == "Excel.Sheet.8")
+								{
+									// Save the OLE object as an Excel file
+									File.WriteAllBytes("ExcelResult.xls", Ole.NativeData);
+									// Open the Excel file with the default file viewer
+									FileViewer("ExcelResult.xls");
+								}
+								else if (s == "PowerPoint.Show.12")
+								{
+									// Save the OLE object as a PowerPoint file
+									File.WriteAllBytes("PPTResult.pptx", Ole.NativeData);
+									// Open the PowerPoint file with the default file viewer
+									FileViewer("PPTResult.pptx");
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Dispose the document object
+			doc.Dispose();
         }
         private void FileViewer(string fileName)
         {

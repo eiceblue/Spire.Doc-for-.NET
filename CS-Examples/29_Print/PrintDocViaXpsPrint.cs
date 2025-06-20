@@ -18,20 +18,28 @@ namespace PrintDocViaXpsPrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                //Create a document
-                using (Document document = new Document())
-                {
-                    //Load file
-                    document.LoadFromFile(@"..\..\..\..\..\..\Data\Template.docx");
-                    //Save to Xps file
-                    document.SaveToStream(ms, FileFormat.XPS);
-                }
-                ms.Position = 0;
-                String printerName = "HP LaserJet P1007";
-                XpsPrint.XpsPrintHelper.Print(ms, printerName, "My printing job", true);
-            }
+			// Create a new MemoryStream for storing the document as XPS
+			using (MemoryStream ms = new MemoryStream())
+			{
+				// Instantiate a new Document object
+				using (Document document = new Document())
+				{
+					// Load the Word document from the specified template file
+					document.LoadFromFile(@"..\..\..\..\..\..\Data\Template.docx");
+
+					// Save the document to the MemoryStream as XPS format
+					document.SaveToStream(ms, FileFormat.XPS);
+				}
+
+				// Reset the position of the MemoryStream to the beginning
+				ms.Position = 0;
+
+				// Specify the printer name to be used for printing
+				String printerName = "HP LaserJet P1007";
+
+				// Print the XPS document using the specified printer and job name
+				XpsPrint.XpsPrintHelper.Print(ms, printerName, "My printing job", true);
+			}
         }
     }
 }

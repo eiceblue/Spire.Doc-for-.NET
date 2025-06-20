@@ -20,99 +20,121 @@ namespace DocAndDataBase
 
         private void button1_Click(object sender, EventArgs e)
         {
+			// Define the input database file path
             String inputDataBase = @"..\..\..\..\..\..\Data\demo.mdb";
+			
+			// Define the input folder path
             String inputFolder = @"..\..\..\..\..\..\Data\";
+			
+			// Define the file name of the document to be stored in the database
             String fileName = "Template.docx";
 
-            // Open a database connection
-            string connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + inputDataBase;
-            OleDbConnection connection = new OleDbConnection(connString);
-            connection.Open();
- 
-            // Store the document to the database.
-            StoreToDatabase(inputFolder + fileName, connection);
-            // Read the document from the database and store the file to disk.
-            Document dbDoc = ReadFromDatabase(fileName, connection);
+            // Create a connection string using the OLE DB provider for Microsoft Access
+			string connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + inputDataBase;
 
-            // Save the retrieved document to disk.
-            string newFileName = "DocAndDataBase_out.docx";
-            dbDoc.SaveToFile(newFileName, FileFormat.Docx);
+			// Create a new OleDbConnection object with the connection string and open the connection
+			OleDbConnection connection = new OleDbConnection(connString);
+			connection.Open();
 
-            // Delete the document from the database.
-            DeleteFromDatabase(fileName, connection);
+			// Store the document from the specified input folder in the database
+			StoreToDatabase(inputFolder + fileName, connection);
 
-            // Close the connection to the database.
-            connection.Close();
+			// Read the document from the database and create a Document object
+			Document dbDoc = ReadFromDatabase(fileName, connection);
+
+			// Specify the file name for the output document
+			string newFileName = "DocAndDataBase_out.docx";
+
+			// Save the document retrieved from the database to the specified file path in Docx format
+			dbDoc.SaveToFile(newFileName, FileFormat.Docx);
+
+			// Delete the document from the database
+			DeleteFromDatabase(fileName, connection);
+
+			// Close and dispose of the connection and Document objects
+			connection.Close();
+			connection.Dispose();
+			dbDoc.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("DocAndDataBase_out.docx");
 
         }
-        //Store document to database 
-        public static void StoreToDatabase(String input, OleDbConnection connection)
-        {
-            Document doc=new Document(input);
-            // Save the document to a MemoryStream object.
-            MemoryStream stream = new MemoryStream();
-            doc.SaveToStream(stream, FileFormat.Docx);
+        // Implementation of the StoreToDatabase method
+		public static void StoreToDatabase(String input, OleDbConnection connection)
+		{
+			// Create a Document object from the specified input file
+			Document doc = new Document(input);
 
-            // Get the filename from the document.
-            string fileName = Path.GetFileName(input);
+		// Create a MemoryStream to store the document content
+		MemoryStream stream = new MemoryStream();
 
-            // Create the SQL command.
-            string commandString = "INSERT INTO Documents (FileName, FileContent) VALUES('" + fileName + "', @Doc)";
-            OleDbCommand command = new OleDbCommand(commandString, connection);
+		// Save the document to the MemoryStream in Docx format
+		doc.SaveToStream(stream, FileFormat.Docx);
 
-            // Add the @Doc parameter.
-            command.Parameters.AddWithValue("Doc", stream.ToArray());
+		// Get the file name from the input path
+		string fileName = Path.GetFileName(input);
 
-            // Write the document to the database.
-            command.ExecuteNonQuery();
-        }
+		// Define the SQL command string to insert the document into the database
+		string commandString = "INSERT INTO Documents (FileName, FileContent) VALUES('" + fileName + "', @Doc)";
 
-        // Read document from database 
-        public static Document ReadFromDatabase(string fileName, OleDbConnection mConnection)
-        {
-            // Create the SQL command.
-            string commandString = "SELECT * FROM Documents WHERE FileName='" + fileName + "'";
-            OleDbCommand command = new OleDbCommand(commandString, mConnection);
+		// Create an OleDbCommand object with the command string and connection
+		OleDbCommand command = new OleDbCommand(commandString, connection);
 
-            // Create the data adapter.
-            OleDbDataAdapter adapter = new OleDbDataAdapter(command);
+		// Set the parameter value for the document content using the MemoryStream
+		command.Parameters.AddWithValue("Doc", stream.ToArray());
 
-            // Fill the results from the database into a DataTable.
-            DataTable dataTable = new DataTable();
-            adapter.Fill(dataTable);
+		// Execute the SQL command to store the document in the database
+		command.ExecuteNonQuery();
+		}
 
-            // Check whether there was a matching record found from the database and throw an exception if no record was found.
-            if (dataTable.Rows.Count == 0)
-                throw new ArgumentException(string.Format("Could not find any record matching the document \"{0}\" in the database.", fileName));
+		// Implementation of the ReadFromDatabase method
+		public static Document ReadFromDatabase(string fileName, OleDbConnection mConnection)
+		{
+			// Define the SQL command string to select the document from the database
+			string commandString = "SELECT * FROM Documents WHERE FileName='" + fileName + "'";
 
-            // The document is stored in byte form in the FileContent column.
-            // Retrieve these bytes of the first matching record to a new buffer.
-            byte[] buffer = (byte[])dataTable.Rows[0]["FileContent"];
+		// Create an OleDbCommand object with the command string and connection
+		OleDbCommand command = new OleDbCommand(commandString, mConnection);
 
-            // Wrap the bytes from the buffer into a new MemoryStream object.
-            MemoryStream newStream = new MemoryStream(buffer);
+		// Create an OleDbDataAdapter object with the command
+		OleDbDataAdapter adapter = new OleDbDataAdapter(command);
 
-            // Read the document from the stream.
-            Document doc = new Document(newStream);
+		// Create a DataTable to store the retrieved data
+		DataTable dataTable = new DataTable();
 
-            // Return the retrieved document.
-            return doc;
-        }
+		// Fill the DataTable with the data from the database
+		adapter.Fill(dataTable);
 
-        // Delete document from database 
-        public static void DeleteFromDatabase(string fileName, OleDbConnection mConnection)
-        {
-            // Create the SQL command.
-            string commandString = "DELETE * FROM Documents WHERE FileName='" + fileName + "'";
-            OleDbCommand command = new OleDbCommand(commandString, mConnection);
+		// Check if any record matching the document is found in the DataTable
+		if (dataTable.Rows.Count == 0)
+			throw new ArgumentException(string.Format("Could not find any record matching the document \"{0}\" in the database.", fileName));
 
-            // Delete the record.
-            command.ExecuteNonQuery();
+		// Get the file content from the first row of the DataTable
+		byte[] buffer = (byte[])dataTable.Rows[0]["FileContent"];
 
-        }
+		// Create a MemoryStream from the file content
+		MemoryStream newStream = new MemoryStream(buffer);
+
+		// Create a Document object from the MemoryStream
+		Document doc = new Document(newStream);
+
+		// Return the Document object
+		return doc;
+		}
+
+		// Implementation of the DeleteFromDatabase method
+		public static void DeleteFromDatabase(string fileName, OleDbConnection mConnection)
+		{
+			// Define the SQL command string to delete the document from the database
+			string commandString = "DELETE * FROM Documents WHERE FileName='" + fileName + "'";
+
+		// Create an OleDbCommand object with the command string and connection
+		OleDbCommand command = new OleDbCommand(commandString, mConnection);
+
+		// Execute the SQL command to delete the document from the database
+		command.ExecuteNonQuery();
+		}
         private void WordDocViewer(string fileName)
         {
             try

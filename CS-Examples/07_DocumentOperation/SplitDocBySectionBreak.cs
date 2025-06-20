@@ -19,24 +19,33 @@ namespace SplitDocBySectionBreak
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_4.docx");
+			// Load a Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_4.docx");
 
-            //Define another new word document object.
-            Document newWord;
+			// Declare a new Document object
+			Document newWord;
 
-            //Split a Word document into multiple documents by section break.
-            for (int i = 0; i < document.Sections.Count; i++)
-            {
-                String result = String.Format("Result-SplitWordFileBySectionBreak_{0}.docx", i);
-                newWord = new Document();
-                newWord.Sections.Add(document.Sections[i].Clone());
+			// Iterate through each section in the document
+			for (int i = 0; i < document.Sections.Count; i++)
+			{
+				// Specify the file name for the result document using the section index
+				String result = String.Format("Result-SplitWordFileBySectionBreak_{0}.docx", i);
 
-                //Save to file.
-                newWord.SaveToFile(result);
+				// Create a new instance of the Document class to hold the split section
+				newWord = new Document();
+
+				// Clone the section at the current index and add it to the new document
+				newWord.Sections.Add(document.Sections[i].Clone());
+
+				// Save the new document with the split section to a file
+				newWord.SaveToFile(result);
+
+				// Dispose of the original and new document objects to release resources
+				document.Dispose();
+				newWord.Dispose();
 
                 //Launch the MS Word file.
                 WordDocViewer(result);

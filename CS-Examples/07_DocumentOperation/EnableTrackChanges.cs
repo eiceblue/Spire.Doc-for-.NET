@@ -19,19 +19,23 @@ namespace EnableTrackChanges
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from the specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Enable the track changes.
-            document.TrackChanges = true;
+			// Enable tracking changes in the document.
+			document.TrackChanges = true;
 
-            String result = "Result-EnableTrackChanges.docx";
+			// Specify the output file name for the modified document.
+			String result = "Result-EnableTrackChanges.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the document with enabled track changes to the specified file format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the Document object to free up resources.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

@@ -18,20 +18,31 @@ namespace DeleteTableFromTextBox
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\TextBoxTable.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+           
+			// Specify the input file path
+			string input = @"..\..\..\..\..\..\Data\TextBoxTable.docx";
 
-            //Get the first textbox
-            Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+			// Create a new Document object
+			Document doc = new Document();
 
-            //Remove the first table from the textbox
-            textbox.Body.Tables.RemoveAt(0);
+			// Load a Word document from the specified input file
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "DeleteTableFromTextBox.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Access the first text box in the document
+			Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+
+			// Remove the table inside the text box
+			textbox.Body.Tables.RemoveAt(0);
+
+			// Specify the output file name
+			string output = "DeleteTableFromTextBox.docx";
+
+			// Save the modified document to a new file
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document object to free up resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

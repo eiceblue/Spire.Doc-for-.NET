@@ -19,19 +19,24 @@ namespace RemoveImageWatermark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+     
+			// Create a new document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveImageWatermark.docx");
+			// Load the document from a file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveImageWatermark.docx");
 
-            //Set the watermark as null to remove the text and image watermark.
-            document.Watermark = null;
+			// Remove the watermark from the document
+			document.Watermark = null;
 
-            String result = "Result-RemoveImageWatermark.docx";
+			// Specify the output file name
+			String result = "Result-RemoveImageWatermark.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to a new file in Docx2013 format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

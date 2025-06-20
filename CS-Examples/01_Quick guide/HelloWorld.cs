@@ -14,20 +14,23 @@ namespace HelloWorld
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+            // Create a new Document object
             Document document = new Document();
 
-            //Create a new section
+            // Add a new Section to the document
             Section section = document.AddSection();
 
-            //Create a new paragraph
+            // Add a new Paragraph to the section
             Paragraph paragraph = section.AddParagraph();
 
-            //Append Text
+            // Add text content to the paragraph
             paragraph.AppendText("Hello World!");
 
-            //Save doc file.
-            document.SaveToFile("Sample.docx",FileFormat.Docx);
+            // Save the document to a file named "Sample.docx" in Docx format
+            document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+            // Dispose of the document object and release any associated resources
+            document.Dispose();
 
             //Launching the Word file.
             WordDocViewer("Sample.docx");

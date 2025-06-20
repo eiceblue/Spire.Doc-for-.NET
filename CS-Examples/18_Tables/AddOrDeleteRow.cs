@@ -20,30 +20,48 @@ namespace AddOrDeleteRow
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
-            //Load file
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
+			Document document = new Document();
 
-            //Delete the seventh row
-            table.Rows.RemoveAt(7);
+			//Load the file from disk
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
 
-            //Add a row and insert it into specific position
-            TableRow row = new TableRow(document);
-            for (int i = 0; i < table.Rows[0].Cells.Count;i++ )
-            {
-                TableCell tc = row.AddCell();
-                Paragraph paragraph = tc.AddParagraph();
+			//Get the first section
+			Section section = document.Sections[0];
+
+			//Get the first table
+			Table table = section.Tables[0] as Table;
+
+			//Delete the eighth row
+			table.Rows.RemoveAt(7);
+
+			//Add a row and insert it into specific position
+			TableRow row = new TableRow(document);
+			for (int i = 0; i < table.Rows[0].Cells.Count; i++)
+			{
+				//Add a cell
+				TableCell tc = row.AddCell();
+
+				//Add a paragraph for the cell
+				Paragraph paragraph = tc.AddParagraph();
+
+				//Set horizontal alignment for the paragraph
                 paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-                paragraph.AppendText("Added");
-            }
-            table.Rows.Insert(2,row);
-            //Add a row at the end of table
-            table.AddRow();
 
-            //Save to file and launch it
-            document.SaveToFile("AddDeleteRow.docx", FileFormat.Docx);
+				//Append text
+				paragraph.AppendText("Added");
+			}
+
+			//Insert the new row
+			table.Rows.Insert(2, row);
+
+			//Add a row at the end of table
+			table.AddRow();
+
+			//Save to file and launch it
+			document.SaveToFile("AddDeleteRow.docx", FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
             FileViewer("AddDeleteRow.docx");
         }
         private void FileViewer(string fileName)

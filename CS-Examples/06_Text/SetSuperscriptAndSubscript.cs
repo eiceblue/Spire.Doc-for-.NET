@@ -15,43 +15,55 @@ namespace SetSuperscriptAndSubscript
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+            // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Create a new section
-            Section section = document.AddSection();
+			// Add a section to the document.
+			Section section = document.AddSection();
 
-            Paragraph paragraph = section.AddParagraph();
-            paragraph.AppendText("E = mc");
-            TextRange range1 = paragraph.AppendText("2");
+			// Add a paragraph to the section.
+			Paragraph paragraph = section.AddParagraph();
 
-            //Set supperscript
-            range1.CharacterFormat.SubSuperScript = SubSuperScript.SuperScript;
+			// Append the text "E = mc" to the paragraph.
+			paragraph.AppendText("E = mc");
 
-            paragraph.AppendBreak(BreakType.LineBreak);
-            paragraph.AppendText("F");
-            TextRange range2 = paragraph.AppendText("n");
+			// Append the text "2" as a superscript to the paragraph.
+			TextRange range1 = paragraph.AppendText("2");
+			range1.CharacterFormat.SubSuperScript = SubSuperScript.SuperScript;
 
-            //Set subscript
-            range2.CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+			// Insert a line break in the paragraph.
+			paragraph.AppendBreak(BreakType.LineBreak);
 
-            paragraph.AppendText(" = F");
-            paragraph.AppendText("n-1").CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
-            paragraph.AppendText(" + F");
-            paragraph.AppendText("n-2").CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+			// Append the text "F" to the paragraph.
+			paragraph.AppendText("F");
 
-            //Set font size
-            foreach (var i in paragraph.Items)
-            {
-                if (i is TextRange)
-                {
-                    (i as TextRange).CharacterFormat.FontSize = 36;
-                }
-            }
+			// Append the text "n" as a subscript to the paragraph.
+			TextRange range2 = paragraph.AppendText("n");
+			range2.CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
 
-            //Save the file
-            string output = "SetSuperscriptAndSubscript.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+			// Append the text " = Fn-1 + Fn-2" with specific subscripts to the paragraph.
+			paragraph.AppendText(" = F");
+			paragraph.AppendText("n-1").CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+			paragraph.AppendText(" + F");
+			paragraph.AppendText("n-2").CharacterFormat.SubSuperScript = SubSuperScript.SubScript;
+
+			// Set the font size to 36 for all TextRange items in the paragraph.
+			foreach (var i in paragraph.Items)
+			{
+				if (i is TextRange)
+				{
+					(i as TextRange).CharacterFormat.FontSize = 36;
+				}
+			}
+
+			// Specify the output file name.
+			string output = "SetSuperscriptAndSubscript.docx";
+
+			// Save the document to a file with the specified output file name and format (Docx).
+			document.SaveToFile(output, FileFormat.Docx);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //Launching the file
             WordDocViewer(output);

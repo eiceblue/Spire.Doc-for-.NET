@@ -17,10 +17,21 @@ namespace AddDigitalSignature
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\AddDigitalSignature.doc");
-            string result = "AddDigitalSignature_result.docx";
-            doc.SaveToFile(result, FileFormat.Docx, @"..\..\..\..\..\..\Data\gary.pfx", "e-iceblue");
+		   // Create a new Document object
+			Document doc = new Document();
+
+			// Load the document from the specified file path
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\AddDigitalSignature.doc");
+
+			// Specify the output file path for the signed document with digital signature
+			string result = "AddDigitalSignature_result.docx";
+
+			// Save the document to the output file path in DOCX format with the specified certificate and password
+			doc.SaveToFile(result, FileFormat.Docx, @"..\..\..\..\..\..\Data\gary.pfx", "e-iceblue");
+
+			// Dispose the document object to free up resources
+			doc.Dispose();
+
             WordDocViewer(result);
         }
         private void WordDocViewer(string fileName)

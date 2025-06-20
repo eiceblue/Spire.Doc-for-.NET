@@ -19,19 +19,27 @@ namespace PrintWithoutDialog
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\Sample.docx";
+          
+            // Specify the input file path
+            String input = @"..\..\..\..\..\..\Data\Sample.docx";
+
+            // Create a new instance of Document
             Document doc = new Document();
+
+            // Load the Word document from the specified input file
             doc.LoadFromFile(input);
 
-            //Get the PrintDocument object
+            // Get the PrintDocument associated with the document
             PrintDocument printDoc = doc.PrintDocument;
 
-            //Add the property PrintController to hide the print processing dialog
+            // Set the print controller to StandardPrintController for silent printing
             printDoc.PrintController = new StandardPrintController();
 
-            //Print the word document
+            // Print the document
             printDoc.Print();
+
+            // Dispose of the document object when finished using it
+            doc.Dispose();
         }
     }
 }

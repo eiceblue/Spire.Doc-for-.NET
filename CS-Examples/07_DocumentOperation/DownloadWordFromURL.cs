@@ -21,22 +21,27 @@ namespace DownloadWordFromURL
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object
+			Document document = new Document();
 
-            //Initialize a new instance of WebClient class.
-            WebClient webClient = new WebClient();
+			// Create a new instance of WebClient
+			WebClient webClient = new WebClient();
 
-            //Download a Word document from URL.
-            using (MemoryStream ms = new MemoryStream(webClient.DownloadData("http://www.e-iceblue.com/images/test.docx")))
-            {
-                document.LoadFromStream(ms, FileFormat.Docx);
-            }
+			// Download the Word file from the specified URL and store it in a MemoryStream
+			using (MemoryStream ms = new MemoryStream(webClient.DownloadData("http://www.e-iceblue.com/images/test.docx")))
+			{
+				// Load the document from the MemoryStream in Docx format
+				document.LoadFromStream(ms, FileFormat.Docx);
+			}
 
-            String result = "Result-DownloadWordFileFromURL.docx";
+			// Specify the file name for the downloaded result
+			String result = "Result-DownloadWordFileFromURL.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the downloaded document to the specified file path in Docx2013 format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the Document object to release resources
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

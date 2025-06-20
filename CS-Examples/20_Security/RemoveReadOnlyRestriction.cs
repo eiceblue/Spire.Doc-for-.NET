@@ -17,19 +17,24 @@ namespace RemoveReadOnlyRestriction
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+  
+			// Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveReadOnlyRestriction.docx");
+			// Load the Word document file from the specified path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveReadOnlyRestriction.docx");
 
-            //Remove ReadOnly Restriction.
-            document.Protect(ProtectionType.NoProtection);
+			// Remove the read-only restriction from the document
+			document.Protect(ProtectionType.NoProtection);
 
-            String result = "RemoveReadOnlyRestriction_out.docx";
+			// Specify the output file name for the modified document
+			String result = "RemoveReadOnlyRestriction_out.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to the specified file format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the Document object to free resources
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

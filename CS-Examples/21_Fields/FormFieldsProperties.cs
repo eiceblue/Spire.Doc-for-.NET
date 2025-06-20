@@ -20,24 +20,33 @@ namespace FormFieldsProperties
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
+           
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
 
-            //Get the first section
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            //Get FormField by index
-            FormField formField = section.Body.FormFields[1];
+			// Get the second form field in the section
+			FormField formField = section.Body.FormFields[1];
 
-            if (formField.Type == FieldType.FieldFormTextInput)
-            {
-                formField.Text = "My name is " + formField.Name;
-                formField.CharacterFormat.TextColor = Color.Red;
-                formField.CharacterFormat.Italic = true;
-            }
+			// Check if the form field is a text input field
+			if (formField.Type == FieldType.FieldFormTextInput)
+			{
+				// Set the text of the form field
+				formField.Text = "My name is " + formField.Name;
 
+				// Customize the text formatting of the form field
+				formField.CharacterFormat.TextColor = Color.Red;
+				formField.CharacterFormat.Italic = true;
+			}
 
-            document.SaveToFile("result.docx", FileFormat.Docx);
+			// Save the modified document to a file
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			// Dispose the document object
+			document.Dispose();
+			
             //Launch result file
             WordDocViewer("result.docx");
 

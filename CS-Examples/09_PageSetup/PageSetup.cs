@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using Spire.Doc;
@@ -16,24 +17,38 @@ namespace PageSetup
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
-            Section section = document.AddSection();
+            // Create a new Document object.
+			Document document = new Document();
 
-            //The unit of all measures below is point, 1point = 0.3528 mm.
-            section.PageSetup.PageSize = PageSize.A4;
-            section.PageSetup.Margins.Top = 72f;
-            section.PageSetup.Margins.Bottom = 72f;
-            section.PageSetup.Margins.Left = 89.85f;
-            section.PageSetup.Margins.Right = 89.85f;
+			// Add a new section to the document.
+			Section section = document.AddSection();
 
-            //Insert header and footer.
-            InsertHeaderAndFooter(section);
+			// Set the page size of the section to A4.
+			section.PageSetup.PageSize = PageSize.A4;
 
-            addTable(section);
+			// Set the top margin of the section to 72 points (1 inch).
+			section.PageSetup.Margins.Top = 72f;
 
-            //Save doc file.
-            document.SaveToFile("Sample.doc",FileFormat.Doc);
+			// Set the bottom margin of the section to 72 points (1 inch).
+			section.PageSetup.Margins.Bottom = 72f;
+
+			// Set the left margin of the section to 89.85 points (approximately 1.27 cm).
+			section.PageSetup.Margins.Left = 89.85f;
+
+			// Set the right margin of the section to 89.85 points (approximately 1.27 cm).
+			section.PageSetup.Margins.Right = 89.85f;
+
+			// Call a method to insert headers and footers in the section.
+			InsertHeaderAndFooter(section);
+
+			// Call a method to add a table to the section.
+			addTable(section);
+
+			// Save the document to a file in the Doc format (older Word format).
+			document.SaveToFile("Sample.doc", FileFormat.Doc);
+
+			// Release the resources associated with the document.
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Sample.doc");
@@ -42,9 +57,12 @@ namespace PageSetup
         }
 
         private void addTable(Section section)
-        {
-            String[] header = { "Name", "Capital", "Continent", "Area", "Population" };
-            String[][] data =
+		{
+			// Array for table header.
+			String[] header = { "Name", "Capital", "Continent", "Area", "Population" };
+
+			// 2D Array for table data.
+			String[][] data =
                 {
                     new String[]{"Argentina", "Buenos Aires", "South America", "2777815", "32300003"},
                     new String[]{"Bolivia", "La Paz", "South", "1098575", "7300000"},
@@ -65,95 +83,94 @@ namespace PageSetup
                     new String[]{"Uruguay", "Montevideo", "South", "176140", "3002000"},
                     new String[]{"Venezuela", "Caracas", "South", "912047", "19700000"}
                 };
-            Spire.Doc.Table table = section.AddTable(true);
-            table.ResetCells(data.Length + 1, header.Length);           
+			
+			// Add a table to the section and enable autofit.
+			Spire.Doc.Table table = section.AddTable(true);
+			
+			// Set the number of rows and columns in the table.
+			table.ResetCells(data.Length + 1, header.Length);
 
-            // ***************** First Row *************************
-            TableRow row = table.Rows[0];
-            row.IsHeader = true;
-            row.Height = 20;
-            row.HeightType = TableRowHeightType.Exactly;
-            row.RowFormat.BackColor = Color.Gray;
+			// First Row (Table Header)
+			TableRow row = table.Rows[0];
+			row.IsHeader = true;
+			row.Height = 20;
+			row.HeightType = TableRowHeightType.Exactly;
+            for (int i = 0; i < row.Cells.Count; i++)
+            {
+                row.Cells[i].CellFormat.Shading.BackgroundPatternColor = Color.Gray;
+            }
+
+            // Populate the header cells with text and formatting.
             for (int i = 0; i < header.Length; i++)
-            {
-                row.Cells[i].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
-                Paragraph p = row.Cells[i].AddParagraph();
-                p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-                TextRange txtRange = p.AppendText(header[i]);
-                txtRange.CharacterFormat.Bold = true;
-            }
+			{
+				row.Cells[i].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
+				Paragraph p = row.Cells[i].AddParagraph();
+				p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+				TextRange txtRange = p.AppendText(header[i]);
+				txtRange.CharacterFormat.Bold = true;
+			}
 
-            for (int r = 0; r < data.Length; r++)
-            {
-                TableRow dataRow = table.Rows[r + 1];
-                dataRow.Height = 20;
-                dataRow.HeightType = TableRowHeightType.Exactly;
-                dataRow.RowFormat.BackColor = Color.Empty;
-                for (int c = 0; c < data[r].Length; c++)
+			// Data Rows
+			for (int r = 0; r < data.Length; r++)
+			{
+				TableRow dataRow = table.Rows[r + 1];
+				dataRow.Height = 20;
+				dataRow.HeightType = TableRowHeightType.Exactly;
+                for (int i = 0; i < dataRow.Cells.Count; i++)
                 {
-                    dataRow.Cells[c].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
-                    dataRow.Cells[c].AddParagraph().AppendText(data[r][c]);
+                    dataRow.Cells[i].CellFormat.Shading.BackgroundPatternColor = Color.Empty;
                 }
-            }
-        }
 
-        private void InsertHeaderAndFooter(Section section)
-        {
-            HeaderFooter header = section.HeadersFooters.Header;
-            HeaderFooter footer = section.HeadersFooters.Footer;
+                // Populate the data cells with text.
+                for (int c = 0; c < data[r].Length; c++)
+				{
+					dataRow.Cells[c].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
+					dataRow.Cells[c].AddParagraph().AppendText(data[r][c]);
+				}
+			}
+		}
 
-            //Insert picture and text to header.
-            Paragraph headerParagraph = header.AddParagraph();
-            DocPicture headerPicture
-                = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
+		private void InsertHeaderAndFooter(Section section)
+		{
+			// Get the header and footer objects from the section.
+			HeaderFooter header = section.HeadersFooters.Header;
+			HeaderFooter footer = section.HeadersFooters.Footer;
 
-            //Header text.
-            TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
-            text.CharacterFormat.FontName = "Arial";
-            text.CharacterFormat.FontSize = 10;
-            text.CharacterFormat.Italic = true;
-            headerParagraph.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
+			// Add a paragraph to the header and insert an image and text.
+			Paragraph headerParagraph = header.AddParagraph();
+			DocPicture headerPicture = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
+			TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
+			text.CharacterFormat.FontName = "Arial";
+			text.CharacterFormat.FontSize = 10;
+			text.CharacterFormat.Italic = true;
+            headerParagraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
+            headerParagraph.Format.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+			headerParagraph.Format.Borders.Bottom.Space = 0.05F;
 
-            //Border.
-            headerParagraph.Format.Borders.Bottom.BorderType
-                = Spire.Doc.Documents.BorderStyle.Single;
-            headerParagraph.Format.Borders.Bottom.Space = 0.05F;
+			// Set picture properties for the header image.
+			headerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+			headerPicture.HorizontalOrigin = HorizontalOrigin.Page;
+			headerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
+			headerPicture.VerticalOrigin = VerticalOrigin.Page;
+			headerPicture.VerticalAlignment = ShapeVerticalAlignment.Top;
 
+			// Add a paragraph to the footer and insert an image and fields for page numbering.
+			Paragraph footerParagraph = footer.AddParagraph();
+			DocPicture footerPicture = footerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Footer.png"));
+			footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+			footerPicture.HorizontalOrigin = HorizontalOrigin.Page;
+			footerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
+			footerPicture.VerticalOrigin = VerticalOrigin.Page;
+			footerPicture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
 
-            //Header picture layout - text wrapping.
-            headerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
-
-            //Header picture layout - position.
-            headerPicture.HorizontalOrigin = HorizontalOrigin.Page;
-            headerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
-            headerPicture.VerticalOrigin = VerticalOrigin.Page;
-            headerPicture.VerticalAlignment = ShapeVerticalAlignment.Top;
-
-            //Insert picture to footer.
-            Paragraph footerParagraph = footer.AddParagraph();
-            DocPicture footerPicture
-                = footerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Footer.png"));
-
-            //Footer picture layout.
-            footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
-            footerPicture.HorizontalOrigin = HorizontalOrigin.Page;
-            footerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
-            footerPicture.VerticalOrigin = VerticalOrigin.Page;
-            footerPicture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
-
-            //Insert page number.
-            footerParagraph.AppendField("page number", FieldType.FieldPage);
-            footerParagraph.AppendText(" of ");
-            footerParagraph.AppendField("number of pages", FieldType.FieldNumPages);
-            footerParagraph.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
-
-            //Border.
-            footerParagraph.Format.Borders.Top.BorderType
-                = Spire.Doc.Documents.BorderStyle.Single;
-            footerParagraph.Format.Borders.Top.Space = 0.05F;
-        }
+			// Insert fields for page numbering.
+			footerParagraph.AppendField("page number", FieldType.FieldPage);
+			footerParagraph.AppendText(" of ");
+			footerParagraph.AppendField("number of pages", FieldType.FieldNumPages);
+            footerParagraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
+            footerParagraph.Format.Borders.Top.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+			footerParagraph.Format.Borders.Top.Space = 0.05F;
+		}
 
         private void WordDocViewer(string fileName)
         {

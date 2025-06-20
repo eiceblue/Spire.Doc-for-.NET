@@ -18,10 +18,20 @@ namespace ToPostScript
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
-            string result = "ToPostScript.ps";
-            doc.SaveToFile(result, FileFormat.PostScript);
+            //Create word document
+			Document doc = new Document();
+
+			//Load the file from disk.
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+			string result = "ToPostScript.ps";
+
+			//Save to PS file
+			doc.SaveToFile(result, FileFormat.PostScript);
+
+			//Dispose the document
+			doc.Dispose();
+			
             WordDocViewer(result);
         }
         private void WordDocViewer(string fileName)

@@ -14,13 +14,18 @@ namespace ImageWaterMark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document as template.
-            Document document = new Document(@"..\..\..\..\..\..\Data\Template.docx");
-			
-			//Insert the imgae watermark.
-            InsertImageWatermark(document);
-            //Save as docx file.
-            document.SaveToFile("Sample.docx", FileFormat.Docx);
+           
+			// Load the document from a template file
+			Document document = new Document(@"..\..\..\..\..\..\Data\Template.docx");
+
+			// Insert image watermark
+			InsertImageWatermark(document);
+
+			// Save the modified document to a new file
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");
@@ -28,14 +33,18 @@ namespace ImageWaterMark
 
         }
 
-        private void InsertImageWatermark(Document document)
-        {
-            PictureWatermark picture = new PictureWatermark();
-            picture.Picture = System.Drawing.Image.FromFile(@"..\..\..\..\..\..\Data\ImageWatermark.png");
-            picture.Scaling = 250;
-            picture.IsWashout = false;
-            document.Watermark = picture;
-        }
+		private void InsertImageWatermark(Document document) {
+			// Create a PictureWatermark object
+			PictureWatermark picture = new PictureWatermark();
+			// Load the image for the watermark
+			picture.Picture = System.Drawing.Image.FromFile(@"..\..\..\..\..\..\Data\ImageWatermark.png");
+			// Set the scaling of the watermark
+			picture.Scaling = 250;
+			// Specify whether the watermark should be washed out
+			picture.IsWashout = false;
+			// Set the watermark for the document
+			document.Watermark = picture;
+		}
         private void WordDocViewer(string fileName)
         {
             try

@@ -20,15 +20,18 @@ namespace HtmlToXps
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
 
-            String result = "Result-HtmlToXps.xps";
+			string result = "Result-HtmlToXps.xps";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.XPS);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.XPS);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

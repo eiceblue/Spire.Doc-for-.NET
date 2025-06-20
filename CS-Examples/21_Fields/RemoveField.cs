@@ -19,21 +19,27 @@ namespace RemoveField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
+    
+			// Load the document from a specified file path
+			Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
 
-            //Get the first field
-            Field field = document.Fields[0];
+			// Get the first field in the document
+			Field field = document.Fields[0];
 
-            //Get the paragraph of the field
-            Paragraph par = field.OwnerParagraph;
-            //Get the index of the  field
-            int index = par.ChildObjects.IndexOf(field);
-            //Remove if field via index
-            par.ChildObjects.RemoveAt(index);
+			// Get the parent paragraph of the field
+			Paragraph par = field.OwnerParagraph;
 
-            //Save doc file
-            document.SaveToFile("result.docx",FileFormat.Docx);
+			// Get the index of the field within the child objects of the paragraph
+			int index = par.ChildObjects.IndexOf(field);
+
+			// Remove the field from the paragraph
+			par.ChildObjects.RemoveAt(index);
+
+			// Save the modified document to a file with the specified name and format
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
 
             //Launch the Word file
             WordDocViewer("result.docx");

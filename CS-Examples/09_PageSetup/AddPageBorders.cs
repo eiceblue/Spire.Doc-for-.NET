@@ -19,27 +19,35 @@ namespace AddPageBorders
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Get the first section.
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            //Add page borders with special style and color.
+			// Set the border type for the page setup of the section to DoubleWave
             section.PageSetup.Borders.BorderType = Spire.Doc.Documents.BorderStyle.DoubleWave;
-            section.PageSetup.Borders.Color = Color.LightSeaGreen;
 
-            //Set the space between border and text.
-            section.PageSetup.Borders.Left.Space = 50;
-            section.PageSetup.Borders.Right.Space = 50;
+			// Set the color of the borders to LightSeaGreen
+			section.PageSetup.Borders.Color = Color.LightSeaGreen;
 
-            String result = "Result-AddPageBorders.docx";
+			// Set the left spacing for the borders of the page setup
+			section.PageSetup.Borders.Left.Space = 50;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Set the right spacing for the borders of the page setup
+			section.PageSetup.Borders.Right.Space = 50;
+
+			// Specify the file name for the resulting document with page borders
+			string result = "Result-AddPageBorders.docx";
+
+			// Save the modified document to the specified file path in the DOCX format (version: Word 2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

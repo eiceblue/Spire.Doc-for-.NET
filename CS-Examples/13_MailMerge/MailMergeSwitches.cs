@@ -20,18 +20,29 @@ namespace MailMergeSwitches
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\Data\MailMergeSwitches.docx";
+            string input = @"..\..\..\..\..\..\Data\MailMergeSwitches.docx";
 
-            Document doc = new Document();
-            //Load a mail merge template file
-            doc.LoadFromFile(input);
+			//Create a Word document
+			Document doc = new Document();
 
-            string[] fieldName = new string[] { "XX_Name" };
-            string[] fieldValue = new string[] { "Jason Tang" };
+			//Load a mail merge template file
+			doc.LoadFromFile(input);
 
-            doc.MailMerge.Execute(fieldName, fieldValue);
-            string result = "MailMergeSwitches_out.docx";
-            doc.SaveToFile(result, FileFormat.Docx);
+			//Define the field names for the mail merge
+			string[] fieldName = new string[] { "XX_Name" };
+
+			//Define the field values for the mail merge
+			string[] fieldValue = new string[] { "Jason Tang" };
+
+			//Execute the mail merge using the field names and values
+			doc.MailMerge.Execute(fieldName, fieldValue);
+
+			//Save to file
+			string result = "MailMergeSwitches_out.docx";
+			doc.SaveToFile(result, FileFormat.Docx);
+
+			// Dispose the document object
+			doc.Dispose();
             WordViewer(result);
         }      
         private void WordViewer(string fileName)

@@ -14,20 +14,38 @@ namespace DocumentProperty
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a blank Word document as template.
+            // Create a new Document object and load the document from the specified file path
             Document document = new Document(@"..\..\..\..\..\..\Data\Summary_of_Science.doc");
 
-            document.BuiltinDocumentProperties.Title = "Document Demo Document";
-            document.BuiltinDocumentProperties.Subject = "demo";
-            document.BuiltinDocumentProperties.Author = "James";
-            document.BuiltinDocumentProperties.Company = "e-iceblue";
-            document.BuiltinDocumentProperties.Manager = "Jakson";
-            document.BuiltinDocumentProperties.Category = "Doc Demos";
-            document.BuiltinDocumentProperties.Keywords = "Document, Property, Demo";
-            document.BuiltinDocumentProperties.Comments = "This document is just a demo.";
+            // Set the Title property of the document
+			document.BuiltinDocumentProperties.Title = "Document Demo Document";
 
-            //Save as docx file.
-            document.SaveToFile("Sample.docx",FileFormat.Docx);
+			// Set the Subject property of the document
+			document.BuiltinDocumentProperties.Subject = "demo";
+
+			// Set the Author property of the document
+			document.BuiltinDocumentProperties.Author = "James";
+
+			// Set the Company property of the document
+			document.BuiltinDocumentProperties.Company = "e-iceblue";
+
+			// Set the Manager property of the document
+			document.BuiltinDocumentProperties.Manager = "Jakson";
+
+			// Set the Category property of the document
+			document.BuiltinDocumentProperties.Category = "Doc Demos";
+
+			// Set the Keywords property of the document
+			document.BuiltinDocumentProperties.Keywords = "Document, Property, Demo";
+
+			// Set the Comments property of the document
+			document.BuiltinDocumentProperties.Comments = "This document is just a demo.";
+
+			// Save the modified document to the specified file path in Docx format
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Dispose of the Document object to release resources
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");

@@ -19,16 +19,19 @@ namespace XMLToWord
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_XmlFile.xml", FileFormat.Xml);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_XmlFile.xml", FileFormat.Xml);
 
-            String result = "Result-XMLToWord.docx";
+			string result = "Result-XMLToWord.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

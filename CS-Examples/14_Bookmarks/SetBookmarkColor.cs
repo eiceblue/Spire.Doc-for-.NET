@@ -18,32 +18,40 @@ namespace SetBookmarkColor
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\BookmarkTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Create an instance of ToPdfParameterList
-            ToPdfParameterList toPdf = new ToPdfParameterList();
+			//Create a word document
+			Document doc = new Document();
 
-            //Set CreateWordBookmarks to true to use word bookmarks when create the bookmarks
-            toPdf.CreateWordBookmarks = true;
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Set the title of word bookmarks
-            toPdf.WordBookmarksTitle = "Changed bookmark";
+			//Create an instance of ToPdfParameterList
+			ToPdfParameterList toPdf = new ToPdfParameterList();
 
-            //Set the text color of word bookmarks
-            toPdf.WordBookmarksColor = Color.Gray;
+			//Set CreateWordBookmarks to true to use word bookmarks when create the bookmarks
+			toPdf.CreateWordBookmarks = true;
 
-            //Call the event document_BookmarkLayout when drawing a bookmark
-            doc.BookmarkLayout += new Spire.Doc.Documents.Rendering.BookmarkLevelHandler(document_BookmarkLayout);
+			//Set the title of word bookmarks
+			toPdf.WordBookmarksTitle = "Changed bookmark";
 
-            //Save and launch document
-            string output = "SetBookmarkColor.pdf";
-            doc.SaveToFile(output, toPdf);
+			//Set the text color of word bookmarks
+			toPdf.WordBookmarksColor = Color.Gray;
+
+			//Call the event document_BookmarkLayout when drawing a bookmark
+			doc.BookmarkLayout += new Spire.Doc.Documents.Rendering.BookmarkLevelHandler(document_BookmarkLayout);
+
+			//Save the document
+			string output = "SetBookmarkColor.pdf";
+			doc.SaveToFile(output, toPdf);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
-        static void document_BookmarkLayout(object sender, Spire.Doc.Documents.Rendering.BookmarkLevelEventArgs args)
+		//Set bookmark layout 
+        void document_BookmarkLayout(object sender, Spire.Doc.Documents.Rendering.BookmarkLevelEventArgs args)
         {
             //set the different color for different levels of bookmarks
             if (args.BookmarkLevel.Level == 2)

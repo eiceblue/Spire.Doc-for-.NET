@@ -20,33 +20,50 @@ namespace CreateVerticalTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
 
-            //Add a new section.
-            Section section = document.AddSection();
+			// Create a new Document object
+			Document document = new Document();
 
-            //Add a table with rows and columns and set the text for the table.
-            Table table = section.AddTable();
-            table.ResetCells(1, 1);
-            TableCell cell = table.Rows[0].Cells[0];
-            table.Rows[0].Height = 150;
-            cell.AddParagraph().AppendText("Draft copy in vertical style");
+			// Add a new section to the document
+			Section section = document.AddSection();
 
-            //Set the TextDirection for the table to RightToLeftRotated.
-            cell.CellFormat.TextDirection = TextDirection.RightToLeftRotated;
+			// Add a table to the section
+			Table table = section.AddTable();
+			table.ResetCells(1, 1);
 
-            //Set the table format.
-            table.TableFormat.WrapTextAround = true;
-            table.TableFormat.Positioning.VertRelationTo = VerticalRelation.Page;
-            table.TableFormat.Positioning.HorizRelationTo = HorizontalRelation.Page;
-            table.TableFormat.Positioning.HorizPosition = section.PageSetup.PageSize.Width - table.Width;
-            table.TableFormat.Positioning.VertPosition = 200;
+			// Get the first cell of the table
+			TableCell cell = table.Rows[0].Cells[0];
 
-            String result = "Result-CreateVerticalTable.docx";
+			// Set the height of the table row
+			table.Rows[0].Height = 150;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Add a paragraph with text to the cell
+			cell.AddParagraph().AppendText("Draft copy in vertical style");
+
+			// Set the text direction of the cell to right-to-left rotated
+			cell.CellFormat.TextDirection = TextDirection.RightToLeftRotated;
+
+			// Enable wrap text around the table
+			table.Format.WrapTextAround = true;
+
+			// Set the vertical position of the table relative to the page
+			table.Format.Positioning.VertRelationTo = VerticalRelation.Page;
+
+			// Set the horizontal position of the table relative to the page
+			table.Format.Positioning.HorizRelationTo = HorizontalRelation.Page;
+
+			// Set the horizontal position of the table
+			table.Format.Positioning.HorizPosition = section.PageSetup.PageSize.Width - table.Width;
+
+			// Set the vertical position of the table
+			table.Format.Positioning.VertPosition = 200;
+
+			// Save the document to a file in Docx2013 format
+			String result = "Result-CreateVerticalTable.docx";
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

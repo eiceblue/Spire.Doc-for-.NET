@@ -19,46 +19,58 @@ namespace ExtractImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //open document
-            Document document = new Document(@"..\..\..\..\..\..\Data\Template.docx");
+            // Create a new Document object
+			Document document = new Document(@"..\..\..\..\..\..\Data\Template.docx");
 
-            //document elements, each of them has child elements
-            Queue<ICompositeObject> nodes = new Queue<ICompositeObject>();
-            nodes.Enqueue(document);
+			// Create a queue to store composite objects
+			Queue<ICompositeObject> nodes = new Queue<ICompositeObject>();
 
-            //embedded images list.
-            IList<Image> images = new List<Image>();
+			// Enqueue the document as the initial node
+			nodes.Enqueue(document);
 
-            //traverse
-            while (nodes.Count > 0)
-            {
-                ICompositeObject node = nodes.Dequeue();
-                foreach (IDocumentObject child in node.ChildObjects)
-                {
-                    if (child is ICompositeObject)
-                    {
-                        nodes.Enqueue(child as ICompositeObject);
-                    
-                      if (child.DocumentObjectType == DocumentObjectType.Picture)
-                      {
-                        DocPicture picture = child as DocPicture;
-                        images.Add(picture.Image);
-                      }
-                    }
-                }
-            }
-            //save images
-            for (int i = 0; i < images.Count; i++)
-            {
-                String fileName = String.Format("Image-{0}.png", i);
-                images[i].Save(fileName, ImageFormat.Png);
-            }
+			// Create a list to store images
+			IList<Image> images = new List<Image>();
 
-            if (images.Count > 0)
-            {
-                //show the first image
-                System.Diagnostics.Process.Start("Image-0.png");
-            }
+			// Traverse through the composite objects in the document
+			while (nodes.Count > 0)
+			{
+				// Dequeue the next node
+				ICompositeObject node = nodes.Dequeue();
+
+				// Iterate through the child objects of the node
+				foreach (IDocumentObject child in node.ChildObjects)
+				{
+					// If the child is a composite object, enqueue it for further processing
+					if (child is ICompositeObject)
+					{
+						nodes.Enqueue(child as ICompositeObject);
+
+						// If the child is a picture, add its image to the list
+						if (child.DocumentObjectType == DocumentObjectType.Picture)
+						{
+							DocPicture picture = child as DocPicture;
+							images.Add(picture.Image);
+						}
+					}
+				}
+			}
+
+			// Save each image in the list as a PNG file
+			for (int i = 0; i < images.Count; i++)
+			{
+				string fileName = string.Format("Image-{0}.png", i);
+				images[i].Save(fileName, ImageFormat.Png);
+			}
+
+			// If there are images, open the first one
+			if (images.Count > 0)
+			{
+				// Open the first image using the default application
+				System.Diagnostics.Process.Start("Image-0.png");
+			}
+
+			// Dispose the document
+			document.Dispose();
         }
         
     }

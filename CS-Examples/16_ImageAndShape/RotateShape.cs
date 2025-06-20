@@ -15,29 +15,37 @@ namespace RotateShape
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\Shapes.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Create a word document
+			Document doc = new Document();
 
-            //Traverse the word document and set the shape rotation as 20
-            foreach (Paragraph para in section.Paragraphs)
-            {
-                foreach (DocumentObject obj in para.ChildObjects)
-                {
-                    if (obj is ShapeObject)
-                    {
-                        (obj as ShapeObject).Rotation = 20.0;
-                    }
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "RotateShape.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first section
+			Section section = doc.Sections[0];
+
+			//Traverse the word document 
+			foreach (Paragraph para in section.Paragraphs)
+			{
+				foreach (DocumentObject obj in para.ChildObjects)
+				{
+					if (obj is ShapeObject)
+					{
+						//Set the shape rotation as 20
+						(obj as ShapeObject).Rotation = 20.0;
+					}
+				}
+			}
+
+			//Save the document
+			string output = "RotateShape.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

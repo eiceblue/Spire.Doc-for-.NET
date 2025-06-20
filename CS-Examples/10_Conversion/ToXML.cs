@@ -21,12 +21,17 @@ namespace ToXML
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Summary_of_Science.doc");
-            //Save the document to a xml file.
-            document.SaveToFile("Sample.xml", FileFormat.Xml);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Summary_of_Science.doc");
 
+			//Save to a xml file.
+			document.SaveToFile("Sample.xml", FileFormat.Xml);
+
+			//Dispose the document
+			document.Dispose();
+			
             //Launch the file.
             XMLViewer("Sample.xml");
         }   

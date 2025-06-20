@@ -20,11 +20,16 @@ namespace ConvertToRtf
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\ToRtf.doc");
+			Document document = new Document();
 
-            //Save doc file.
-            document.SaveToFile("Sample.rtf", FileFormat.Rtf);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\ToRtf.doc");
+
+			//Save to RTF file.
+			document.SaveToFile("Sample.rtf", FileFormat.Rtf);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.rtf");

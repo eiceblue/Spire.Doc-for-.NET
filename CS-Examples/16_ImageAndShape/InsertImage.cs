@@ -16,42 +16,64 @@ namespace InsertImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
-            string input = @"..\..\..\..\..\..\Data\BlankTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\BlankTemplate.docx";
 
-            Section section = doc.Sections[0];
-            Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
-            paragraph.AppendText("The sample demonstrates how to insert an image into a document.");
-            paragraph.ApplyStyle(BuiltinStyle.Heading2);
-            paragraph = section.AddParagraph();
-            paragraph.AppendText("The above is a picture.");
-            //get original image 
-            Bitmap p = new Bitmap(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
+			//Create a word document
+			Document doc = new Document();
 
-            //rotate image and insert image to word document
-            p.RotateFlip(RotateFlipType.Rotate90FlipX);
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Create a picture
-            DocPicture picture = new DocPicture(doc);
-            picture.LoadImage(p);
-            //set image's position
-            picture.HorizontalPosition = 50.0F;
-            picture.VerticalPosition = 60.0F;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //set image's size
-            picture.Width = 200;
-            picture.Height = 200;
+			//Add a new section or get the first section
+			Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
 
-            //set textWrappingStyle with image;
-            picture.TextWrappingStyle = TextWrappingStyle.Through;
-            //Insert the picture at the beginning of the second paragraph
-            paragraph.ChildObjects.Insert(0,picture);
+			//Append text
+			paragraph.AppendText("The sample demonstrates how to insert an image into a document.");
 
-            //Save and launch document
-            string output = "InsertImageAtSpecifiedLocation.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Apply style
+			paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
+			//Add a new paragraph
+			paragraph = section.AddParagraph();
+
+			//Append text
+			paragraph.AppendText("The above is a picture.");
+
+			//Load an image 
+			Bitmap p = new Bitmap(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
+
+			//rotate image and insert image to word document
+			p.RotateFlip(RotateFlipType.Rotate90FlipX);
+
+			//Create a DocPicture instance
+			DocPicture picture = new DocPicture(doc);
+
+			//Load the image
+			picture.LoadImage(p);
+			//set image's position
+			picture.HorizontalPosition = 50.0F;
+			picture.VerticalPosition = 60.0F;
+
+			//set image's size
+			picture.Width = 200;
+			picture.Height = 200;
+
+			//set textWrappingStyle with image;
+			picture.TextWrappingStyle = TextWrappingStyle.Through;
+			
+			//Insert the picture at the beginning of the second paragraph
+			paragraph.ChildObjects.Insert(0, picture);
+
+			//Save the document
+			string output = "InsertImageAtSpecifiedLocation.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

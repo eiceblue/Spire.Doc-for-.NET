@@ -15,39 +15,41 @@ namespace SetCultureForField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
-            Document document = new Document();
 
-            //Create a section
-            Section section = document.AddSection();
+			// Create a new document
+			Document document = new Document();
 
-            //Add paragraph
-            Paragraph paragraph = section.AddParagraph();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //Add textRnage for paragraph
-            paragraph.AppendText("Add Date Field: ");
+			// Add a paragraph to the section
+			Paragraph paragraph = section.AddParagraph();
 
-            //Add date field1
-            Field field1 = paragraph.AppendField("Date1", FieldType.FieldDate) as Field;
-            field1.Code = @"DATE  \@" + "\"yyyy\\MM\\dd\"";
+			// Add text to the paragraph
+			paragraph.AppendText("Add Date Field: ");
 
-            //Add new paragraph
-            Paragraph newParagraph = section.AddParagraph();
+			// Append a date field to the paragraph and set its format
+			Field field1 = paragraph.AppendField("Date1", FieldType.FieldDate) as Field;
+			field1.Code = @"DATE  \@" + "\"yyyy\\MM\\dd\"";
 
-            //Add textRnage for paragraph
-            newParagraph.AppendText("Add Date Field with setting French Culture: ");
+			// Add a new paragraph to the section
+			Paragraph newParagraph = section.AddParagraph();
 
-            //Add date field2
-            Field field2 = newParagraph.AppendField("\"\\@\"dd MMMM yyyy", FieldType.FieldDate);
+			// Add text to the new paragraph
+			newParagraph.AppendText("Add Date Field with setting French Culture: ");
 
-            //Setting Field with setting French Culture
-            field2.CharacterFormat.LocaleIdASCII = 1036;
+			// Append a date field to the new paragraph and set its format
+			Field field2 = newParagraph.AppendField("\"\\@\"dd MMMM yyyy", FieldType.FieldDate);
+			field2.CharacterFormat.LocaleIdASCII = 1036;
 
-            //Update fields
-            document.IsUpdateFields = true;
+			// Enable automatic update of fields in the document
+			document.IsUpdateFields = true;
 
-            //Save the document.
-            document.SaveToFile("Output.docx", FileFormat.Docx);
+			// Save the document to a file
+			document.SaveToFile("Output.docx", FileFormat.Docx);
+
+			// Dispose of the document object
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

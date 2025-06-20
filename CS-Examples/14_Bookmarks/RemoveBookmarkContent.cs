@@ -20,27 +20,39 @@ namespace RemoveBookmarkContent
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk.
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
+			//Create a word document
+			Document document = new Document();
 
-            //Get the bookmark by name.            
-            Bookmark bookmark = document.Bookmarks["Test"];
+			//Load the document from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
 
-            Paragraph para = bookmark.BookmarkStart.Owner as Paragraph;
-            int startIndex = para.ChildObjects.IndexOf(bookmark.BookmarkStart);
-            para = bookmark.BookmarkEnd.Owner as Paragraph;
-            int endIndex = para.ChildObjects.IndexOf(bookmark.BookmarkEnd);
+			//Get the bookmark by name.            
+			Bookmark bookmark = document.Bookmarks["Test"];
 
-            //Remove the content object, and Start from next of BookmarkStart object, end up with previous of BookmarkEnd object. 
-            //This method is only to remove the content of the bookmark.
-            for (int i = startIndex + 1; i < endIndex; i++)
-            {
-                para.ChildObjects.RemoveAt(startIndex + 1);
-            }
+			//Get the owner paragraph of bookmark start
+			Paragraph para = bookmark.BookmarkStart.Owner as Paragraph;
 
-            //Save the document.
-            document.SaveToFile("RemoveBookMarkContent.docx", FileFormat.Docx);
+			//Get the index of the bookmark start
+			int startIndex = para.ChildObjects.IndexOf(bookmark.BookmarkStart);
+
+			//Get the owner paragraph of bookmark end
+			para = bookmark.BookmarkEnd.Owner as Paragraph;
+
+			//Get the index of the bookmark end
+			int endIndex = para.ChildObjects.IndexOf(bookmark.BookmarkEnd);
+
+			//Remove the content object, and Start from next of BookmarkStart object, end up with previous of BookmarkEnd object. 
+			//This method is only to remove the content of the bookmark.
+			for (int i = startIndex + 1; i < endIndex; i++)
+			{
+				para.ChildObjects.RemoveAt(startIndex + 1);
+			}
+
+			//Save the document.
+			document.SaveToFile("RemoveBookMarkContent.docx", FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Word file.
             FileViewer("RemoveBookMarkContent.docx");

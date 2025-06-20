@@ -19,12 +19,17 @@ namespace HtmlFileToWord
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open an html file.
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\InputHtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
+            // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Save it to a Word document.
-            document.SaveToFile("HtmlFileToWord.docx", FileFormat.Docx);
+			// Load an HTML file into the document object, with XHTML validation disabled.
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\InputHtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
+
+			// Save the document as a DOCX file named "HtmlFileToWord.docx".
+			document.SaveToFile("HtmlFileToWord.docx", FileFormat.Docx);
+
+			// Dispose the document object to release resources.
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer("HtmlFileToWord.docx");

@@ -28,6 +28,9 @@ namespace ToTiffImage
 			//Save the document to a tiff image.
 			JoinTiffImages(SaveAsImage(document),"Sample.tif",EncoderValue.CompressionLZW);
 
+			//Dispose the document
+			document.Dispose();
+			
             //Launching the tiff file.
             FileViewer("Sample.tif");
         }

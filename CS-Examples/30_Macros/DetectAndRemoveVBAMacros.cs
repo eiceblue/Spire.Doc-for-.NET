@@ -19,22 +19,28 @@ namespace DetectAndRemoveVBAMacros
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+    
+            // Create a new instance of Document
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load the Word document from the specified file that may contain VBA macros
             document.LoadFromFile(@"..\..\..\..\..\..\Data\DetectAndRemoveVBAMacros.docm");
 
-            //If the document contains Macros, remove them from the document.
+            // Check if the document contains VBA macros
             if (document.IsContainMacro)
             {
+                // Clear/remove the VBA macros from the document
                 document.ClearMacros();
             }
 
+            // Specify the name for the resulting document after removing VBA macros
             String result = "Result-DetectAndRemoveVBAMacros.docm";
 
-            //Save to file.
+            // Save the modified document to a new file with the specified name and format (Docm for macro-enabled document)
             document.SaveToFile(result, FileFormat.Docm);
+
+            // Dispose of the document object when finished using it
+            document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

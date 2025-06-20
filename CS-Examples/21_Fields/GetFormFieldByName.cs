@@ -20,21 +20,27 @@ namespace GetFormFieldByName
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+			// Create a StringBuilder to hold the field information
+			StringBuilder sb = new StringBuilder();
 
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
 
-            //Get the first section
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            //Get form field by name
-            FormField formField = section.Body.FormFields["email"];
-        
-            sb.AppendLine("The name of the form field is " + formField.Name);
-            sb.AppendLine("The type of the form field is " + formField.FormFieldType);
+			// Get the form field with the name "email"
+			FormField formField = section.Body.FormFields["email"];
 
-            File.WriteAllText("result.txt", sb.ToString());
+			// Append the name and type of the form field to the StringBuilder
+			sb.AppendLine("The name of the form field is " + formField.Name);
+			sb.AppendLine("The type of the form field is " + formField.FormFieldType);
+
+			// Write the field information to a text file
+			File.WriteAllText("result.txt", sb.ToString());
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.txt");

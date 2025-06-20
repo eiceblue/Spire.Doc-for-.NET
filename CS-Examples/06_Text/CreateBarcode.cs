@@ -16,22 +16,33 @@ namespace CreateBarcode
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
-            Document doc = new Document();
+           // Create a new instance of the Document class.
+			Document doc = new Document();
 
-            //Add a paragraph
-            Paragraph p = doc.AddSection().AddParagraph();
+			// Add a new section to the document and get its first paragraph.
+			Paragraph p = doc.AddSection().AddParagraph();
 
-            //Add barcode and set its format
-            TextRange txtRang = p.AppendText("H63TWX11072");
-            //Set barcode font name, note you need to install the barcode font on your system at first
-            txtRang.CharacterFormat.FontName = "C39HrP60DlTt";
-            txtRang.CharacterFormat.FontSize = 80;
-            txtRang.CharacterFormat.TextColor = Color.SeaGreen;
+			// Append the text "H63TWX11072" to the paragraph and obtain the TextRange object.
+			TextRange txtRang = p.AppendText("H63TWX11072");
 
-            //Save and launch document
-            string output = "CreateBarcode.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Set the font name for the text range to "C39HrP60DlTt".
+			txtRang.CharacterFormat.FontName = "C39HrP60DlTt";
+
+			// Set the font size for the text range to 80.
+			txtRang.CharacterFormat.FontSize = 80;
+
+			// Set the text color for the text range to SeaGreen.
+			txtRang.CharacterFormat.TextColor = Color.SeaGreen;
+
+			// Specify the file name for the resulting document.
+			string output = "CreateBarcode.docx";
+
+			// Save the document to a file with the specified file name and format (Docx).
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Clean up resources used by the document.
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

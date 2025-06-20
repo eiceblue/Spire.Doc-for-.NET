@@ -20,11 +20,16 @@ namespace ToOdt
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\ToOdt.doc");
+			Document document = new Document();
 
-            //Save doc file.
-            document.SaveToFile("Sample.odt", FileFormat.Odt);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\ToOdt.doc");
+
+			//Save to odt file.
+			document.SaveToFile("Sample.odt", FileFormat.Odt);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.odt");

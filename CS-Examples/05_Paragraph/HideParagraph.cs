@@ -20,30 +20,40 @@ namespace HideParagraph
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new Document object.
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load an existing Word document from the specified file path.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Get the first section and the first paragraph from the word document.
+            // Get the first Section of the document.
             Section sec = document.Sections[0];
+
+            // Get the first Paragraph of the Section.
             Paragraph para = sec.Paragraphs[0];
-         
-            //Loop through the textranges and set CharacterFormat.Hidden property as true to hide the texts.
+
+            // Iterate over the child DocumentObjects in the Paragraph.
             foreach (DocumentObject obj in para.ChildObjects)
             {
+                // Check if the child DocumentObject is a TextRange.
                 if (obj is TextRange)
                 {
+                    // Convert the child DocumentObject to a TextRange.
                     TextRange range = obj as TextRange;
+
+                    // Set the Hidden property of the TextRange's CharacterFormat to true, hiding the text.
                     range.CharacterFormat.Hidden = true;
                 }
             }
 
-            String result = "Result-HideWordParagraph.docx";
+            // Specify the file name for the resulting Word document.
+            string result = "Result-HideWordParagraph.docx";
 
-            //Save to file.
+            // Save the Document object to a file in Docx format with compatibility mode set to Docx2013.
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Dispose the Document object.
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

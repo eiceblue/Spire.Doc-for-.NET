@@ -16,28 +16,36 @@ namespace ReplaceTextInTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Word from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextInTable.docx");
+   
+			// Create a new document object
+			Document doc = new Document();
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			// Load a document from a file, specified by the file path
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextInTable.docx");
 
-            //Get the first table in the section
-            Table table = section.Tables[0] as Table;
+			// Get the first section of the document
+			Section section = doc.Sections[0];
 
-            //Define a regular expression to match the {} with its content
-            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(@"{[^\}]+\}");
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
 
-            //Replace the text of table with regex
-            table.Replace(regex, "E-iceblue");
+			// Create a regular expression pattern for matching text within curly braces
+			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(@"{[^\}]+\}");
 
-            //Replace old text with new text in table
-            table.Replace("Beijing", "Component", false, true);
+			// Replace text in the table that matches the regular expression pattern with "E-iceblue"
+			table.Replace(regex, "E-iceblue");
 
-            //Save the Word document
-            string output="ReplaceTextInTable_out.docx";
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			// Replace the text "Beijing" with "Component" in the table, case-insensitive and match whole words only
+			table.Replace("Beijing", "Component", false, true);
+
+			// Specify the output file name
+			string output = "ReplaceTextInTable_out.docx";
+
+			// Save the modified document to a file, using Docx2013 format
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose of the document object
+			doc.Dispose();
 
             //Launch the file
             WordDocViewer(output);

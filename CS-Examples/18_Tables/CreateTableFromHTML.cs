@@ -19,30 +19,34 @@ namespace CreateTableFromHTML
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //HTML string
-            String HTML = "<table border='2px'>" +
-                               "<tr>" +
-                               "<td>Row 1, Cell 1</td>" +
-                               "<td>Row 1, Cell 2</td>" +
-                               "</tr>" +
-                               "<tr>" +
-                               "<td>Row 2, Cell 2</td>" +
-                               "<td>Row 2, Cell 2</td>" +
-                               "</tr>" +
-                               "</table>";
+      
+			// Define an HTML string representing a table structure
+			String HTML = "<table border='2px'>" +
+						  "<tr>" +
+						  "<td>Row 1, Cell 1</td>" +
+						  "<td>Row 1, Cell 2</td>" +
+						  "</tr>" +
+						  "<tr>" +
+						  "<td>Row 2, Cell 1</td>" +
+						  "<td>Row 2, Cell 2</td>" +
+						  "</tr>" +
+						  "</table>";
 
-			//Create a Word document
-            Document document = new Document();
+			// Create a new Document object
+			Document document = new Document();
 
-            //Add a section
-            Section section = document.AddSection();
+			// Add a new section to the document
+			Section section = document.AddSection();
 
-            //Add a paragraph and append html string
-            section.AddParagraph().AppendHTML(HTML);
+			// Append the HTML content to the section as a paragraph
+			section.AddParagraph().AppendHTML(HTML);
 
-            //Save to Word document
-            string output = "CreateTableFromHTML_out.docx";
-            document.SaveToFile(output, FileFormat.Docx2013);
+			// Save the document to a file in Docx2013 format
+			string output = "CreateTableFromHTML_out.docx";
+			document.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
 
             //Launch the file
             WordDocViewer(output);

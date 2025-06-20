@@ -14,58 +14,64 @@ namespace BetweenParagraphStyles
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create the first document
+            // Create a new source document
             Document sourceDocument = new Document();
 
-            //Load the source document from disk.
+            // Load the source document from a file
             sourceDocument.LoadFromFile(@"..\..\..\..\..\..\Data\BetweenParagraphStyle.docx");
 
-            //Create a destination document
+            // Create a new destination document
             Document destinationDoc = new Document();
 
-            //Add a section
+            // Add a section to the destination document
             Section section = destinationDoc.AddSection();
 
-            //Extract content between the first paragraph to the third paragraph
+            // Extract paragraphs between specified styles from the source document and copy them to the destination document
             ExtractBetweenParagraphStyles(sourceDocument, destinationDoc, "1", "2");
 
-            //Save the document.
+            // Save the destination document to a file named "Output.docx"
             destinationDoc.SaveToFile("Output.docx", FileFormat.Docx);
 
-            //Launch the Word file.
+            // Dispose the sourceDocument and destinationDoc to release the associated resources.
+            sourceDocument.Dispose();
+            destinationDoc.Dispose();
+
+            // Open the Word file
             WordDocViewer("Output.docx");
         }
 
+        // Method to extract paragraphs between two paragraph styles
         private static void ExtractBetweenParagraphStyles(Document sourceDocument, Document destinationDocument, string stylename1, string stylename2)
         {
             int startindex = 0;
             int endindex = 0;
-            //travel the sections of source document
+
+            // Iterate through sections in the source document
             foreach (Section section in sourceDocument.Sections)
             {
-                //travel the paragraphs
+                // Iterate through paragraphs in the section
                 foreach (Paragraph paragraph in section.Paragraphs)
                 {
-                    //Judge paragraph style1
+                    // Find the starting paragraph style
                     if (paragraph.StyleName == stylename1)
                     {
-                        //Get the paragraph index
                         startindex = section.Body.Paragraphs.IndexOf(paragraph);
                     }
-                    //Judge paragraph style2
+
+                    // Find the ending paragraph style
                     if (paragraph.StyleName == stylename2)
                     {
-                        //Get the paragraph index
                         endindex = section.Body.Paragraphs.IndexOf(paragraph);
                     }
                 }
-                //Extract the content
+
+                // Copy paragraphs between the starting and ending indexes
                 for (int i = startindex + 1; i < endindex; i++)
                 {
-                    //Clone the ChildObjects of source document
+                    // Clone the document object
                     DocumentObject doobj = sourceDocument.Sections[0].Body.ChildObjects[i].Clone();
 
-                    //Add to destination document 
+                    // Add the cloned object to the destination document
                     destinationDocument.Sections[0].Body.ChildObjects.Add(doobj);
                 }
             }

@@ -22,58 +22,73 @@ namespace FillFormField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document with form.
-            Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
+         
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
 
-            //Load data.
-            using (Stream stream = File.OpenRead(@"..\..\..\..\..\..\Data\User.xml"))
-            {
-                XPathDocument xpathDoc = new XPathDocument(stream);
-                XPathNavigator user = xpathDoc.CreateNavigator().SelectSingleNode("/user");
+			// Open the XML file containing user data
+			using (Stream stream = File.OpenRead(@"..\..\..\..\..\..\Data\User.xml"))
+			{
+				// Create an XPathDocument from the XML stream
+				XPathDocument xpathDoc = new XPathDocument(stream);
 
-                //Fill data.
-                foreach (FormField field in document.Sections[0].Body.FormFields)
-                {
-                    String path = String.Format("{0}/text()", field.Name);
-                    XPathNavigator propertyNode = user.SelectSingleNode(path);
-                    if (propertyNode != null)
-                    {
-                        switch (field.Type)
-                        {
-                            case FieldType.FieldFormTextInput:
-                                field.Text = propertyNode.Value;
-                                break;
+				// Select the "user" node from the XML document
+				XPathNavigator user = xpathDoc.CreateNavigator().SelectSingleNode("/user");
 
-                            case FieldType.FieldFormDropDown:
-                                DropDownFormField combox = field as DropDownFormField;
-                                for(int i = 0; i < combox.DropDownItems.Count; i++)
-                                {
-                                    if (combox.DropDownItems[i].Text == propertyNode.Value)
-                                    {
-                                        combox.DropDownSelectedIndex = i;
-                                        break;
-                                    }
-                                    if (field.Name == "country" && combox.DropDownItems[i].Text == "Others")
-                                    {
-                                        combox.DropDownSelectedIndex = i;
-                                    }
-                                }
-                                break;
+				// Iterate through each form field in the document's first section
+				foreach (FormField field in document.Sections[0].Body.FormFields)
+				{
+					// Get the XPath to retrieve the value for the current form field
+					String path = String.Format("{0}/text()", field.Name);
 
-                            case FieldType.FieldFormCheckBox:
-                                if (Convert.ToBoolean(propertyNode.Value))
-                                {
-                                    CheckBoxFormField checkBox = field as CheckBoxFormField;
-                                    checkBox.Checked = true;
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
+					// Select the corresponding node from the XML document
+					XPathNavigator propertyNode = user.SelectSingleNode(path);
 
-            //Save doc file.
-            document.SaveToFile("Sample.doc",FileFormat.Doc);
+					// If the node exists, set the value of the form field based on its type
+					if (propertyNode != null)
+					{
+						switch (field.Type)
+						{
+							// Text input field
+							case FieldType.FieldFormTextInput:
+								field.Text = propertyNode.Value;
+								break;
+
+							// Dropdown field
+							case FieldType.FieldFormDropDown:
+								DropDownFormField combox = field as DropDownFormField;
+								for (int i = 0; i < combox.DropDownItems.Count; i++)
+								{
+									if (combox.DropDownItems[i].Text == propertyNode.Value)
+									{
+										combox.DropDownSelectedIndex = i;
+										break;
+									}
+									if (field.Name == "country" && combox.DropDownItems[i].Text == "Others")
+									{
+										combox.DropDownSelectedIndex = i;
+									}
+								}
+								break;
+
+							// Checkbox field
+							case FieldType.FieldFormCheckBox:
+								if (Convert.ToBoolean(propertyNode.Value))
+								{
+									CheckBoxFormField checkBox = field as CheckBoxFormField;
+									checkBox.Checked = true;
+								}
+								break;
+						}
+					}
+				}
+			}
+
+			// Save the modified document to a file
+			document.SaveToFile("Sample.doc", FileFormat.Doc);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Sample.doc");

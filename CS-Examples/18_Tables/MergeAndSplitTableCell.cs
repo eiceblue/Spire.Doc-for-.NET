@@ -20,19 +20,33 @@ namespace MergeAndSplitTableCell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document and load file from disk
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
-            //The method shows how to merge cell horizontally
-            table.ApplyHorizontalMerge(6, 2, 3);
-            //The method shows how to merge cell vertically
-            table.ApplyVerticalMerge(2, 4, 5);
-            //The method shows how to split the cell
-            table.Rows[8].Cells[3].SplitCell(2, 2);
-            //Save to file and launch it
-            document.SaveToFile("Sample.docx", FileFormat.Docx);
+			// Create a new Document object
+			Document document = new Document();
+
+			// Load an existing Word document from a file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+
+			// Get the first section of the document
+			Section section = document.Sections[0];
+
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
+
+			// Apply horizontal merging to cells in the range (6, 2) to (6, 3)
+			table.ApplyHorizontalMerge(6, 2, 3);
+
+			// Apply vertical merging to cells in the range (2, 4) to (2, 5)
+			table.ApplyVerticalMerge(2, 4, 5);
+
+			// Split the cell at row index 8 and column index 3 into a 2x2 grid
+			table.Rows[8].Cells[3].SplitCell(2, 2);
+
+			// Save the modified document to a file named "Sample.docx"
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
+			
             FileViewer("Sample.docx");
         }
         private void FileViewer(string fileName)

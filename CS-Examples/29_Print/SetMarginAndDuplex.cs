@@ -19,26 +19,33 @@ namespace SetMarginAndDuplex
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\Sample.docx";
+    
+            // Specify the input file path
+            String input = @"..\..\..\..\..\..\Data\Sample.docx";
+
+            // Create a new instance of Document
             Document doc = new Document();
+
+            // Load the Word document from the specified input file
             doc.LoadFromFile(input);
 
-            //Get the PrintDocument object
+            // Get the PrintDocument associated with the document
             PrintDocument printDoc = doc.PrintDocument;
 
-            //Set graphics origin starts at the page margins
+            // Set the OriginAtMargins property to true to align the printable area with the margins
             printDoc.OriginAtMargins = true;
-            //Set the margin to 0
+
+            // Set the Margins property of the DefaultPageSettings to zero to remove any margins
             printDoc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
 
-            //Double-sided, vertical printing
+            // Set the Duplex property of PrinterSettings to Vertical for double-sided printing
             printDoc.PrinterSettings.Duplex = Duplex.Vertical;
-            //Double-sided, horizontal printing
-            //printDoc.PrinterSettings.Duplex = Duplex.Horizontal;
 
-            //Print the word document
+            // Print the document
             printDoc.Print();
+
+            // Dispose of the document object when finished using it
+            doc.Dispose();
         }
     }
 }

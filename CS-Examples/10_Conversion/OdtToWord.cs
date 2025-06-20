@@ -20,15 +20,18 @@ namespace OdtToWord
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_OdtFile.odt");
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_OdtFile.odt");
 
-            String result = "Result-OdtToDocOrDocx.docx";
+			string result = "Result-OdtToDocOrDocx.docx";
 
-            //Save to Docx file.
-            document.SaveToFile(result, FileFormat.Docx);
+			//Save to Docx file.
+			document.SaveToFile(result, FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the files.
             WordDocViewer(result);

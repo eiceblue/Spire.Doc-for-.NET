@@ -13,17 +13,20 @@ namespace Replace
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+             // Create a new instance of the Document class
             Document document = new Document();
 
-            //Load the document from disk.
+            // Load the content of the document from the given path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
-            //Replace text
-            document.Replace("word", "ReplacedText",false,true);
+            // Replace all occurrences of the word "word" with the text "ReplacedText"
+            document.Replace("word", "ReplacedText", false, true);
 
-            //Save doc file.
+            // Save the modified document to the given filename with the .docx file format
             document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+            // Dispose of the Document object to release its resources
+            document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");

@@ -19,19 +19,24 @@ namespace InsertSectionBreak
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from a specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Insert section break. There are five section break options including EvenPage, NewColumn, NewPage, NoBreak, OddPage.
-            document.Sections[0].Paragraphs[1].InsertSectionBreak(SectionBreakType.NoBreak);
+			// Insert a section break at a specific position in the document.
+			// There are five section break options: EvenPage, NewColumn, NewPage, NoBreak, OddPage.
+			document.Sections[0].Paragraphs[1].InsertSectionBreak(SectionBreakType.NoBreak);
 
-            String result = "Result-InsertSectionBreak.docx";
+			// Specify the name and file format for the resulting document after saving.
+			string result = "Result-InsertSectionBreak.docx";
 
-            //Save the file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to a file in the specified format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources associated with the document.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

@@ -15,30 +15,40 @@ namespace InsertImageIntoTextBox
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a new document
-            Document doc = new Document();
+      
+			// Create a new Document object
+			Document doc = new Document();
 
-            Section section = doc.AddSection();
-            Paragraph paragraph = section.AddParagraph();
+			// Add a section to the document
+			Section section = doc.AddSection();
 
-            //Append a textbox to paragraph
-            Spire.Doc.Fields.TextBox tb = paragraph.AppendTextBox(220, 220);
+			// Add a paragraph to the section
+			Paragraph paragraph = section.AddParagraph();
 
-            //Set the position of the textbox
-            tb.Format.HorizontalOrigin = HorizontalOrigin.Page;
-            tb.Format.HorizontalPosition = 50;
-            tb.Format.VerticalOrigin = VerticalOrigin.Page;
-            tb.Format.VerticalPosition = 50;
+			// Append a text box to the paragraph with specified dimensions
+			Spire.Doc.Fields.TextBox tb = paragraph.AppendTextBox(220, 220);
 
-            //Set the fill effect of textbox as picture
-            tb.Format.FillEfects.Type = BackgroundType.Picture;
+			// Set the horizontal and vertical positioning of the text box
+			tb.Format.HorizontalOrigin = HorizontalOrigin.Page;
+			tb.Format.HorizontalPosition = 50;
+			tb.Format.VerticalOrigin = VerticalOrigin.Page;
+			tb.Format.VerticalPosition = 50;
 
-            //Fill the textbox with a picture
-            tb.Format.FillEfects.Picture = Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+			// Set the background fill effect of the text box to a picture
+			tb.Format.FillEfects.Type = BackgroundType.Picture;
 
-            //Save and launch document
-            string output = "InsertImageIntoTextBox.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Set the picture for the background fill effect from a file
+			tb.Format.FillEfects.Picture = Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+
+			// Specify the output file name
+			string output = "InsertImageIntoTextBox.docx";
+
+			// Save the document to a file in DOCX format
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the Document object to free up resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

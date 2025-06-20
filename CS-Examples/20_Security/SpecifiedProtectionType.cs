@@ -19,19 +19,24 @@ namespace SpecifiedProtectionType
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+			 
+			// Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
+			// Load the Word document file from the specified path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
 
-            //Protect the Word file.
-            document.Protect(ProtectionType.AllowOnlyReading, "123456");
+			// Set the document protection to allow only reading with the specified password
+			document.Protect(ProtectionType.AllowOnlyReading, "123456");
 
-            String result = "Result-SpecifiedProtectionType.docx";
+			// Specify the output file name for the modified document
+			String result = "Result-SpecifiedProtectionType.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to the specified file format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the Document object to free resources
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

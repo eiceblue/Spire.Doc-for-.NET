@@ -15,23 +15,31 @@ namespace ResetShapeSize
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
-            string input = @"..\..\..\..\..\..\Data\Shapes.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+            //Create a word document
+			Document doc = new Document();
 
-            //Get the first section and the first paragraph that contains the shape
-            Section section = doc.Sections[0];
-            Paragraph para = section.Paragraphs[0];
+			//Load the file from disk
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Shapes.docx");
 
-            //Get the second shape and reset the width and height for the shape
-            ShapeObject shape = para.ChildObjects[1] as ShapeObject;
-            shape.Width = 200;
-            shape.Height = 200; 
+			//Get the first section 
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "ResetShapeSize.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first paragraph
+			Paragraph para = section.Paragraphs[0];
+
+			//Get the second shape
+			ShapeObject shape = para.ChildObjects[1] as ShapeObject;
+
+			//Reset the width and height of the shape
+			shape.Width = 200;
+			shape.Height = 200;
+
+			//Save and launch document
+			string output = "ResetShapeSize.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

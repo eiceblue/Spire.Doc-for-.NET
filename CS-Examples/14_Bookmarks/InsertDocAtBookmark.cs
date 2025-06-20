@@ -44,17 +44,22 @@ namespace InsertDocAtBookmark
             //Get the para index
             int index = section1.Body.ChildObjects.IndexOf(para);
 
-            //Insert the paragraphs of document2
+            //Loop through the sections
             foreach (Section section2 in document2.Sections)
             {
                 foreach (Paragraph paragraph in section2.Paragraphs)
                 {
-                    section1.Body.ChildObjects.Insert(index + 1, paragraph.Clone() as Paragraph);
+					//Insert the paragraphs of document2
+                    section1.Body.ChildObjects.Insert(index++ + 1, paragraph.Clone() as Paragraph);
                 }
             }
 
             //Save the document.
             document1.SaveToFile("Output.docx", FileFormat.Docx);
+			
+			//Dispose the document
+			document1.Dispose();
+			document2.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

@@ -19,28 +19,32 @@ namespace AddLineNumbers
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Set the start value of the line numbers.
-            document.Sections[0].PageSetup.LineNumberingStartValue = 1;
+			// Set the start value for line numbering in the first section of the document
+			document.Sections[0].PageSetup.LineNumberingStartValue = 1;
 
-            //Set the interval between displayed numbers.
-            document.Sections[0].PageSetup.LineNumberingStep = 6;
+			// Set the interval between line numbers in the first section of the document
+			document.Sections[0].PageSetup.LineNumberingStep = 6;
 
-            //Set the distance between line numbers and text.
-            document.Sections[0].PageSetup.LineNumberingDistanceFromText = 40f;
+			// Set the distance between line numbers and the main text in the first section of the document
+			document.Sections[0].PageSetup.LineNumberingDistanceFromText = 40f;
 
-            //Set the numbering mode of line numbers. There are four choices: None, Continuous, RestartPage and RestartSection.
-            document.Sections[0].PageSetup.LineNumberingRestartMode = LineNumberingRestartMode.Continuous;
-            
-            String result = "Result-AddLineNumbers.docx";
+			// Set the line numbering restart mode to continuous in the first section of the document
+			document.Sections[0].PageSetup.LineNumberingRestartMode = LineNumberingRestartMode.Continuous;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Specify the file name for the resulting document with line numbers
+			string result = "Result-AddLineNumbers.docx";
+
+			// Save the modified document to the specified file path in the DOCX format (version: Word 2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

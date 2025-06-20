@@ -16,54 +16,48 @@ namespace ReplaceContentWithDoc
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create the first document
+            // Create a new instance of the Document class
             Document document1 = new Document();
-
-            //Load the first document from disk.
+            // Load a Word document from a file
             document1.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceContentWithDoc.docx");
-
-            //Create the second document
+            // Create another instance of the Document class
             Document document2 = new Document();
-
-            //Load the second document from disk.
+            // Load another Word document from a file
             document2.LoadFromFile(@"..\..\..\..\..\..\Data\Insert.docx");
-
-            //Get the first section of the first document 
+            // Get the first section of the first document
             Section section1 = document1.Sections[0];
-
-            //Create a regex
+            // Create a regular expression object to search for a pattern
             Regex regex = new Regex(@"\[MY_DOCUMENT\]", RegexOptions.None);
-
-            //Find the text by regex
+            // Find all occurrences of the pattern in the first document
             TextSelection[] textSections = document1.FindAllPattern(regex);
-
-            //Travel the found strings
+            // Loop through each occurrence of the pattern
             foreach (TextSelection seletion in textSections)
             {
-
-                //Get the para
+                // Get the paragraph that contains the pattern
                 Paragraph para = seletion.GetAsOneRange().OwnerParagraph;
-
-                //Get textRange
+                // Get the range of text that contains the pattern
                 TextRange textRange = seletion.GetAsOneRange();
-
-                //Get the para index
+                // Get the index of the paragraph in the first document's section
                 int index = section1.Body.ChildObjects.IndexOf(para);
-
-                //Insert the paragraphs of document2
+                // Loop through each section in the second document
                 foreach (Section section2 in document2.Sections)
                 {
+                    // Loop through each paragraph in the second section
                     foreach (Paragraph paragraph in section2.Paragraphs)
                     {
+                        // Insert the paragraph from the second document into the first document's section
                         section1.Body.ChildObjects.Insert(index, paragraph.Clone() as Paragraph);
                     }
                 }
-                //Remove the found textRange
+                // Remove the range of text that contains the pattern from the paragraph
                 para.ChildObjects.Remove(textRange);
             }
-
-            //Save the document.
+            // Save the modified first document to a file
             document1.SaveToFile("Output.docx", FileFormat.Docx);
+            // Dispose the first document and release all resources it is using
+            document1.Dispose();
+            // Dispose the second document and release all resources it is using
+            document2.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

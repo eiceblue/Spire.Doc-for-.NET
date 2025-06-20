@@ -58,7 +58,10 @@ namespace IdentifyMergeFieldName
 
             //Save to file.
             File.WriteAllText(result,content.ToString());
-
+			
+			// Dispose the document object
+			document.Dispose();
+			
             //Launch the file.
             WordDocViewer(result);
         }

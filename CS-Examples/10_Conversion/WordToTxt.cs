@@ -19,16 +19,19 @@ namespace WordToTxt
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            String result = "Result-WordToText.txt";
+			string result = "Result-WordToText.txt";
 
-            //Save the file.
-            document.SaveToFile(result, FileFormat.Txt);
+			//Save the file.
+			document.SaveToFile(result, FileFormat.Txt);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

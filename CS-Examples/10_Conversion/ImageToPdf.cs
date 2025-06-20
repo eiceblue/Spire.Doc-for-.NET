@@ -18,25 +18,35 @@ namespace ImageToPdf
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\Data\Image.png";
-            //Create a new document
-            Document doc = new Document();
-            //Create a new section
-            Section section = doc.AddSection();
-            //Create a new paragraph
-            Paragraph paragraph = section.AddParagraph();
-            //Add a picture for paragraph
-            DocPicture picture = paragraph.AppendPicture(input);
-            //Set the page size to the same size as picture
-            //section.PageSetup.PageSize = new SizeF(picture.Width, picture.Height);
-            //Set A4 page size
-            section.PageSetup.PageSize = PageSize.A4;
-            //Set the page margins
-            section.PageSetup.Margins.Top = 10f;
-            section.PageSetup.Margins.Left = 25f;
+            string input = @"..\..\..\..\..\..\Data\Image.png";
+			//Create a new document
+			Document doc = new Document();
 
-            String result = "ImageToPdf.pdf";
-            doc.SaveToFile(result,FileFormat.PDF);
+			//Create a new section
+			Section section = doc.AddSection();
+
+			//Create a new paragraph
+			Paragraph paragraph = section.AddParagraph();
+
+			//Add a picture for paragraph
+			paragraph.AppendPicture(input);
+
+			//Set A4 page size
+			section.PageSetup.PageSize = PageSize.A4;
+
+			//Set the page margins
+			section.PageSetup.Margins.Top = 10f;
+			section.PageSetup.Margins.Left = 25f;
+
+			string result = "ImageToPdf.pdf";
+			
+			//Save to file
+			doc.SaveToFile(result, FileFormat.PDF);
+
+			//Dispose the Document
+			doc.Dispose();
+			
+			//Launch the document
             Viewer(result);
         }
         private void Viewer(string fileName)

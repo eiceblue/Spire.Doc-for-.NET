@@ -20,22 +20,32 @@ namespace ToHtmlExportOption
 
         private void button1_Click(object sender, EventArgs e)
         {
-			//Open a Word document.
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ToHtmlTemplate.docx");
-            //Set whether the css styles are embeded or not. 
-            document.HtmlExportOptions.CssStyleSheetFileName = "sample.css";
-            document.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.External;
-			
-            //Set whether the images are embeded or not. 
-            document.HtmlExportOptions.ImageEmbedded = false;
-            document.HtmlExportOptions.ImagesPath = "Images";
-			
-            //Set the option whether to export form fields as plain text or not.
-            document.HtmlExportOptions.IsTextInputFormFieldAsText = true;
-			
-			//Save the document to a html file.
-            document.SaveToFile("Sample.html",FileFormat.Html);
+			// Create a new Document object.
+			Document document = new Document();
+
+			// Load the Word document from the specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ToHtmlTemplate.docx");
+
+			// Set the file name for the CSS style sheet that will be used in the HTML export.
+			document.HtmlExportOptions.CssStyleSheetFileName = "sample.css";
+
+			// Specify that the CSS style sheet should be external.
+			document.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.External;
+
+			// Disable embedding images in the HTML output.
+			document.HtmlExportOptions.ImageEmbedded = false;
+
+			// Set the path where the exported HTML file will look for image resources.
+			document.HtmlExportOptions.ImagesPath = "Images";
+
+			// Treat text input form fields as plain text instead of form fields.
+			document.HtmlExportOptions.IsTextInputFormFieldAsText = true;
+
+			// Save the document as an HTML file with the specified file name and format.
+			document.SaveToFile("Sample.html", FileFormat.Html);
+
+			// Release the resources associated with the Document object.
+			document.Dispose();
 			
 			//Launch the file.
             FileViewer("Sample.html");

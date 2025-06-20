@@ -19,14 +19,17 @@ namespace GetText
 
         private void button1_Click(object sender, EventArgs e)
         {   
-			//Load the document from disk.
-            Document document = new Document(@"..\..\..\..\..\..\Data\ExtractText.docx");
+			// Create a new instance of the Document class and load a Word document from the specified file path.
+			Document document = new Document(@"..\..\..\..\..\..\Data\ExtractText.docx");
 
-            //get text from document
-            string text = document.GetText();
+			// Extract the text content from the document.
+			string text = document.GetText();
 
-            //create a new TXT File to save extracted text
-            File.WriteAllText("Extract.txt", text);
+			// Write the extracted text to a text file named "Extract.txt".
+			File.WriteAllText("Extract.txt", text);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //launch the file.
             WordDocViewer("Extract.txt");

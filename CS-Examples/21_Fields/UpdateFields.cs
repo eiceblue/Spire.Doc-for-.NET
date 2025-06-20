@@ -19,14 +19,21 @@ namespace UpdateFields
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
+   
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
 
-            //Update fields
-            document.IsUpdateFields = true;
- 
-            //Save doc file
-            document.SaveToFile("result.docx",FileFormat.Docx);
+            		// Setting the culture source when updating fields
+            		document.FieldOptions.CultureSource = Spire.Doc.Layout.Fields.FieldCultureSource.CurrentThread;
+
+			// Enable automatic update of fields in the document
+			document.IsUpdateFields = true;
+
+			// Save the document to a new file
+			document.SaveToFile("result.docx", FileFormat.Docx);
+
+			// Dispose of the document object
+			document.Dispose();
 
             //Launch the Word file
             WordDocViewer("result.docx");

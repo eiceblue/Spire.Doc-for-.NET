@@ -15,30 +15,40 @@ namespace ResetImageSize
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
-            string input = @"..\..\..\..\..\..\Data\ImageTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+            //Create a word document
+			Document doc = new Document();
 
-            //Get the first secion
-            Section section = doc.Sections[0];
-            //Get the first paragraph
-            Paragraph paragraph = section.Paragraphs[0];
+			//Load the file from disk
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\ImageTemplate.docx");
 
-            //Reset the image size of the first paragraph
-            foreach (DocumentObject docObj in paragraph.ChildObjects)
-            {
-                if (docObj is DocPicture)
-                {
-                    DocPicture picture = docObj as DocPicture;
-                    picture.Width = 50f;
-                    picture.Height = 50f;
-                }
-            }
+			//Get the first secion
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "ResetImageSize.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first paragraph
+			Paragraph paragraph = section.Paragraphs[0];
+
+			//Reset the image size of the first paragraph
+			foreach (DocumentObject docObj in paragraph.ChildObjects)
+			{
+				if (docObj is DocPicture)
+				{
+					DocPicture picture = docObj as DocPicture;
+
+					//Set the width
+					picture.Width = 50f;
+
+					//Set the height
+					picture.Height = 50f;
+				}
+			}
+
+			//Save the document
+			string output = "ResetImageSize.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -17,8 +17,9 @@ namespace GetBookmarks
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            //Load the document from disk.
             Document document = new Document();
+			
+			//Load the document from disk.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmarks.docx");
 
             //Get the bookmark by index.
@@ -38,6 +39,9 @@ namespace GetBookmarks
 
             //Save them to a txt file
             File.WriteAllText("Bookmarks.txt", content.ToString());
+			
+			// Dispose the document
+			document.Dispose();
 
             //Launch the file
             FileViewer("Bookmarks.txt");

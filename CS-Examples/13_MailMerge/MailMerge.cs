@@ -13,19 +13,25 @@ namespace MailMerage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\MailMerge.doc");
+            //Create a Word document
+			Document document = new Document();
 
-            string[] filedNames = new string[]{"Contact Name","Fax","Date"};
+			//Load the file from disk
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\MailMerge.doc");
 
-            string[] filedValues = new string[]{"John Smith","+1 (69) 123456",System.DateTime.Now.Date.ToString()};
+			//prepare sample data
+			string[] fieldNames = new string[] { "Contact Name", "Fax", "Date" };
 
-            document.MailMerge.Execute(filedNames, filedValues);
+			string[] fieldValues = new string[] { "John Smith", "+1 (69) 123456", System.DateTime.Now.Date.ToString() };
 
-          
-            //Save doc file.
-            document.SaveToFile("Sample.doc", FileFormat.Doc);
+			//Begin the mail merge process
+			document.MailMerge.Execute(fieldNames, fieldValues);
+
+			//Save the document.
+			document.SaveToFile("Sample.doc", FileFormat.Doc);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.doc");

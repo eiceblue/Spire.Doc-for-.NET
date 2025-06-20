@@ -21,18 +21,26 @@ namespace AutoFitToContents
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
-            //Load file
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+			Document document = new Document();
 
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
+			//Load file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
 
-            //Automatically fit the table to the cell content
-            table.AutoFit(AutoFitBehaviorType.AutoFitToContents);
+			//Get the first section
+			Section section = document.Sections[0];
 
-            //Save to file and launch it
-            document.SaveToFile("result.docx");
+			//Get the first section
+			Table table = section.Tables[0] as Table;
+
+			//Automatically fit the table to the cell content
+			table.AutoFit(AutoFitBehaviorType.AutoFitToContents);
+
+			//Save to file 
+			document.SaveToFile("result.docx");
+
+			//Dispose the document
+			document.Dispose();
+			
             FileViewer("result.docx");
         }
         private void FileViewer(string fileName)

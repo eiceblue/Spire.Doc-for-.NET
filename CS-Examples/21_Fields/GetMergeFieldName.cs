@@ -20,22 +20,32 @@ namespace GetMergeFieldName
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+			// Create a StringBuilder to hold the field information
+			StringBuilder sb = new StringBuilder();
 
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\MailMerge.doc");
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\MailMerge.doc");
 
-            //Get merge field name
-            string[] fieldNames = document.MailMerge.GetMergeFieldNames();
+			// Get the array of merge field names in the document
+			string[] fieldNames = document.MailMerge.GetMergeFieldNames();
 
-            sb.Append("The document has " + fieldNames.Length.ToString() + " merge fields.");
-            sb.Append(" The below is the name of the merge field:"+"\r\n");
-            foreach (string name in fieldNames)
-            {
-                sb.AppendLine(name);
-            }
+			// Append the count of merge fields in the document to the StringBuilder
+			sb.Append("The document has " + fieldNames.Length.ToString() + " merge fields.");
 
-            File.WriteAllText("result.txt", sb.ToString());
+			// Append a header for the merge field names
+			sb.Append(" The below is the name of the merge field:" + "\r\n");
+
+			// Iterate through each merge field name and append it to the StringBuilder
+			foreach (string name in fieldNames)
+			{
+				sb.AppendLine(name);
+			}
+
+			// Write the result to a text file
+			File.WriteAllText("result.txt", sb.ToString());
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.txt");

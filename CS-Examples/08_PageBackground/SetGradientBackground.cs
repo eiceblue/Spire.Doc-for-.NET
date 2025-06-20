@@ -19,28 +19,38 @@ namespace SetGradientBackground
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
 
-            //Set the background type as Gradient.
-            document.Background.Type = BackgroundType.Gradient;
-            BackgroundGradient Test = document.Background.Gradient;
+			// Set the background type of the document to gradient
+			document.Background.Type = BackgroundType.Gradient;
 
-            //Set the first color and second color for Gradient.
-            Test.Color1 = Color.White;
-            Test.Color2 = Color.LightBlue;
+			// Get the BackgroundGradient object of the document's background
+			BackgroundGradient Test = document.Background.Gradient;
 
-            //Set the Shading style and Variant for the gradient.
-            Test.ShadingVariant = GradientShadingVariant.ShadingDown;
-            Test.ShadingStyle = GradientShadingStyle.Horizontal;
+			// Set the first color of the gradient background to white
+			Test.Color1 = Color.White;
 
-            String result = "Result-SetGradientBackground.docx";
+			// Set the second color of the gradient background to light blue
+			Test.Color2 = Color.LightBlue;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Set the shading variant of the gradient background to ShadingDown
+			Test.ShadingVariant = GradientShadingVariant.ShadingDown;
+
+			// Set the shading style of the gradient background to Horizontal
+			Test.ShadingStyle = GradientShadingStyle.Horizontal;
+
+			// Specify the output file name
+			string result = "Result-SetGradientBackground.docx";
+
+			// Save the modified document to a file with the specified format (Docx2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the Document object to release resources
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

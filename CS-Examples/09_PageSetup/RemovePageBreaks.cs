@@ -19,37 +19,42 @@ namespace RemovePageBreaks
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_4.docx");
+			// Load an existing document from a file.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_4.docx");
 
-            //Traverse every paragraph of the first section of the document.
-            for (int j = 0; j < document.Sections[0].Paragraphs.Count; j++)
-            {
-                Paragraph p = document.Sections[0].Paragraphs[j];
+			// Iterate through paragraphs in the first section of the document.
+			for (int j = 0; j < document.Sections[0].Paragraphs.Count; j++)
+			{
+				// Get a reference to the current paragraph.
+				Paragraph p = document.Sections[0].Paragraphs[j];
 
-                //Traverse every child object of a paragraph.
-                for (int i = 0; i < p.ChildObjects.Count; i++)
-                {
-                    DocumentObject obj = p.ChildObjects[i];
+				// Iterate through child objects (elements) within the paragraph.
+				for (int i = 0; i < p.ChildObjects.Count; i++)
+				{
+					// Get a reference to the current child object.
+					DocumentObject obj = p.ChildObjects[i];
 
-                    //Find the page break object.
-                    if (obj.DocumentObjectType == DocumentObjectType.Break)
-                    {
-                        Break b = obj as Break;
+					// Check if the child object is a Break.
+					if (obj.DocumentObjectType == DocumentObjectType.Break)
+					{
+						// Remove the Break from the paragraph's child objects.
+						Break b = obj as Break;
+						p.ChildObjects.Remove(b);
+					}
+				}
+			}
 
-                        //Remove the page break object from paragraph.
-                        p.ChildObjects.Remove(b);
-                    }
-                }
-            }
+			// Specify the filename for the resulting document without page breaks.
+			string result = "Result-RemovePageBreaks.docx";
 
-            String result = "Result-RemovePageBreaks.docx";
+			// Save the modified document to a file in the Docx2013 format.
+			document.SaveToFile(result, FileFormat.Docx2013);
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Release the resources associated with the document.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

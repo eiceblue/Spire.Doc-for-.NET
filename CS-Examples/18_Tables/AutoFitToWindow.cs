@@ -21,15 +21,25 @@ namespace AutoFitToWindow
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
-            //Load file
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
-            //Automatically fit the table to the active window width
-            table.AutoFit(AutoFitBehaviorType.AutoFitToWindow);
-            //Save to file and launch it
-            document.SaveToFile("result.docx");
+			Document document = new Document();
+
+			//Load file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+
+			//Get the first section
+			Section section = document.Sections[0];
+
+			//Get the first table
+			Table table = section.Tables[0] as Table;
+
+			//Automatically fit the table to the active window width
+			table.AutoFit(AutoFitBehaviorType.AutoFitToWindow);
+
+			//Save to file 
+			document.SaveToFile("result.docx");
+
+			//Dispose the document
+			document.Dispose();
             FileViewer("result.docx");
         }
         private void FileViewer(string fileName)

@@ -17,23 +17,34 @@ namespace RemoveHyperlinks
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
-            string input = @"..\..\..\..\..\..\Data\Hyperlinks.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+         
+			// Specify the input file path for the document containing hyperlinks
+			string input = @"..\..\..\..\..\..\Data\Hyperlinks.docx";
 
-            //Get all hyperlinks
-            List<Field> hyperlinks = FindAllHyperlinks(doc);
+			// Create a new Document object
+			Document doc = new Document();
 
-            //Flatten all hyperlinks
-            for (int i = hyperlinks.Count - 1; i >= 0; i--)
-            {
-                FlattenHyperlinks(hyperlinks[i]);
-            }
+			// Load the document from the specified file path
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "RemoveHyperlinks.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Find all the hyperlinks in the document and store them in a list
+			List<Field> hyperlinks = FindAllHyperlinks(doc);
+
+			// Flatten each hyperlink, removing the hyperlink functionality but keeping the text
+			for (int i = hyperlinks.Count - 1; i >= 0; i--)
+			{
+				FlattenHyperlinks(hyperlinks[i]);
+			}
+
+			// Specify the output file path for the modified document without hyperlinks
+			string output = "RemoveHyperlinks.docx";
+
+			// Save the modified document to the output file path in DOCX format
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document object to free up resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)
@@ -45,124 +56,137 @@ namespace RemoveHyperlinks
             catch { }
         }
 
-        //Create a method FindAllHyperlinks() to get all the hyperlinks from the sample document
-        private List<Field> FindAllHyperlinks(Document document)
-        {
-            List<Field> hyperlinks = new List<Field>();
-            //Iterate through the items in the sections to find all hyperlinks
-            foreach (Section section in document.Sections)
-            {
-                foreach (DocumentObject sec in section.Body.ChildObjects)
-                {
-                    if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
-                    {
-                        foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
-                        {
-                            if (para.DocumentObjectType == DocumentObjectType.Field)
-                            {
-                                Field field = para as Field;
-                                if (field.Type == FieldType.FieldHyperlink)
-                                {
-                                    hyperlinks.Add(field);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return hyperlinks;
-        }
+		   
+		// Method to find all hyperlinks in the document and return them as a list
+		private List<Field> FindAllHyperlinks(Document document)
+		{
+			List<Field> hyperlinks = new List<Field>();
 
-        // Flatten the hyperlink field
-        private void FlattenHyperlinks(Field field)
-        {
-            int ownerParaIndex = field.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.OwnerParagraph);
-            int fieldIndex = field.OwnerParagraph.ChildObjects.IndexOf(field);
-            Paragraph sepOwnerPara = field.Separator.OwnerParagraph;
-            int sepOwnerParaIndex = field.Separator.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.Separator.OwnerParagraph);
-            int sepIndex = field.Separator.OwnerParagraph.ChildObjects.IndexOf(field.Separator);
-            int endIndex = field.End.OwnerParagraph.ChildObjects.IndexOf(field.End);
-            int endOwnerParaIndex = field.End.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.End.OwnerParagraph);
+			foreach (Section section in document.Sections)
+			{
+				foreach (DocumentObject sec in section.Body.ChildObjects)
+				{
+					if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
+					{
+						foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
+						{
+							if (para.DocumentObjectType == DocumentObjectType.Field)
+							{
+								Field field = para as Field;
+								if (field.Type == FieldType.FieldHyperlink)
+								{
+									hyperlinks.Add(field);
+								}
+							}
+						}
+					}
+				}
+			}
+			return hyperlinks;
+		}
 
-            FormatFieldResultText(field.Separator.OwnerParagraph.OwnerTextBody, sepOwnerParaIndex, endOwnerParaIndex, sepIndex, endIndex);
+    
+		// Method to flatten a hyperlink, removing the hyperlink functionality but keeping the text
+		private void FlattenHyperlinks(Field field)
+		{
+			// Store the indices of relevant objects for later removal
+			int ownerParaIndex = field.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.OwnerParagraph);
+			int fieldIndex = field.OwnerParagraph.ChildObjects.IndexOf(field);
+			Paragraph sepOwnerPara = field.Separator.OwnerParagraph;
+			int sepOwnerParaIndex = field.Separator.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.Separator.OwnerParagraph);
+			int sepIndex = field.Separator.OwnerParagraph.ChildObjects.IndexOf(field.Separator);
+			int endIndex = field.End.OwnerParagraph.ChildObjects.IndexOf(field.End);
+			int endOwnerParaIndex = field.End.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.End.OwnerParagraph);
 
-            field.End.OwnerParagraph.ChildObjects.RemoveAt(endIndex);
+			// Format the text between the separator and the end of the field result
+			FormatFieldResultText(field.Separator.OwnerParagraph.OwnerTextBody, sepOwnerParaIndex, endOwnerParaIndex, sepIndex, endIndex);
 
-            for (int i = sepOwnerParaIndex; i >= ownerParaIndex; i--)
-            {
-                if (i == sepOwnerParaIndex && i == ownerParaIndex)
-                {
-                    for (int j = sepIndex; j >= fieldIndex; j--)
-                    {
-                        field.OwnerParagraph.ChildObjects.RemoveAt(j);
+			// Remove the end field marker
+			field.End.OwnerParagraph.ChildObjects.RemoveAt(endIndex);
 
-                    }
-                }
-                else if (i == ownerParaIndex)
-                {
-                    for (int j = field.OwnerParagraph.ChildObjects.Count - 1; j >= fieldIndex; j--)
-                    {
-                        field.OwnerParagraph.ChildObjects.RemoveAt(j);
-                    }
+			// Remove the field and its associated objects in reverse order
+			for (int i = sepOwnerParaIndex; i >= ownerParaIndex; i--)
+			{
+				if (i == sepOwnerParaIndex && i == ownerParaIndex)
+				{
+					// Remove objects from the same paragraph as the field
+					for (int j = sepIndex; j >= fieldIndex; j--)
+					{
+						field.OwnerParagraph.ChildObjects.RemoveAt(j);
+					}
+				}
+				else if (i == ownerParaIndex)
+				{
+					// Remove objects from the field's paragraph but after the field
+					for (int j = field.OwnerParagraph.ChildObjects.Count - 1; j >= fieldIndex; j--)
+					{
+						field.OwnerParagraph.ChildObjects.RemoveAt(j);
+					}
+				}
+				else if (i == sepOwnerParaIndex)
+				{
+					// Remove objects from the separator's paragraph
+					for (int j = sepIndex; j >= 0; j--)
+					{
+						sepOwnerPara.ChildObjects.RemoveAt(j);
+					}
+				}
+				else
+				{
+					// Remove objects from other paragraphs
+					field.OwnerParagraph.OwnerTextBody.ChildObjects.RemoveAt(i);
+				}
+			}
+		}
 
-                }
-                else if (i == sepOwnerParaIndex)
-                {
-                    for (int j = sepIndex; j >= 0; j--)
-                    {
-                        sepOwnerPara.ChildObjects.RemoveAt(j);
-                    }
-                }
-                else
-                {
-                    field.OwnerParagraph.OwnerTextBody.ChildObjects.RemoveAt(i);
-                }
-            }
-        }
+		// Method to format the text between the separator and the end of a field result in the document body
+		private void FormatFieldResultText(Body ownerBody, int sepOwnerParaIndex, int endOwnerParaIndex, int sepIndex, int endIndex)
+		{
+			for (int i = sepOwnerParaIndex; i <= endOwnerParaIndex; i++)
+			{
+				// Get the paragraph at the current index
+				Paragraph para = ownerBody.ChildObjects[i] as Paragraph;
+				
+				if (i == sepOwnerParaIndex && i == endOwnerParaIndex)
+				{
+					// Format objects within the same paragraph as the separator and the end of the field
+					for (int j = sepIndex + 1; j < endIndex; j++)
+					{
+						FormatText(para.ChildObjects[j] as TextRange);
+					}
+				}
+				else if (i == sepOwnerParaIndex)
+				{
+					// Format objects after the separator in the separator's paragraph
+					for (int j = sepIndex + 1; j < para.ChildObjects.Count; j++)
+					{
+						FormatText(para.ChildObjects[j] as TextRange);
+					}
+				}
+				else if (i == endOwnerParaIndex)
+				{
+					// Format objects before the end of the field in the end paragraph
+					for (int j = 0; j < endIndex; j++)
+					{
+						FormatText(para.ChildObjects[j] as TextRange);
+					}
+				}
+				else
+				{
+					// Format all objects in other paragraphs
+					for (int j = 0; j < para.ChildObjects.Count; j++)
+					{
+						FormatText(para.ChildObjects[j] as TextRange);
+					}
+				}
+			}
+		}
 
-        //Remove the font color and underline format of the hyperlinks
-        private void FormatFieldResultText(Body ownerBody, int sepOwnerParaIndex, int endOwnerParaIndex, int sepIndex, int endIndex)
-        {
-            for (int i = sepOwnerParaIndex; i <= endOwnerParaIndex; i++)
-            {
-                Paragraph para = ownerBody.ChildObjects[i] as Paragraph;
-                if (i == sepOwnerParaIndex && i == endOwnerParaIndex)
-                {
-                    for (int j = sepIndex + 1; j < endIndex; j++)
-                    {
-                        FormatText(para.ChildObjects[j] as TextRange);
-                    }
-
-                }
-                else if (i == sepOwnerParaIndex)
-                {
-                    for (int j = sepIndex + 1; j < para.ChildObjects.Count; j++)
-                    {
-                        FormatText(para.ChildObjects[j] as TextRange);
-                    }
-                }
-                else if (i == endOwnerParaIndex)
-                {
-                    for (int j = 0; j < endIndex; j++)
-                    {
-                        FormatText(para.ChildObjects[j] as TextRange);
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < para.ChildObjects.Count; j++)
-                    {
-                        FormatText(para.ChildObjects[j] as TextRange);
-                    }
-                }
-            }
-        }
-        private void FormatText(TextRange tr)
-        {
-            //Set the text color to black
-            tr.CharacterFormat.TextColor = Color.Black;
-            //Set the text underline style to none
-            tr.CharacterFormat.UnderlineStyle = UnderlineStyle.None;
-        }
+		// Method to format the text range by setting its color to black and removing underline style
+		private void FormatText(TextRange tr)
+		{
+			tr.CharacterFormat.TextColor = Color.Black;
+			tr.CharacterFormat.UnderlineStyle = UnderlineStyle.None;
+		}
     }
 }

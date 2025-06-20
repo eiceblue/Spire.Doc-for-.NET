@@ -15,11 +15,24 @@ namespace LoadTextWithEncoding
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string inputFile = "../../../../../../Data/Sample_UTF-7.txt";
-            Document document = new Document();
-            document.LoadText(inputFile, Encoding.UTF7);
-            string resultFile = "LoadTextWithEncoding_out.docx";
-            document.SaveToFile(resultFile, FileFormat.Docx);
+            // Specify the input file path.
+			string inputFile = "../../../../../../Data/Sample_UTF-7.txt";
+
+			// Create a new instance of the Document class.
+			Document document = new Document();
+
+			// Load the text content from the specified input file using UTF-7 encoding.
+			document.LoadText(inputFile, Encoding.UTF7);
+
+			// Specify the file name for the resulting document.
+			string resultFile = "LoadTextWithEncoding_out.docx";
+
+			// Save the loaded text as a Word document with the specified file name and format (Docx).
+			document.SaveToFile(resultFile, FileFormat.Docx);
+
+			// Clean up resources used by the document.
+			document.Dispose();
+			
             WordDocViewer(resultFile);
 
         }

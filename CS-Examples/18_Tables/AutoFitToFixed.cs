@@ -21,15 +21,25 @@ namespace AutoFitToFixed
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
-            //Load file
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
-            //The table is set to a fixed size
-            table.AutoFit(AutoFitBehaviorType.FixedColumnWidths);
-            //Save to file
-            document.SaveToFile("result.docx");
+			Document document = new Document();
+			//Load file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+
+			//Get the first section
+			Section section = document.Sections[0];
+
+			//Get the first table
+			Table table = section.Tables[0] as Table;
+
+			//The table is set to a fixed size
+			table.AutoFit(AutoFitBehaviorType.FixedColumnWidths);
+
+			//Save to file
+			document.SaveToFile("result.docx");
+
+			//Dispose the document
+			document.Dispose();
+			
             //Launch the document
             FileViewer("result.docx");
         }

@@ -15,50 +15,52 @@ namespace AddCheckBoxContentControl
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
+     
+            // Create a new document object
             Document document = new Document();
 
-            //Add a new section.
+            // Add a section to the document
             Section section = document.AddSection();
 
-            //Add a paragraph
+            // Add a paragraph to the section
             Paragraph paragraph = section.AddParagraph();
 
-            //Append textRange for the paragraph
+            // Append text with an explanation to the paragraph
             TextRange txtRange = paragraph.AppendText("The following example shows how to add CheckBox content control in a Word document. \n");
 
-            //Append textRange 
+            // Append text indicating adding the CheckBox content control
             txtRange = paragraph.AppendText("Add CheckBox Content Control:  ");
 
-            //Set the font format
+            // Set the text range formatting to italic
             txtRange.CharacterFormat.Italic = true;
 
-            //Create StructureDocumentTagInline for document
+            // Create an inline structure document tag (SDT) and add it to the paragraph's child objects
             StructureDocumentTagInline sdt = new StructureDocumentTagInline(document);
-
-            //Add sdt in paragraph
             paragraph.ChildObjects.Add(sdt);
 
-            //Specify the type
+            // Set the SDT type to CheckBox
             sdt.SDTProperties.SDTType = SdtType.CheckBox;
 
-            //Set properties for control
+            // Create an instance of SdtCheckBox and set it as the control properties for the SDT
             SdtCheckBox scb = new SdtCheckBox();
             sdt.SDTProperties.ControlProperties = scb;
 
-            //Add textRange format
+            // Create a TextRange object, set its font name and size
             TextRange tr = new TextRange(document);
             tr.CharacterFormat.FontName = "MS Gothic";
             tr.CharacterFormat.FontSize = 12;
 
-            //Add textRange to StructureDocumentTagInline
+            // Add the TextRange object to the SDT's child objects
             sdt.ChildObjects.Add(tr);
 
-            //Set checkBox as checked
+            // Set the CheckBox as checked
             scb.Checked = true;
 
-            //Save the document.
+            // Save the document to a file in Docx format
             document.SaveToFile("Output.docx", FileFormat.Docx);
+
+            // Dispose the document object
+            document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

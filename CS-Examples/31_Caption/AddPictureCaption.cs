@@ -16,37 +16,46 @@ namespace AddPictureCaption
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+            // Create a new instance of Document
             Document document = new Document();
 
-            //Create a new section
+            // Add a new section to the document
             Section section = document.AddSection();
 
-            //Add the first picture
+            // Add a paragraph to the section
             Paragraph par1 = section.AddParagraph();
             par1.Format.AfterSpacing = 10;
+
+            // Append an image (picture) to the paragraph from the specified file path
             DocPicture pic1 = par1.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
             pic1.Height = 100;
             pic1.Width = 120;
-            //Add caption to the picture
+
+            // Set the caption numbering format to "Number" and add a caption below the picture
             CaptionNumberingFormat format = CaptionNumberingFormat.Number;
             pic1.AddCaption("Figure", format, CaptionPosition.BelowItem);
 
-            //Add the second picture
+            // Add another paragraph to the section
             Paragraph par2 = section.AddParagraph();
+
+            // Append another image (picture) to the paragraph from the specified file path
             DocPicture pic2 = par2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
             pic2.Height = 100;
             pic2.Width = 120;
-            //Add caption to the picture
+
+            // Add a caption below the second picture
             pic2.AddCaption("Figure", format, CaptionPosition.BelowItem);
 
-            //Update fields
+            // Enable field updating in the document
             document.IsUpdateFields = true;
 
-            //Save the file
+            // Specify the output file name and format (Docx)
             string output = "AddPictureCaption_result.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+            document.SaveToFile(output, FileFormat.Docx);
 
+            // Dispose of the document object when finished using it
+            document.Dispose();
+			
             //Launching the file
             WordDocViewer(output);
 

@@ -20,41 +20,54 @@ namespace ExecuteWithDataTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String inputDataBase = @"..\..\..\..\..\..\Data\demo.mdb";
-            String input = @"..\..\..\..\..\..\Data\ExecuteWithDataTable.doc";
-            // Get a dataTable
-            DataTable orderTable = GetCountryDataTable(inputDataBase);
-            Document doc = new Document();
-            //Load a mail merge template file
-            doc.LoadFromFile(input);
-            //Fill mergedField with data from dataTable
-            doc.MailMerge.ExecuteWidthRegion(orderTable);
+            string inputDataBase = @"..\..\..\..\..\..\Data\demo.mdb";
+			string input = @"..\..\..\..\..\..\Data\ExecuteWithDataTable.doc";
 
-            string result = "ExecuteWithDataTable_out.doc";
-            doc.SaveToFile(result, FileFormat.Doc);
+			// Get a dataTable
+			DataTable orderTable = GetCountryDataTable(inputDataBase);
+
+			// Create a Document 
+			Document doc = new Document();
+
+			//Load a mail merge template file
+			doc.LoadFromFile(input);
+
+			//Fill mergedField with data from dataTable
+			doc.MailMerge.ExecuteWidthRegion(orderTable);
+
+			//Save to file
+			string result = "ExecuteWithDataTable_out.doc";
+			doc.SaveToFile(result, FileFormat.Doc);
+
+			// Dispose the document object
+			doc.Dispose();
             WordViewer(result);
        }
         private DataTable GetCountryDataTable(string inputDataBase)
         {
             // Open a database connection
-            string connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + inputDataBase;
-            OleDbConnection connection = new OleDbConnection(connString);
-            connection.Open();
+			string connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + inputDataBase;
+			OleDbConnection connection = new OleDbConnection(connString);
+			connection.Open();
 
-            // Create the SQL command.
-            string commandString = "SELECT * FROM Country";
-            OleDbCommand command = new OleDbCommand(commandString, connection);
+			// Create the SQL command.
+			string commandString = "SELECT * FROM Country";
+			OleDbCommand command = new OleDbCommand(commandString, connection);
 
-            // Create the data adapter.
-            OleDbDataAdapter adapter = new OleDbDataAdapter(command);
+			// Create the data adapter.
+			OleDbDataAdapter adapter = new OleDbDataAdapter(command);
 
-            // Fill the results from the database into a DataTable.
-            DataTable dataTable = new DataTable();
-            adapter.Fill(dataTable);
-            dataTable.TableName = "Country";
-            connection.Close();
+			// Fill the results from the database into a DataTable.
+			DataTable dataTable = new DataTable();
 
-            return dataTable;
+			//Fill the data table
+			adapter.Fill(dataTable);
+			dataTable.TableName = "Country";
+
+			//Close the connection
+			connection.Close();
+
+			return dataTable;
         }
         private void WordViewer(string fileName)
         {

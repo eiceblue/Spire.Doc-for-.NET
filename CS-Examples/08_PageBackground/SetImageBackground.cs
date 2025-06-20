@@ -19,17 +19,20 @@ namespace SetImageBackground
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //load a word document
+            // Create a new Document object and load a Word document from a specific file path
             Document document = new Document(@"..\..\..\..\..\..\Data\Template.docx");
 
-            //set the background type as picture.
+            // Set the background type of the document to picture
             document.Background.Type = BackgroundType.Picture;
 
-            //set the background picture
+            // Set the background picture of the document by loading an image from a file path
             document.Background.Picture = Image.FromFile(@"..\..\..\..\..\..\Data\Background.png");
 
-            //save the file.
+            // Save the modified document to a file with the specified format (Docx)
             document.SaveToFile("ImageBackground.docx", FileFormat.Docx);
+
+            // Dispose the Document object to release resources
+            document.Dispose();
 
             //launching the Word file.
             WordDocViewer("ImageBackground.docx");

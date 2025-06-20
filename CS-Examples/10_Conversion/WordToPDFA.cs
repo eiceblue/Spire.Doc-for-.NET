@@ -19,20 +19,25 @@ namespace WordToPDFA
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Set the Conformance-level of the Pdf file to PDF_A1B.
-            ToPdfParameterList toPdf = new ToPdfParameterList();
-            toPdf.PdfConformanceLevel = Spire.Pdf.PdfConformanceLevel.Pdf_A1B;
+			//Create a ToPdfParameterList
+			ToPdfParameterList toPdf = new ToPdfParameterList();
 
-            String result = "Result-WordToPDFA.pdf";
+			//Set the Conformance-level of the Pdf file to PDF_A1B.
+			toPdf.PdfConformanceLevel = PdfConformanceLevel.Pdf_A1B;
 
-            //Save the file.
-            document.SaveToFile(result, toPdf);
+			string result = "Result-WordToPDFA.pdf";
+
+			//Save the file.
+			document.SaveToFile(result, toPdf);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Pdf file.
             WordDocViewer(result);

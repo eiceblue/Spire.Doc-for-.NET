@@ -17,27 +17,32 @@ namespace AddOrRemoveColumn
         private void button1_Click(object sender, EventArgs e)
         {
 
-            //Load the document from disk.
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_N2.docx");
+            //Create a Word document
+			Document doc = new Document();
 
-            //Access the first section
-            Section section = doc.Sections[0];
+			//Load the document from disk
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_N2.docx");
 
-            //Access the first table
-            Table table = section.Tables[0] as Table;
+			//Access the first section
+			Section section = doc.Sections[0];
 
-            //Add a blank column
-            int columnIndex1 = 0;
-            AddColumn(table, columnIndex1);
+			//Access the first table
+			Table table = section.Tables[0] as Table;
 
-            //Remove a column
-            int columnIndex2 = 2;
-            RemoveColumn(table, columnIndex2);
+			//Add a blank column
+			int columnIndex1 = 0;
+			AddColumn(table, columnIndex1);
 
-            //Save the Word file
-            string output = "AddOrRemoveColumn_out.docx";
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			//Remove a column
+			int columnIndex2 = 2;
+			RemoveColumn(table, columnIndex2);
+
+			//Save the Word file
+			string output = "AddOrRemoveColumn_out.docx";
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			//Dispose the document
+			doc.Dispose();
 
             //Launch the file
             FileViewer(output);
@@ -45,17 +50,21 @@ namespace AddOrRemoveColumn
         private void AddColumn(Table table, int columnIndex)
         {
             for (int r = 0; r < table.Rows.Count; r++)
-            {
-                TableCell addCell = new TableCell(table.Document);
-                table.Rows[r].Cells.Insert(columnIndex, addCell);
-            }
+			{
+				//Create a new table cell
+				TableCell addCell = new TableCell(table.Document);
+
+				//Insert the new cell into the specified position
+				table.Rows[r].Cells.Insert(columnIndex, addCell);
+			}
         }
         private void RemoveColumn(Table table, int columnIndex)
         {
             for (int r = 0; r < table.Rows.Count; r++)
-            {
-                table.Rows[r].Cells.RemoveAt(columnIndex);
-            }
+			{
+				//Remove the cell from specified position
+				table.Rows[r].Cells.RemoveAt(columnIndex);
+			}
         }
         private void FileViewer(string fileName)
         {

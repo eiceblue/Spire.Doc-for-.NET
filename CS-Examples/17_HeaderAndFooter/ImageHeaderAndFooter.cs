@@ -17,45 +17,51 @@ namespace ImageHeaderAndFooter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk
             string input = @"..\..\..\..\..\..\Data\Template.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the header of the first page
-            HeaderFooter header = doc.Sections[0].HeadersFooters.Header;
+			//Create a word document
+			Document doc = new Document();
 
-            //Add a paragraph for the header
-            Paragraph paragraph = header.AddParagraph();
+			//Load the document from disk
+			doc.LoadFromFile(input);
 
-            //Set the format of the paragraph
+			//Get the header of the first page
+			HeaderFooter header = doc.Sections[0].HeadersFooters.Header;
+
+			//Add a paragraph for the header
+			Paragraph paragraph = header.AddParagraph();
+
+			//Set the format of the paragraph
             paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
 
-            //Append a picture in the paragraph
-            DocPicture headerimage = paragraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
-            headerimage.VerticalAlignment = ShapeVerticalAlignment.Bottom;
+			//Append a picture in the paragraph
+			DocPicture headerimage = paragraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+			headerimage.VerticalAlignment = ShapeVerticalAlignment.Bottom;
 
-            //Get the footer of the first section
-            HeaderFooter footer = doc.Sections[0].HeadersFooters.Footer;
+			//Get the footer of the first section
+			HeaderFooter footer = doc.Sections[0].HeadersFooters.Footer;
 
-            //Add a paragraph for the footer
-            Paragraph paragraph2 = footer.AddParagraph();
+			//Add a paragraph for the footer
+			Paragraph paragraph2 = footer.AddParagraph();
 
-            //Set the format of the paragraph
+			//Set the format of the paragraph
             paragraph2.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Left;
 
-            //Append a picture in the paragraph
-            DocPicture footerimage = paragraph2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
+			//Append a picture in the paragraph
+			paragraph2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
 
-            //Append text in the paragraph
-            TextRange TR = paragraph2.AppendText("Copyright © 2013 e-iceblue. All Rights Reserved.");
-            TR.CharacterFormat.FontName = "Arial";
-            TR.CharacterFormat.FontSize = 10;
-            TR.CharacterFormat.TextColor = Color.Black;
+			//Append text in the paragraph and set its character format
+			TextRange TR = paragraph2.AppendText("Copyright © 2013 e-iceblue. All Rights Reserved.");
+			TR.CharacterFormat.FontName = "Arial";
+			TR.CharacterFormat.FontSize = 10;
+			TR.CharacterFormat.TextColor = Color.Black;
 
-            //Save and launch document
-            string output = "ImageHeaderAndFooter.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Save the document
+			string output = "ImageHeaderAndFooter.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -17,36 +17,42 @@ namespace SetFont
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\Sample.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\Sample.docx";
 
-            //Get the first section 
-            Section s = doc.Sections[0];
+			//Create a Word document.
+			Document doc = new Document();
 
-            //Get the second paragraph
-            Paragraph p = s.Paragraphs[1];
+			//Load the file from disk.
+			doc.LoadFromFile(input);
 
-            //Create a characterFormat object
-            CharacterFormat format = new CharacterFormat(doc);
-            //Set font
-            format.Font = new Font("Arial", 16);
+			//Get the first section 
+			Section s = doc.Sections[0];
 
-            //Loop through the childObjects of paragraph 
-            foreach (DocumentObject childObj in p.ChildObjects)
-            {
-                if (childObj is TextRange)
-                {
-                    //Apply character format
-                    TextRange tr = childObj as TextRange;
-                    tr.ApplyCharacterFormat(format);
-                }
-            }
+			//Get the second paragraph
+			Paragraph p = s.Paragraphs[1];
 
-            //Save and launch document
-            string output = "SetFont.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Create a characterFormat object
+			CharacterFormat format = new CharacterFormat(doc);
+			//Set font
+			format.Font = new Font("Arial", 16);
+
+			//Loop through the childObjects of paragraph 
+			foreach (DocumentObject childObj in p.ChildObjects)
+			{
+				if (childObj is TextRange)
+				{
+					//Apply character format
+					TextRange tr = childObj as TextRange;
+					tr.ApplyCharacterFormat(format);
+				}
+			}
+
+			//Save and launch document
+			string output = "SetFont.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the Document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

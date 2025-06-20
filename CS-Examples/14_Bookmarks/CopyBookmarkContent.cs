@@ -20,53 +20,71 @@ namespace CopyBookmarkContent
 
         private void button1_Click(object sender, EventArgs e)
         {
-			//Load the document from disk.
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
-			
-            //Get the bookmark by name.
-            Bookmark bookmark = doc.Bookmarks["Test"];
-            DocumentObject docObj = null;
-			
-            //Judge if the paragraph includes the bookmark exists in the table, if it exists in cell,
-            //Then need to find its outermost parent object(Table),
-            //and get the start/end index of current object on body.
-            if ((bookmark.BookmarkStart.Owner as Paragraph).IsInCell)
-            {
-                docObj = bookmark.BookmarkStart.Owner.Owner.Owner.Owner;
-            }
-            else
-            {
-                docObj = bookmark.BookmarkStart.Owner;
-            }
-            int startIndex = doc.Sections[0].Body.ChildObjects.IndexOf(docObj);
-            if ((bookmark.BookmarkEnd.Owner as Paragraph).IsInCell)
-            {
-                docObj = bookmark.BookmarkEnd.Owner.Owner.Owner.Owner;
-            }
-            else
-            {
-                docObj = bookmark.BookmarkEnd.Owner;
-            }
-            int endIndex = doc.Sections[0].Body.ChildObjects.IndexOf(docObj);
-			
-            //Get the start/end index of the bookmark object on the paragraph.
-            Paragraph para = bookmark.BookmarkStart.Owner as Paragraph;
-            int pStartIndex = para.ChildObjects.IndexOf(bookmark.BookmarkStart);
-            para = bookmark.BookmarkEnd.Owner as Paragraph;
-            int pEndIndex = para.ChildObjects.IndexOf(bookmark.BookmarkEnd);
-			
-            //Get the content of current bookmark and copy.
-            TextBodySelection select = new TextBodySelection(doc.Sections[0].Body, startIndex, endIndex, pStartIndex, pEndIndex);
-            TextBodyPart body = new TextBodyPart(select);
-            for (int i = 0; i < body.BodyItems.Count; i++)
-            {
-                doc.Sections[0].Body.ChildObjects.Add(body.BodyItems[i].Clone());
+			//Create a Word document
+			Document doc = new Document();
 
-            }
-			
+			//Load the document from disk.
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
+
+			//Get the bookmark by name.
+			Bookmark bookmark = doc.Bookmarks["Test"];
+			DocumentObject docObj = null;
+
+			//Judge if the paragraph includes the bookmark exists in the table, if it exists in cell,
+			//Then need to find its outermost parent object(Table),
+			//and get the start/end index of current object on body.
+			if ((bookmark.BookmarkStart.Owner as Paragraph).IsInCell)
+			{
+				//Get the table object
+				docObj = bookmark.BookmarkStart.Owner.Owner.Owner.Owner;
+			}
+			else
+			{
+				//Get the owner paragraph
+				docObj = bookmark.BookmarkStart.Owner;
+			}
+
+			//Get the index of the docObj
+			int startIndex = doc.Sections[0].Body.ChildObjects.IndexOf(docObj);
+
+
+			//Judge the postion of the BookmarkEnd
+			if ((bookmark.BookmarkEnd.Owner as Paragraph).IsInCell)
+			{
+				docObj = bookmark.BookmarkEnd.Owner.Owner.Owner.Owner;
+			}
+			else
+			{
+				docObj = bookmark.BookmarkEnd.Owner;
+			}
+
+			//Get the index of the docObj
+			int endIndex = doc.Sections[0].Body.ChildObjects.IndexOf(docObj);
+
+			//Get the start/end index of the bookmark object on the paragraph.
+			Paragraph para = bookmark.BookmarkStart.Owner as Paragraph;
+
+			//Get the index of BookmarkStart
+			int pStartIndex = para.ChildObjects.IndexOf(bookmark.BookmarkStart);
+			para = bookmark.BookmarkEnd.Owner as Paragraph;
+
+			//Get the index of the BookmarkEnd
+			int pEndIndex = para.ChildObjects.IndexOf(bookmark.BookmarkEnd);
+
+			//Get the content of current bookmark and copy.
+			TextBodySelection select = new TextBodySelection(doc.Sections[0].Body, startIndex, endIndex, pStartIndex, pEndIndex);
+			TextBodyPart body = new TextBodyPart(select);
+			for (int i = 0; i < body.BodyItems.Count; i++)
+			{
+				doc.Sections[0].Body.ChildObjects.Add(body.BodyItems[i].Clone());
+
+			}
+
 			//Save the document.
-            doc.SaveToFile("CopyBookmarkContent.docx", FileFormat.Docx);
+			doc.SaveToFile("CopyBookmarkContent.docx", FileFormat.Docx);
+
+			// Dispose the Document object 
+			doc.Dispose();
 			
 			//Launch the Word file.
             FileViewer("CopyBookmarkContent.docx");

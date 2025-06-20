@@ -20,19 +20,26 @@ namespace ReplaceBookmarkContent
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk.
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
+            //Create a word document
+			Document doc = new Document();
 
-            //Locate the bookmark.
-            BookmarksNavigator bookmarkNavigator = new BookmarksNavigator(doc);
-            bookmarkNavigator.MoveToBookmark("Test");
+			//Load the document from disk.
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
 
-            //Replace the context with new.
-            bookmarkNavigator.ReplaceBookmarkContent("This is replaced content.", false);
+			//Create a BookmarksNavigator instance
+			BookmarksNavigator bookmarkNavigator = new BookmarksNavigator(doc);
 
-            //Save the document.
-            doc.SaveToFile("ReplaceBookMarkContent.docx", FileFormat.Docx);
+			//Locate the bookmark.
+			bookmarkNavigator.MoveToBookmark("Test");
+
+			//Replace the context with new.
+			bookmarkNavigator.ReplaceBookmarkContent("This is replaced content.", false);
+
+			//Save the document.
+			doc.SaveToFile("ReplaceBookMarkContent.docx", FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
 
             //Launch the Word file.
             FileViewer("ReplaceBookMarkContent.docx");

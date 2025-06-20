@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Spire.Doc;
 using Spire.Doc.Documents;
 using System.Drawing;
+using System.Data;
 
 namespace RepeatRowOnEachPage
 {
@@ -15,79 +16,85 @@ namespace RepeatRowOnEachPage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+          
+			// Create a new Word document
+			Document document = new Document();
 
-            //Create a new section
-            Section section = document.AddSection();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //Create a table width default borders
-            Table table = section.AddTable(true);
-            //Set table with to 100%
-            PreferredWidth width = new PreferredWidth(WidthType.Percentage, 100);
-            table.PreferredWidth = width;
+			// Add a table to the section
+			Table table = section.AddTable(true);
 
-            //Add a new row 
-            TableRow row = table.AddRow();
-            //Set the row as a table header 
-            row.IsHeader = true;
-            //Set the backcolor of row
-            row.RowFormat.BackColor = Color.LightGray;
-            //Add a new cell for row
+			// Set the preferred width of the table to 100%
+			PreferredWidth width = new PreferredWidth(WidthType.Percentage, 100);
+			table.PreferredWidth = width;
+
+			// Add a header row to the table
+			TableRow row = table.AddRow();
+			row.IsHeader = true;
+            // Add a cell to the header row
             TableCell cell = row.AddCell();
-            cell.SetCellWidth(100, CellWidthType.Percentage);
-            //Add a paragraph for cell to put some data
-            Paragraph parapraph = cell.AddParagraph();
-            //Add text 
-            parapraph.AppendText("Row Header 1");
-            //Set paragraph horizontal center alignment
-            parapraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+			cell.SetCellWidth(100, CellWidthType.Percentage);
 
-            row = table.AddRow(false, 1);
-            row.IsHeader = true;
-            row.RowFormat.BackColor = Color.Ivory;
-            //Set row height
+            for (int i = 0; i < row.Cells.Count; i++)
+            {
+                row.Cells[i].CellFormat.Shading.BackgroundPatternColor = Color.LightGray;
+            }
+
+            // Add a paragraph to the cell with text "Row Header 1"
+            Paragraph paragraph = cell.AddParagraph();
+			paragraph.AppendText("Row Header 1");
+			paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+			// Add another header row to the table
+			row = table.AddRow(false, 1);
+			row.IsHeader = true;
+            for (int i = 0; i < row.Cells.Count; i++)
+            {
+                row.Cells[i].CellFormat.Shading.BackgroundPatternColor = Color.Ivory;
+            }
             row.Height = 30;
-            cell = row.Cells[0];
-            cell.SetCellWidth(100, CellWidthType.Percentage);
-            //Set cell vertical middle alignment
-            cell.CellFormat.VerticalAlignment = VerticalAlignment.Middle;
-            //Add a paragraph for cell to put some data
-            parapraph = cell.AddParagraph();
-            //Add text 
-            parapraph.AppendText("Row Header 2");
-            parapraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+			cell = row.Cells[0];
+			cell.SetCellWidth(100, CellWidthType.Percentage);
+			cell.CellFormat.VerticalAlignment = VerticalAlignment.Middle;
 
-            //Add many common rows 
-            for (int i = 0; i < 70; i++)
-            {
-                row = table.AddRow(false,2);
-                cell = row.Cells[0];
-                //Set cell width to 50% of table width
-                cell.SetCellWidth(50, CellWidthType.Percentage);
-                cell.AddParagraph().AppendText("Column 1 Text");
-                cell = row.Cells[1];
-                cell.SetCellWidth(50, CellWidthType.Percentage);
-                cell.AddParagraph().AppendText("Column 2 Text");
-            }
-            //Set cell backcolor
-            for (int j = 1; j < table.Rows.Count; j++)
-            {
-                if (j % 2 == 0)
-                {
-                    TableRow row2 = table.Rows[j];
-                    for (int f = 0; f < row2.Cells.Count; f++)
-                    {
-                        row2.Cells[f].CellFormat.BackColor = Color.LightBlue;
+			// Add a paragraph to the cell with text "Row Header 2"
+			paragraph = cell.AddParagraph();
+			paragraph.AppendText("Row Header 2");
+			paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+			// Add rows and cells to the table
+			for (int i = 0; i < 70; i++)
+			{
+				row = table.AddRow(false, 2);
+				cell = row.Cells[0];
+				cell.SetCellWidth(50, CellWidthType.Percentage);
+				cell.AddParagraph().AppendText("Column 1 Text");
+				cell = row.Cells[1];
+				cell.SetCellWidth(50, CellWidthType.Percentage);
+				cell.AddParagraph().AppendText("Column 2 Text");
+			}
+
+			// Set background color for alternating rows
+			for (int j = 1; j < table.Rows.Count; j++)
+			{
+				if (j % 2 == 0)
+				{
+					TableRow row2 = table.Rows[j];
+					for (int f = 0; f < row2.Cells.Count; f++)
+					{
+						row2.Cells[f].CellFormat.Shading.BackgroundPatternColor = Color.LightBlue;         
                     }
-                }
-               
-            }
+				}
+			}
 
-            String result = "RepeatRowOnEachPage_out.docx";
+			// Save the document to a file
+			String result = "RepeatRowOnEachPage_out.docx";
+			document.SaveToFile(result, FileFormat.Docx);
 
-            //Save file.
-            document.SaveToFile(result,FileFormat.Docx);
+			// Dispose of the document object
+			document.Dispose();
 
             //Launching the Word file.
             WordDocViewer(result);

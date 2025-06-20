@@ -19,23 +19,29 @@ namespace ManagePagination
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new instance of the Document class.
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load a Word document from a specified file path.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Get the first section and the paragraph we want to manage the pagination.
+            // Get the first section of the document.
             Section sec = document.Sections[0];
+
+            // Get the fifth paragraph of the section.
             Paragraph para = sec.Paragraphs[4];
 
-            //Set the pagination format as Format.PageBreakBefore for the checked paragraph.
+            // Set the PageBreakBefore property of the paragraph to true, causing a page break before it.
             para.Format.PageBreakBefore = true;
 
+            // Specify the file name for the resulting document.
             String result = "Result-ManagePagination.docx";
 
-            //Save the file.
+            // Save the document to a file with the specified file name and format (Docx2013).
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Clean up resources used by the document.
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

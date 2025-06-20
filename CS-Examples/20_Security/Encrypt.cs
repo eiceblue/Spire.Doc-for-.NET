@@ -16,19 +16,23 @@ namespace Encrypt
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+       
+			// Create a new Document object
+			Document document = new Document();
 
-            //Load Word document.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template.docx");
+			// Load the document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template.docx");
 
-            //encrypt document with password specified by textBox1
-            document.Encrypt("E-iceblue");
+			// Encrypt the document with the provided password
+			document.Encrypt("E-iceblue");
 
-            //Save as docx file.
-            document.SaveToFile("Sample.docx",FileFormat.Docx);
+			// Save the encrypted document to the specified file path in DOCX format
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
 
-            //Launching the MS Word file.
+			// Dispose the document object to free up resources
+			document.Dispose();
+
+            //Launching the Word file.
             WordDocViewer("Sample.docx");
 
 

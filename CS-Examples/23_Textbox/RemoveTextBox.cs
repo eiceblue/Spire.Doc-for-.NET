@@ -13,20 +13,31 @@ namespace RemoveTextBox
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\TextBoxTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+          
+			// Specify the input file path
+			string input = @"..\..\..\..\..\..\Data\TextBoxTemplate.docx";
 
-            //Remove the first text box
-            doc.TextBoxes.RemoveAt(0);
+			// Create a new instance of Document
+			Document doc = new Document();
 
-            //Clear all the text boxes
-            //Doc.TextBoxes.Clear();
+			// Load the document from the specified input file
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "RemoveTextBox.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Remove the first text box in the document
+			doc.TextBoxes.RemoveAt(0);
+
+			// Clear all the text boxes in the document
+			//doc.TextBoxes.Clear();
+
+			// Specify the output file path
+			string output = "RemoveTextBox.docx";
+
+			// Save the modified document to the output file with the specified file format (Docx)
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document object to release resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

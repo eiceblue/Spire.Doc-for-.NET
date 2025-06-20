@@ -21,11 +21,16 @@ namespace ToXPS
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+			Document document = new Document();
 
-            //Save the document to a xps file.
-            document.SaveToFile("Sample.xps", FileFormat.XPS);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+			//Save the document to a xps file.
+			document.SaveToFile("Sample.xps", FileFormat.XPS);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launching the pdf reader to open.
             FileViewer("Sample.xps");

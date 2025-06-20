@@ -21,16 +21,19 @@ namespace HtmlToImage
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile1.html", FileFormat.Html, XHTMLValidationType.None);
-            
-            String result = "Result-HtmlToImage.png";
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile1.html", FileFormat.Html, XHTMLValidationType.None);
 
-            //Save to image. You can convert HTML to BMP, JPEG, PNG, GIF, Tiff£¬etc.
-            Image image = document.SaveToImages(0, ImageType.Bitmap);
-            image.Save(result, ImageFormat.Png);
+			string result = "Result-HtmlToImage.png";
+
+			//Save to image. You can convert HTML to BMP, JPEG, PNG, GIF, Tiff£¬etc.
+			Image image = document.SaveToImages(0, ImageType.Bitmap);
+			image.Save(result, ImageFormat.Png);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the image.
             WordDocViewer(result);

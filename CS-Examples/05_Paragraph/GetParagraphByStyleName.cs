@@ -20,31 +20,41 @@ namespace GetParagraphByStyleName
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+           // Create a new Document object.
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load an existing Word document from the specified file path.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_DocX_3.docx");
 
+            // Create a StringBuilder object to store the content.
             StringBuilder content = new StringBuilder();
+
+            // Append a line of text to the StringBuilder.
             content.AppendLine("Get paragraphs by style name \"Heading1\": ");
 
-            //Get paragraphs by style name.
+            // Iterate over the Sections in the document.
             foreach (Section section in document.Sections)
             {
+                // Iterate over the Paragraphs in each Section.
                 foreach (Paragraph paragraph in section.Paragraphs)
                 {
+                    // Check if the Paragraph has the style name "Heading1".
                     if (paragraph.StyleName == "Heading1")
                     {
+                        // Append the text of the Paragraph to the StringBuilder.
                         content.AppendLine(paragraph.Text);
                     }
                 }
             }
 
+            // Specify the file name for the resulting text file.
             String result = "Result-GetParagraphsByStyleName.txt";
 
-            //Save to file.
-            File.WriteAllText(result,content.ToString());
+            // Write the content of the StringBuilder to a text file.
+            File.WriteAllText(result, content.ToString());
+
+            // Dispose the Document object.
+            document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

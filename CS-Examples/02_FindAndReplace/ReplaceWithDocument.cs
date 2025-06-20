@@ -15,18 +15,26 @@ namespace ReplaceWithDocument
         private void button1_Click(object sender, EventArgs e)
         {
 
-            //Load a template document 
+           // Create a new Word document object with a relative path
             Document doc = new Document(@"..\..\..\..\..\..\Data\Text2.docx");
 
-            //Load another document to replace text
+            // Create an object of another Word document to be used for replacement
             IDocument replaceDoc = new Document(@"..\..\..\..\..\..\Data\Text1.docx");
 
-            //Replace specified text with the other document
+            // Search for the string "Document1" in the doc document for the first occurrence,
+            // replace it with the content of the replaceDoc document, case-sensitive search,
+            // but case-insensitive replacement
             doc.Replace("Document1", replaceDoc, false, true);
 
-            //Save and launch document
+            // Define the output file name, which will be saved in the root directory of the project with a .docx extension
             string output = "ReplaceWithDocument.docx";
+
+            // Save the modified document to a specified path with a .docx format
             doc.SaveToFile(output, FileFormat.Docx);
+
+            // Dispose of the document object to release resources and prevent memory leaks
+            doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

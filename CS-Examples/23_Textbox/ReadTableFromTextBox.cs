@@ -16,35 +16,47 @@ namespace ReadTableFromTextBox
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\TextBoxTable.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+        
+			// Load the Word document from the specified file path
+			string input = @"..\..\..\..\..\..\Data\TextBoxTable.docx";
+			Document doc = new Document();
+			doc.LoadFromFile(input);
 
-            //Get the first textbox
-            Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+			// Get the first textbox in the document
+			Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
 
-            //Get the first table in the textbox
-            Table table = textbox.Body.Tables[0] as Table;
+			// Get the first table from the textbox
+			Table table = textbox.Body.Tables[0] as Table;
 
-            string str = null;
+			// Initialize an empty string to store the table data
+			string str = null;
 
-            //Loop through the paragraphs of the table cells and extract them to a .txt file
-            foreach (TableRow row in table.Rows)
-            {
-                foreach (TableCell cell in row.Cells)
-                {
-                    foreach (Paragraph paragraph in cell.Paragraphs)
-                    {
-                        str += paragraph.Text + "\t";
-                    }
-                }
-                str += "\r\n";
-            }
+			// Iterate through each row in the table
+			foreach (TableRow row in table.Rows)
+			{
+				// Iterate through each cell in the row
+				foreach (TableCell cell in row.Cells)
+				{
+					// Iterate through each paragraph in the cell
+					foreach (Paragraph paragraph in cell.Paragraphs)
+					{
+						// Append the text of each paragraph to the string, separated by a tab
+						str += paragraph.Text + "\t";
+					}
+				}
+				// Add a new line after processing each row
+				str += "\r\n";
+			}
 
-            //Save to TXT file and launch it
-            string output = "ReadTableFromTextBox.txt";
-            File.WriteAllText(output, str);
+			// Specify the output file path
+			string output = "ReadTableFromTextBox.txt";
+
+			// Write the table data to the output file
+			File.WriteAllText(output, str);
+
+			// Dispose of the document object
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -18,22 +18,27 @@ namespace AddSectionFromOtherDoc
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document as target document
-            Document TarDoc = new Document(@"..\..\..\..\..\..\..\Data\SampleB_1.docx");
+            // Create a new instance of the Document class and load a document from the specified file path.
+			Document TarDoc = new Document(@"..\..\..\..\..\..\..\Data\SampleB_1.docx");
 
-            //Open a Word document as source document
-            Document SouDoc = new Document( @"..\..\..\..\..\..\..\Data\Sample_two sections.docx");
+			// Create a new instance of the Document class and load another document from the specified file path.
+			Document SouDoc = new Document(@"..\..\..\..\..\..\..\Data\Sample_two sections.docx");
 
-            //Get the second section from source document
-            Section Ssection = SouDoc.Sections[1];
-           
-            //Add the section in target document
-            TarDoc.Sections.Add(Ssection.Clone());
+			// Get the second section from SouDoc.
+			Section Ssection = SouDoc.Sections[1];
 
-            String result = "result.docx";
+			// Clone the second section and add it to TarDoc.
+			TarDoc.Sections.Add(Ssection.Clone());
 
-            //Save to file
-            TarDoc.SaveToFile(result, FileFormat.Docx);
+			// Specify the output file name.
+			string result = "result.docx";
+
+			// Save the modified TarDoc to a file with the specified output file name and format (Docx).
+			TarDoc.SaveToFile(result, FileFormat.Docx);
+
+			// Clean up resources used by the TarDoc and SouDoc.
+			TarDoc.Dispose();
+			SouDoc.Dispose();
 
             //Launch result file
             WordDocViewer(result);

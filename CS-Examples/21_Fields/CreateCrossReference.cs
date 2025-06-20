@@ -20,51 +20,56 @@ namespace CreateCrossReference
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+         
+			// Create a new Document object
+			Document document = new Document();
 
-            //Add a new section.
-            Section section = document.AddSection();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //Create a bookmark.
-            Paragraph paragraph = section.AddParagraph();
-            paragraph.AppendBookmarkStart("MyBookmark");
-            paragraph.AppendText("Text inside a bookmark");
-            paragraph.AppendBookmarkEnd("MyBookmark");
+			// Add a paragraph to the section and append a bookmark with the specified name
+			Paragraph paragraph = section.AddParagraph();
+			paragraph.AppendBookmarkStart("MyBookmark");
+			paragraph.AppendText("Text inside a bookmark");
+			paragraph.AppendBookmarkEnd("MyBookmark");
 
-            //Insert line breaks.
-            for (int i = 0; i < 4; i++)
-            {
-                paragraph.AppendBreak(BreakType.LineBreak);
-            }
+			// Add line breaks to the paragraph
+			for (int i = 0; i < 4; i++)
+			{
+				paragraph.AppendBreak(BreakType.LineBreak);
+			}
 
-            //Create a cross-reference field, and link it to bookmark.                    
-            Field field = new Field(document);
-            field.Type = FieldType.FieldRef;
-            field.Code = @"REF MyBookmark \p \h";
+			// Create a new Field object for referencing the bookmark
+			Field field = new Field(document);
+			field.Type = FieldType.FieldRef;
+			field.Code = @"REF MyBookmark \p \h";
 
-            //Insert field to paragraph.
-            paragraph = section.AddParagraph();
-            paragraph.AppendText("For more information, see ");
-            paragraph.ChildObjects.Add(field);
+			// Add a new paragraph to the section and append text and the field
+			paragraph = section.AddParagraph();
+			paragraph.AppendText("For more information, see ");
+			paragraph.ChildObjects.Add(field);
 
-            //Insert FieldSeparator object.
-            FieldMark fieldSeparator = new FieldMark(document, FieldMarkType.FieldSeparator);
-            paragraph.ChildObjects.Add(fieldSeparator);
+			// Add a field separator to the paragraph
+			FieldMark fieldSeparator = new FieldMark(document, FieldMarkType.FieldSeparator);
+			paragraph.ChildObjects.Add(fieldSeparator);
 
-            //Set display text of the field.
-            TextRange tr = new TextRange(document);
-            tr.Text = "above";
-            paragraph.ChildObjects.Add(tr);
+			// Create a TextRange object and set its text
+			TextRange tr = new TextRange(document);
+			tr.Text = "above";
+			paragraph.ChildObjects.Add(tr);
 
-            //Insert FieldEnd object to mark the end of the field.
-            FieldMark fieldEnd = new FieldMark(document, FieldMarkType.FieldEnd);
-            paragraph.ChildObjects.Add(fieldEnd);
+			// Add a field end mark to the paragraph
+			FieldMark fieldEnd = new FieldMark(document, FieldMarkType.FieldEnd);
+			paragraph.ChildObjects.Add(fieldEnd);
 
-            String result = "Result-CreateCrossReferenceToBookmark.docx";
+			// Specify the file name for the result document
+			String result = "Result-CreateCrossReferenceToBookmark.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the document to a file
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

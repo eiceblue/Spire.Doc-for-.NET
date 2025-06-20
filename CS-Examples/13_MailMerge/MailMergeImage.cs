@@ -22,23 +22,39 @@ namespace MailMergeImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Document spireDoc = new Document();
-            spireDoc.LoadFromFile(@"..\..\..\..\..\..\Data\MailMergeImage.docx");
-            string[] fieldNames = new string[] { "ImageFile" };
-            string[] fieldValues = new string[] { @"..\..\..\..\..\..\Data\MailMergedImage.png" };
-            spireDoc.MailMerge.MergeImageField += new MergeImageFieldEventHandler(MailMerge_MergeImageField);
-            spireDoc.MailMerge.Execute(fieldNames, fieldValues);
+            //Create a Word document
+			Document spireDoc = new Document();
 
-            spireDoc.SaveToFile("Result.docx", FileFormat.Docx);
+			//Load the file from disk
+			spireDoc.LoadFromFile(@"..\..\..\..\..\..\Data\MailMergeImage.docx");
+
+			//Define the field names for the mail merge
+			string[] fieldNames = new string[] { "ImageFile" };
+
+			//Define the field values for the mail merge
+			string[] fieldValues = new string[] { @"..\..\..\..\..\..\Data\MailMergedImage.png" };
+
+			//Subscribe to the MergeField event
+			spireDoc.MailMerge.MergeImageField += new MergeImageFieldEventHandler(MailMerge_MergeImageField);
+
+			//Execute the mail merge using the field names and values
+			spireDoc.MailMerge.Execute(fieldNames, fieldValues);
+
+			spireDoc.SaveToFile("Result.docx", FileFormat.Docx);
+
+			// Dispose the document object
+			spireDoc.Dispose();
             FileViewer("Result.docx");
         }
         private void MailMerge_MergeImageField(object sender, MergeImageFieldEventArgs field)
         {
-            string filePath = field.ImageFileName;
-            if (!String.IsNullOrEmpty(filePath))
-            {
-                field.Image = Image.FromFile(filePath);
-            }
+            //Determine if the image exists or not
+			string filePath = field.ImageFileName;
+			if (!string.IsNullOrEmpty(filePath))
+			{
+				//Load the image from specified path
+				field.Image = Image.FromFile(filePath);
+			}
         }
         private void FileViewer(string fileName)
         {

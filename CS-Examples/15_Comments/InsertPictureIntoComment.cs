@@ -16,27 +16,39 @@ namespace InsertPictureIntoComment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\CommentTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first paragraph and insert comment
-            Paragraph paragraph = doc.Sections[0].Paragraphs[2];
-            Comment comment = paragraph.AppendComment("This is a comment.");
-            comment.Format.Author = "E-iceblue";
+			//Create a word document
+			Document doc = new Document();
 
-            //Load a picture
-            DocPicture docPicture = new DocPicture(doc);
-            Image img = Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png");
-            docPicture.LoadImage(img);
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Insert the picture into the comment body
-            comment.Body.AddParagraph().ChildObjects.Add(docPicture);
+			//Get the third paragraph in the first section
+			Paragraph paragraph = doc.Sections[0].Paragraphs[2];
 
-            //Save and launch
-            string output = "InsertPictureIntoComment.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Add comment
+			Comment comment = paragraph.AppendComment("This is a comment.");
+
+			//Add author information
+			comment.Format.Author = "E-iceblue";
+
+			//Create a DocPicture instance
+			DocPicture docPicture = new DocPicture(doc);
+
+			//Load a picture
+			docPicture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+
+			//Insert the picture into the comment body
+			comment.Body.AddParagraph().ChildObjects.Add(docPicture);
+
+			//Save the document
+			string output = "InsertPictureIntoComment.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

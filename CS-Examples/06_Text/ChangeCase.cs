@@ -15,38 +15,58 @@ namespace ChangeCase
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Create a new document and load from file
-            string input = @"..\..\..\..\..\..\Data\Text1.docx"; ;
-            Document doc = new Document();
-            doc.LoadFromFile(input);
-            TextRange textRange;
-            //Get the first paragraph and set its CharacterFormat to AllCaps
-            Paragraph para1 = doc.Sections[0].Paragraphs[1];
+            // Specify the input file path.
+			string input = @"..\..\..\..\..\..\Data\Text1.docx";
 
-            foreach (DocumentObject obj in para1.ChildObjects)
-            {
-                if (obj is TextRange)
-                {
-                    textRange = obj as TextRange;
-                    textRange.CharacterFormat.AllCaps = true;
-                }
-            }
-     
-            //Get the third paragraph and set its CharacterFormat to IsSmallCaps
-            Paragraph para2 = doc.Sections[0].Paragraphs[3];
-            foreach (DocumentObject obj in para2.ChildObjects)
-            {
-                if (obj is TextRange)
-                {
-                    textRange = obj as TextRange;
-                    textRange.CharacterFormat.IsSmallCaps = true;
-                }
-            }
-         
+			// Create a new instance of the Document class.
+			Document doc = new Document();
 
-            //Save and launch the document
-            string output = "ChangeCase.docx";
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			// Load a Word document from the specified input file path.
+			doc.LoadFromFile(input);
+
+			TextRange textRange;
+
+			// Get the second paragraph in the first section of the document.
+			Paragraph para1 = doc.Sections[0].Paragraphs[1];
+
+			// Iterate through each child object within the paragraph.
+			foreach (DocumentObject obj in para1.ChildObjects)
+			{
+				// Check if the child object is a TextRange.
+				if (obj is TextRange)
+				{
+					// Cast the child object to a TextRange and set the AllCaps property to true,
+					// which converts the text to all capital letters.
+					textRange = obj as TextRange;
+					textRange.CharacterFormat.AllCaps = true;
+				}
+			}
+
+			// Get the fourth paragraph in the first section of the document.
+			Paragraph para2 = doc.Sections[0].Paragraphs[3];
+
+			// Iterate through each child object within the paragraph.
+			foreach (DocumentObject obj in para2.ChildObjects)
+			{
+				// Check if the child object is a TextRange.
+				if (obj is TextRange)
+				{
+					// Cast the child object to a TextRange and set the IsSmallCaps property to true,
+					// which converts the text to small capital letters.
+					textRange = obj as TextRange;
+					textRange.CharacterFormat.IsSmallCaps = true;
+				}
+			}
+
+			// Specify the file name for the resulting document.
+			string output = "ChangeCase.docx";
+
+			// Save the modified document to a file with the specified file name and format (Docx2013).
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Clean up resources used by the document.
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

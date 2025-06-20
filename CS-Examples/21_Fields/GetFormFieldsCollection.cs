@@ -20,19 +20,26 @@ namespace GetFormFieldsCollection
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+			// Create a StringBuilder to hold the field information
+			StringBuilder sb = new StringBuilder();
 
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\FillFormField.doc");
 
-            //Get the first section
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            FormFieldCollection formFields = section.Body.FormFields;
+			// Get the collection of form fields in the section
+			FormFieldCollection formFields = section.Body.FormFields;
 
-            sb.Append("The first section has " + formFields.Count + " form fields.");
+			// Append the count of form fields in the section to the StringBuilder
+			sb.Append("The first section has " + formFields.Count + " form fields.");
 
-            File.WriteAllText("result.txt", sb.ToString());
+			// Write the result to a text file
+			File.WriteAllText("result.txt", sb.ToString());
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.txt");

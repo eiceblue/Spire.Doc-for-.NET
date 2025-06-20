@@ -17,20 +17,23 @@ namespace ReplaceTextByRegex
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //create a document
+            // Create a new instance of the Document class
             Document doc = new Document();
 
-            //Load the document from disk.
+            // Load a Word document from a file
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextByRegex.docx");
 
-            //create a regex, match the text that starts with #
+            // Create a regular expression object to search for a pattern
             Regex regex = new Regex(@"\#\w+\b");
 
-            //replace the text by regex
+            // Replace all occurrences of the pattern in the document with the string "Spire.Doc"
             doc.Replace(regex, "Spire.Doc");
 
-            //save the document
+            // Save the modified document to a file
             doc.SaveToFile("output.docx", FileFormat.Docx);
+
+            // Dispose the document and release all resources it is using
+            doc.Dispose();
 
             //view the document
             WordDocViewer("output.docx");

@@ -20,21 +20,30 @@ namespace CountWordsNumber
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load the document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Count the number of words.
-            StringBuilder content = new StringBuilder();
-            content.AppendLine("CharCount: " + document.BuiltinDocumentProperties.CharCount);
-            content.AppendLine("CharCountWithSpace: " + document.BuiltinDocumentProperties.CharCountWithSpace);
-            content.AppendLine("WordCount: " + document.BuiltinDocumentProperties.WordCount);
+			// Create a StringBuilder to store the content
+			StringBuilder content = new StringBuilder();
 
-            //Save to file.
-            String result = "Result-CountWordsNumber.txt";
-            File.WriteAllText(result, content.ToString());
+			// Append the character count information to the content
+			content.AppendLine("CharCount: " + document.BuiltinDocumentProperties.CharCount);
+			content.AppendLine("CharCountWithSpace: " + document.BuiltinDocumentProperties.CharCountWithSpace);
+
+			// Append the word count information to the content
+			content.AppendLine("WordCount: " + document.BuiltinDocumentProperties.WordCount);
+
+			// Specify the output file name for the result
+			string result = "Result-CountWordsNumber.txt";
+
+			// Write the content to the specified file path
+			File.WriteAllText(result, content.ToString());
+
+			// Dispose of the Document object to release resources
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

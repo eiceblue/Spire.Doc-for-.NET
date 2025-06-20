@@ -16,14 +16,20 @@ namespace Comment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk.
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\CommentTemplate.docx");
+            //Create a word document
+			Document document = new Document();
 
-            InsertComments(document.Sections[0]);
+			//Load the file from disk
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\CommentTemplate.docx");
 
-            //Save the document.
-            document.SaveToFile("Output.docx",FileFormat.Docx);
+			//Insert comments
+			InsertComments(document.Sections[0]);
+
+			//Save the document.
+			document.SaveToFile("Output.docx", FileFormat.Docx);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");
@@ -31,11 +37,17 @@ namespace Comment
 
         private void InsertComments(Section section)
         {          
-            //Insert comment.
-            Paragraph paragraph = section.Paragraphs[1];
-            Spire.Doc.Fields.Comment comment = paragraph.AppendComment("Spire.Doc for .NET");
-            comment.Format.Author = "E-iceblue";
-            comment.Format.Initial = "CM";
+            //Get the second paragraph
+			Paragraph paragraph = section.Paragraphs[1];
+
+			//Add comment
+			Spire.Doc.Fields.Comment comment = paragraph.AppendComment("Spire.Doc for .NET");
+
+			//Add author information
+			comment.Format.Author = "E-iceblue";
+
+			//Set the user initials.
+			comment.Format.Initial = "CM";
         }
 
         private void WordDocViewer(string fileName)

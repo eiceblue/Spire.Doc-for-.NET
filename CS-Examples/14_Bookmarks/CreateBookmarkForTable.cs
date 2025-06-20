@@ -28,6 +28,9 @@ namespace CreateBookmarkForTable
             //Save the document.
             document.SaveToFile(result, FileFormat.Docx);
 
+			// Dispose the document
+			document.Dispose();
+			
             //Launch the Word file.
             WordDocViewer(result);
         }

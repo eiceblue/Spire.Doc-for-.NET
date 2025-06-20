@@ -19,20 +19,23 @@ namespace HtmlStringToWord
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Get html string.
-            String HTML = File.ReadAllText(@"..\..\..\..\..\..\..\Data\InputHtml.txt");
+            // Read the content of an HTML file into a string variable.
+			string HTML = File.ReadAllText(@"..\..\..\..\..\..\..\Data\InputHtml.txt");
 
-			//Create a new document.
-            Document document = new Document();
+			// Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Add a section.
-            Section sec = document.AddSection();
+			// Add a new section to the document.
+			Section sec = document.AddSection();
 
-            //Add a paragraph and append html string.
-            sec.AddParagraph().AppendHTML(HTML);
+			// Add a new paragraph to the section and append the HTML content to it.
+			sec.AddParagraph().AppendHTML(HTML);
 
-            //Save it to a Word file.
-            document.SaveToFile("HtmlFileToWord.docx", FileFormat.Docx);
+			// Save the document as a DOCX file named "HtmlFileToWord.docx".
+			document.SaveToFile("HtmlFileToWord.docx", FileFormat.Docx);
+
+			// Dispose the document object to release resources.
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("HtmlFileToWord.docx");

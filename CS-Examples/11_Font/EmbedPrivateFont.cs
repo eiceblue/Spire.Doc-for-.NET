@@ -15,29 +15,43 @@ namespace EmbedPrivateFont
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\BlankTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first section and add a paragraph
-            Section section = doc.Sections[0];
-            Paragraph p = section.AddParagraph();
+			//Create a Word document.
+			Document doc = new Document();
 
-            //Append text to the paragraph, then set the font name and font size
-            TextRange range = p.AppendText("Spire.Doc for .NET is a professional Word.NET library specifically designed for developers to create, read, write, convert and print Word document files from any.NET platform with fast and high quality performance.");
-            range.CharacterFormat.FontName = "PT Serif Caption";
-            range.CharacterFormat.FontSize = 20;
+			//Load the file from disk.
+			doc.LoadFromFile(input);
 
-            //Allow embedding font in document
-            doc.EmbedFontsInFile = true;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Embed private font from font file into the document
-            doc.PrivateFontList.Add(new PrivateFontPath("PT Serif Caption", @"..\..\..\..\..\..\Data\PT Serif Caption.ttf"));
+			//Add a paragraph
+			Paragraph p = section.AddParagraph();
 
-            //Save and launch document
-            string output = "EmbedPrivateFont.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Append text to the paragraph
+			TextRange range = p.AppendText("Spire.Doc for .NET is a professional Word.NET library specifically designed for developers to create, read, write, convert and print Word document files from any.NET platform with fast and high quality performance.");
+
+			//Set the font name
+			range.CharacterFormat.FontName = "PT Serif Caption";
+
+			//Set the font size
+			range.CharacterFormat.FontSize = 20;
+
+			//Allow embedding font in document
+			doc.EmbedFontsInFile = true;
+
+			//Embed private font from font file into the document
+			doc.PrivateFontList.Add(new PrivateFontPath("PT Serif Caption", @"..\..\..\..\..\..\Data\PT Serif Caption.ttf"));
+
+			string output = "EmbedPrivateFont.docx";
+			
+			//Save the document
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the Document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

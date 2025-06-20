@@ -19,44 +19,56 @@ namespace ChangeTOCTabStyle
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load document from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Toc.docx");
+         
+			// Create a new document
+			Document doc = new Document();
 
-            //Loop through sections
-            foreach (Section section in doc.Sections)
-            {
-                //Loop through content of section
-                foreach (DocumentObject obj in section.Body.ChildObjects)
-                {
-                    //Find the structure document tag
-                    if (obj is StructureDocumentTag)
-                    {
-                        StructureDocumentTag tag = obj as StructureDocumentTag;
-                        //Find the paragraph where the TOC1 locates
-                        foreach (DocumentObject cObj in tag.ChildObjects)
-                        {
-                            if (cObj is Paragraph)
-                            {
-                                Paragraph para = cObj as Paragraph;
-                                if (para.StyleName == "TOC2")
-                                {
-                                    //Set the tab style of paragraph
-                                    foreach (Tab tab in para.Format.Tabs)
-                                    {
-                                        tab.Position = tab.Position + 20;
-                                        tab.TabLeader = TabLeader.NoLeader;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+			// Load the document from a file
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Toc.docx");
 
-            //Save the Word file
-            string output = "ChangeTOCTabStyle_out.docx";
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			// Iterate through all sections in the document
+			foreach (Section section in doc.Sections)
+			{
+				// Iterate through all child objects in the body of each section
+				foreach (DocumentObject obj in section.Body.ChildObjects)
+				{
+					// Check if the object is a StructureDocumentTag (e.g., TOC field)
+					if (obj is StructureDocumentTag)
+					{
+						StructureDocumentTag tag = obj as StructureDocumentTag;
+						
+						// Iterate through all child objects within the StructureDocumentTag
+						foreach (DocumentObject cObj in tag.ChildObjects)
+						{
+							// Check if the child object is a paragraph
+							if (cObj is Paragraph)
+							{
+								Paragraph para = cObj as Paragraph;
+								
+								// Check if the paragraph has the style name "TOC2"
+								if (para.StyleName == "TOC2")
+								{
+									// Adjust the position and tab leader of each tab in the paragraph's format
+									foreach (Tab tab in para.Format.Tabs)
+									{
+										tab.Position = tab.Position + 20;
+										tab.TabLeader = TabLeader.NoLeader;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Specify the output file name
+			string output = "ChangeTOCTabStyle_out.docx";
+
+			// Save the modified document to a new file in DOCX format (version 2013)
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose of the document object
+			doc.Dispose();
             
             //Launch the file
             WordDocViewer(output);

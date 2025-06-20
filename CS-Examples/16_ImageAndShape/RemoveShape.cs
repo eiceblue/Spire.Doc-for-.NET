@@ -15,30 +15,38 @@ namespace RemoveShape
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\Shapes.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            Section section = doc.Sections[0];
+			//Create a word document
+			Document doc = new Document();
 
-            //Get all the child objects of paragraph
-            foreach (Paragraph para in section.Paragraphs)
-            {
-                for (int i = 0; i < para.ChildObjects.Count; i++)
-                {
-                    //If the child objects is shape object
-                    if (para.ChildObjects[i] is ShapeObject)
-                    {
-                        //Remove the shape object
-                        para.ChildObjects.RemoveAt(i);
-                    }
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "RemoveShape.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first section
+			Section section = doc.Sections[0];
+
+			//Get all the child objects of paragraph
+			foreach (Paragraph para in section.Paragraphs)
+			{
+				for (int i = 0; i < para.ChildObjects.Count; i++)
+				{
+					//If the child objects is shape object
+					if (para.ChildObjects[i] is ShapeObject)
+					{
+						//Remove the shape object
+						para.ChildObjects.RemoveAt(i);
+					}
+				}
+			}
+
+			//Save the document
+			string output = "RemoveShape.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

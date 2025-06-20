@@ -17,30 +17,37 @@ namespace InsertOLEAsIconViaStream
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string output = "InsertOLEAsIconViaStream.docx";
+			// Specify the output file name
+			string output = "InsertOLEAsIconViaStream.docx";
 
-            //Create word document
-            Document doc = new Document();
-            //add a section
-            Section sec = doc.AddSection();
-            //add a paragraph
-            Paragraph par = sec.AddParagraph();
+			// Create a new document object
+			Document doc = new Document();
 
-            //ole stream
-            Stream stream = File.OpenRead(@"..\..\..\..\..\..\Data\example.zip");
+			// Add a section to the document
+			Section sec = doc.AddSection();
 
-            //load the image
-            DocPicture picture = new DocPicture(doc);
-            Image image = Image.FromFile(@"..\..\..\..\..\..\Data\example.png");
-            picture.LoadImage(image);
+			// Add a paragraph to the section
+			Paragraph par = sec.AddParagraph();
 
-            //insert the OLE from stream
-            DocOleObject obj = par.AppendOleObject(stream, picture, "zip");
+			// Open a stream for the OLE object data from the specified file
+			Stream stream = File.OpenRead(@"..\..\..\..\..\..\Data\example.zip");
 
-            //display as icon
-            obj.DisplayAsIcon = true;
+			// Create a DocPicture object and load an image from file
+			DocPicture picture = new DocPicture(doc);
+			Image image = Image.FromFile(@"..\..\..\..\..\..\Data\example.png");
+			picture.LoadImage(image);
 
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			// Append an OLE object to the paragraph using the provided stream, picture, and object type ("zip")
+			DocOleObject obj = par.AppendOleObject(stream, picture, "zip");
+
+			// Set the OLE object to be displayed as an icon
+			obj.DisplayAsIcon = true;
+
+			// Save the document to a file in Docx2013 format
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose the document object
+			doc.Dispose();
 
             //Launching the Word file.
             WordDocViewer(output);

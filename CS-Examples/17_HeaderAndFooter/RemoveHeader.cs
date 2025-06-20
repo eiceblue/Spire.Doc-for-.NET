@@ -18,38 +18,44 @@ namespace RemoveHeader
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\HeaderAndFooter.docx";            
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+            string input = @"..\..\..\..\..\..\Data\HeaderAndFooter.docx";
 
-            //Get the first section of the document
-            Section section = doc.Sections[0];
+			//Create a Word document
+			Document doc = new Document();
 
-            //Traverse the word document and clear all headers in different type
-            foreach (Paragraph para in section.Paragraphs)
-            {
-                foreach (DocumentObject obj in para.ChildObjects)
-                {
-                    //Clear footer in the first page
-                    HeaderFooter header;
-                    header = section.HeadersFooters[HeaderFooterType.HeaderFirstPage];
-                    if (header != null)
-                        header.ChildObjects.Clear();
-                    //Clear footer in the odd page
-                    header = section.HeadersFooters[HeaderFooterType.HeaderOdd];
-                    if (header != null)
-                        header.ChildObjects.Clear();
-                    //Clear footer in the even page
-                    header = section.HeadersFooters[HeaderFooterType.HeaderEven];
-                    if (header != null)
-                        header.ChildObjects.Clear();
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "RemoveHeader.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first section of the document
+			Section section = doc.Sections[0];
+
+			//Traverse the word document and clear all headers in different type
+			foreach (Paragraph para in section.Paragraphs)
+			{
+				foreach (DocumentObject obj in para.ChildObjects)
+				{
+					//Clear footer in the first page
+					HeaderFooter header;
+					header = section.HeadersFooters[HeaderFooterType.HeaderFirstPage];
+					if (header != null)
+						header.ChildObjects.Clear();
+					//Clear footer in the odd page
+					header = section.HeadersFooters[HeaderFooterType.HeaderOdd];
+					if (header != null)
+						header.ChildObjects.Clear();
+					//Clear footer in the even page
+					header = section.HeadersFooters[HeaderFooterType.HeaderEven];
+					if (header != null)
+						header.ChildObjects.Clear();
+				}
+			}
+
+			//Save and launch document
+			string output = "RemoveHeader.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

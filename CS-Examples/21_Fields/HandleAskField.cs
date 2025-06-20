@@ -18,36 +18,48 @@ namespace HandleAskField
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create and load Word document.
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\HandleAskField.docx");
+        
+			// Create a new document
+			Document doc = new Document();
 
-            //call UpdateFieldsHandler event to handle the ASK field.
-            doc.UpdateFields += new UpdateFieldsHandler(doc_UpdateFields);
-            //update the fields in the document.
-            doc.IsUpdateFields = true;        
-            //save the document.
-            doc.SaveToFile("HandleAskField.docx", FileFormat.Docx);
+			// Load the document from a file
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\HandleAskField.docx");
+
+			// Subscribe to the UpdateFields event
+			doc.UpdateFields += new UpdateFieldsHandler(doc_UpdateFields);
+
+			// Enable field update
+			doc.IsUpdateFields = true;
+
+			// Save the modified document to a file
+			doc.SaveToFile("HandleAskField.docx", FileFormat.Docx);
+
+			// Dispose the document object
+			doc.Dispose();
+			
             WordDocViewer("HandleAskField.docx");
          
         }
-        private static void doc_UpdateFields(object sender, IFieldsEventArgs args)
-        {     
-            if (args is AskFieldEventArgs)
-            {
-                AskFieldEventArgs askArgs = args as AskFieldEventArgs;
-                
-                if (askArgs.BookmarkName == "1")
-                {
-                    askArgs.ResponseText = "Thank you. This is my first time to come to a Chinese restaurant. Could you tell me the different features of Chinese food?";
-                }
-                
-                if (askArgs.BookmarkName == "2")
-                {
-                    askArgs.ResponseText = "No more, thank you. I'm quite full.";
-                }
-            }
-        }
+		// Event handler for updating fields
+		private static void doc_UpdateFields(object sender, IFieldsEventArgs args)
+		{     
+			// Check if the event arguments are of type AskFieldEventArgs
+			if (args is AskFieldEventArgs)
+			{
+				AskFieldEventArgs askArgs = args as AskFieldEventArgs;
+				
+				// Handle different bookmarks and set response text accordingly
+				if (askArgs.BookmarkName == "1")
+				{
+					askArgs.ResponseText = "Thank you. This is my first time to come to a Chinese restaurant. Could you tell me the different features of Chinese food?";
+				}
+				
+				if (askArgs.BookmarkName == "2")
+				{
+					askArgs.ResponseText = "No more, thank you. I'm quite full.";
+				}
+			}
+		}
         private void WordDocViewer(string fileName)
         {
             try

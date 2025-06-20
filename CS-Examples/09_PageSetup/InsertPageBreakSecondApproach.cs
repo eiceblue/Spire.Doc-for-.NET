@@ -19,19 +19,23 @@ namespace InsertPageBreakSecondApproach
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Insert page break.
-            document.Sections[0].Paragraphs[3].AppendBreak(BreakType.PageBreak);
+			// Get the first section of the document, third paragraph, and append a page break to it
+			document.Sections[0].Paragraphs[3].AppendBreak(BreakType.PageBreak);
 
-            String result = "Result-InsertWordPageBreak.docx";
+			// Specify the file name for the resulting document with the inserted page break
+			string result = "Result-InsertWordPageBreak.docx";
 
-            //Save the file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to the specified file path in the DOCX format (version: Word 2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

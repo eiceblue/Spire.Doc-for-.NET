@@ -18,26 +18,34 @@ namespace ConvertDocToByte
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\Data\Template.docx";
-            Document doc = new Document();
-            // Load the document from disk.
-            doc.LoadFromFile(input);
+            // Define the input file path relative to the current directory.
+			string input = @"..\..\..\..\..\..\Data\Template.docx";
 
-            // Create a new memory stream.
-            MemoryStream outStream = new MemoryStream();
-            // Save the document to stream.
-            doc.SaveToStream(outStream, FileFormat.Docx);
+			// Create a new instance of the Document class.
+			Document doc = new Document();
 
-            // Convert the document to bytes.
-            byte[] docBytes = outStream.ToArray();
+			// Load the document from the specified input file.
+			doc.LoadFromFile(input);
 
-            // The bytes are now ready to be stored/transmitted.
+			// Create a new MemoryStream to store the document content.
+			MemoryStream outStream = new MemoryStream();
 
-            // Now reverse the steps to load the bytes back into a document object.
-            MemoryStream inStream = new MemoryStream(docBytes);
+			// Save the document to the MemoryStream in Docx format.
+			doc.SaveToStream(outStream, FileFormat.Docx);
 
-            // Load the stream into a new document object.
-            Document newDoc = new Document(inStream);
+			// Convert the content of the MemoryStream to a byte array.
+			byte[] docBytes = outStream.ToArray();
+
+			// The bytes are now ready to be stored/transmitted.
+
+			// Create a new MemoryStream from the byte array.
+			MemoryStream inStream = new MemoryStream(docBytes);
+
+			// Create a new Document object by loading from the MemoryStream.
+			Document newDoc = new Document(inStream);
+
+			// Dispose the existing document object.
+			doc.Dispose();
         }
     }
 }

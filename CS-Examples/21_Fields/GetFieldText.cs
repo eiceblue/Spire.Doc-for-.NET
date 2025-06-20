@@ -20,22 +20,30 @@ namespace GetFieldText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
+			// Create a StringBuilder to hold the field information
+			StringBuilder sb = new StringBuilder();
 
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_1.docx");
+			// Load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_1.docx");
 
-            //Get all fields in document
-            FieldCollection fields = document.Fields;
+			// Get the collection of fields in the document
+			FieldCollection fields = document.Fields;
 
-            foreach (Field field in fields)
-            {
-                //Get field text
-                string fieldText = field.FieldText;
-                sb.Append("The field text is \""+fieldText + "\".\r\n");
-            }
+			// Iterate through each field in the collection
+			foreach (Field field in fields)
+			{
+				// Get the text of the field
+				string fieldText = field.FieldText;
 
-            File.WriteAllText("result.txt", sb.ToString());
+				// Append the field text to the StringBuilder
+				sb.Append("The field text is \"" + fieldText + "\".\r\n");
+			}
+
+			// Write the field information to a text file
+			File.WriteAllText("result.txt", sb.ToString());
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch result file
             WordDocViewer("result.txt");

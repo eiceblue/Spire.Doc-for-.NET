@@ -19,36 +19,44 @@ namespace InsertImageAtBookmark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\Bookmark.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\Bookmark.docx";
 
-            //Create an instance of BookmarksNavigator
-            BookmarksNavigator bn = new BookmarksNavigator(doc);
+			//Create a word document
+			Document doc = new Document();
 
-            //Find a bookmark named Test
-            bn.MoveToBookmark("Test", true, true);
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Add a section
-            Section section0 = doc.AddSection();
+			//Create an instance of BookmarksNavigator
+			BookmarksNavigator bn = new BookmarksNavigator(doc);
 
-            //Add a paragraph for the section
-            Paragraph paragraph = section0.AddParagraph();
-            Image image = Image.FromFile(@"..\..\..\..\..\..\Data\Word.png");
+			//Find a bookmark named Test
+			bn.MoveToBookmark("Test", true, true);
 
-            //Add a picture into the paragraph
-            DocPicture picture = paragraph.AppendPicture(image);
+			//Add a section
+			Section section0 = doc.AddSection();
 
-            //Add the paragraph at the position of bookmark
-            bn.InsertParagraph(paragraph);
+			//Add a paragraph for the section
+			Paragraph paragraph = section0.AddParagraph();
+			
+			//Load an image
+			Image image = Image.FromFile(@"..\..\..\..\..\..\Data\Word.png");
 
-            //Remove the section0
-            doc.Sections.Remove(section0);
+			//Add a picture into the paragraph
+			DocPicture picture = paragraph.AppendPicture(image);
 
-            //Save and launch document
-            string output = "InsertImageAtBookmark.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Add the paragraph at the position of bookmark
+			bn.InsertParagraph(paragraph);
+
+			//Remove the section0
+			doc.Sections.Remove(section0);
+
+			//Save the document
+			string output = "InsertImageAtBookmark.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

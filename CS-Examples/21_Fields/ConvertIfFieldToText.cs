@@ -19,41 +19,58 @@ namespace ConvertIfFieldToText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document
-            Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
+           
+			// Create a new Document object and load the document from a file
+			Document document = new Document(@"..\..\..\..\..\..\Data\IfFieldSample.docx");
 
+			// Get the collection of fields in the document
+			FieldCollection fields = document.Fields;
 
-            //Get all fields in document
-            FieldCollection fields = document.Fields;
+			// Iterate through each field in the collection
+			for (int i = 0; i < fields.Count; i++)
+			{
+				// Get the current field
+				Field field = fields[i];
 
-            for (int i = 0; i < fields.Count; i++)
-            {
-                Field field = fields[i];
-                if (field.Type == FieldType.FieldIf)
-                {
-                    TextRange original = field as TextRange;
-                    //Get field text
-                    string text = field.FieldText;
-                    //Create a new textRange and set its format
-                    TextRange textRange = new TextRange(document);
-                    textRange.Text = text;
-                    textRange.CharacterFormat.FontName = original.CharacterFormat.FontName;
-                    textRange.CharacterFormat.FontSize = original.CharacterFormat.FontSize;
+				// Check if the field is of type FieldIf
+				if (field.Type == FieldType.FieldIf)
+				{
+					// Cast the field as TextRange to access its properties
+					TextRange original = field as TextRange;
 
-                    Paragraph par = field.OwnerParagraph;
-                    //Get the index of the if field
-                    int index = par.ChildObjects.IndexOf(field);
-                    //Remove if field via index
-                    par.ChildObjects.RemoveAt(index);
-                    //Insert field text at the position of if field
-                    par.ChildObjects.Insert(index, textRange);
-                }
+					// Get the text of the field
+					string text = field.FieldText;
 
-            }
+					// Create a new TextRange object with the document and set its text to the field text
+					TextRange textRange = new TextRange(document);
+					textRange.Text = text;
 
-            String result ="result.docx";
-            //Save doc file
-            document.SaveToFile(result, FileFormat.Docx);
+					// Set the font name and size of the new text range to match the original field
+					textRange.CharacterFormat.FontName = original.CharacterFormat.FontName;
+					textRange.CharacterFormat.FontSize = original.CharacterFormat.FontSize;
+
+					// Get the owner paragraph of the field
+					Paragraph par = field.OwnerParagraph;
+
+					// Get the index of the field within its owner paragraph
+					int index = par.ChildObjects.IndexOf(field);
+
+					// Remove the field from its owner paragraph
+					par.ChildObjects.RemoveAt(index);
+
+					// Insert the new text range at the index of the field within its owner paragraph
+					par.ChildObjects.Insert(index, textRange);
+				}
+			}
+
+			// Specify the file name for the result document
+			String result = "result.docx";
+
+			// Save the modified document to a new file
+			document.SaveToFile(result, FileFormat.Docx);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch the Word file
             WordDocViewer(result);

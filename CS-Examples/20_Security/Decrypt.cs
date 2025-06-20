@@ -13,14 +13,20 @@ namespace Decrypt
 
         private void button1_Click(object sender, EventArgs e)
         {
-                //Create word document
-                Document document = new Document();
-                document.LoadFromFile(@"..\..\..\..\..\..\Data\TemplateWithPassword.docx", FileFormat.Docx, "E-iceblue");
+        
+				// Create a new Document object
+				Document document = new Document();
 
-                //Save as doc file.
-                document.SaveToFile("Sample.docx", FileFormat.Docx);
+				// Load the document from the specified file path using the provided password
+				document.LoadFromFile(@"..\..\..\..\..\..\Data\TemplateWithPassword.docx", FileFormat.Docx, "E-iceblue");
 
-                //Launching the MS Word file.
+				// Save the document to the specified file path in DOCX format
+				document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+				// Dispose the document object to free up resources
+				document.Dispose();
+
+                //Launching the Word file.
                 WordDocViewer("Sample.docx");
 
 

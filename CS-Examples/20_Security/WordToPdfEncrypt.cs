@@ -19,22 +19,27 @@ namespace WordToPdfEncrypt
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+      
+			// Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
+			// Load the Word document file from the specified path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
 
-            //Create an instance of ToPdfParameterList.
-            ToPdfParameterList toPdf = new ToPdfParameterList();
+			// Create a ToPdfParameterList object to specify PDF conversion parameters
+			ToPdfParameterList toPdf = new ToPdfParameterList();
 
-            //Set the user password for the resulted PDF file.
-            toPdf.PdfSecurity.Encrypt("e-iceblue");          
+			// Encrypt the PDF with the specified password "e-iceblue"
+			toPdf.PdfSecurity.Encrypt("e-iceblue");
 
-            String result = "Result-WordToPdfEncrypt.pdf";
+			// Specify the output file name for the converted PDF
+			String result = "Result-WordToPdfEncrypt.pdf";
 
-            //Save to file.
-            document.SaveToFile(result, toPdf);
+			// Save the document as a PDF with the specified encryption settings
+			document.SaveToFile(result, toPdf);
+
+			// Dispose the Document object to free resources
+			document.Dispose();
 
             //Launch the Pdf file.
             WordDocViewer(result);

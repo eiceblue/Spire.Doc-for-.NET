@@ -19,27 +19,36 @@ namespace CopyContentToAnotherDoc
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Initialize a new object of Document class and load the source document.
-            Document sourceDoc = new Document();
-            sourceDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_1.docx");
+            // Create a new instance of the Document class and load a document from the specified file path ("Template_Docx_1.docx").
+			Document sourceDoc = new Document();
+			sourceDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Initialize another object to load target document.
-            Document destinationDoc = new Document();
-            destinationDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Target.docx");
+			// Create a new instance of the Document class and load another document from the specified file path ("Target.docx").
+			Document destinationDoc = new Document();
+			destinationDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Target.docx");
 
-            //Copy content from source file and insert them to the target file.
-            foreach (Section sec in sourceDoc.Sections)
-            {
-                foreach (DocumentObject obj in sec.Body.ChildObjects)
-                {
-                    destinationDoc.Sections[0].Body.ChildObjects.Add(obj.Clone());
-                }
-            }
+			// Iterate through each section in the source document.
+			foreach (Section sec in sourceDoc.Sections)
+			{
+				// Iterate through each child object in the body of the section.
+				foreach (DocumentObject obj in sec.Body.ChildObjects)
+				{
+					// Clone the child object and add it to the body of the first section in the destination document.
+					destinationDoc.Sections[0].Body.ChildObjects.Add(obj.Clone());
+				}
+			}
 
-            String result = "Result-CopyContentToAnotherWord.docx";
+			// Specify the output file name.
+			string result = "Result-CopyContentToAnotherWord.docx";
 
-            //Save to file.
-            destinationDoc.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified destination document to a file with the specified output file name and format (Docx2013).
+			destinationDoc.SaveToFile(result, FileFormat.Docx2013);
+
+			// Clean up resources used by the source document.
+			sourceDoc.Dispose();
+
+			// Clean up resources used by the destination document.
+			destinationDoc.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

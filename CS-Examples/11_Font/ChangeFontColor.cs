@@ -17,44 +17,57 @@ namespace ChangeFontColor
         private void button1_Click(object sender, EventArgs e)
         {
             //Load the document
-            string input = @"..\..\..\..\..\..\Data\Sample.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			string input = @"..\..\..\..\..\..\Data\Sample.docx";
 
-            //Get the first section and first paragraph
-            Section section = doc.Sections[0];
-            Paragraph p1 = section.Paragraphs[0];
+			//Create a Word document.
+			Document doc = new Document();
 
-            //Iterate through the childObjects of the paragraph 1 
-            foreach (DocumentObject childObj in p1.ChildObjects)
-            {
-                if (childObj is TextRange)
-                {
-                    //Change text color
-                    TextRange tr = childObj as TextRange;
-                    tr.CharacterFormat.TextColor = Color.RosyBrown;
-                }
-            }
+			//Load the file from disk.
+			doc.LoadFromFile(input);
 
-            //Get the second paragraph
-            Paragraph p2 = section.Paragraphs[1];
+			//Get the first section 
+			Section section = doc.Sections[0];
 
-            //Iterate through the childObjects of the paragraph 2
-            foreach (DocumentObject childObj in p2.ChildObjects)
-            {
-                if (childObj is TextRange)
-                {
-                    //Change text color
-                    TextRange tr = childObj as TextRange;
-                    tr.CharacterFormat.TextColor = Color.DarkGreen;
-                }
-            }
+			//Get the first paragraph
+			Paragraph p1 = section.Paragraphs[0];
 
-            //Save and launch document
-            string output = "ChangeFontColor.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
-            Viewer(output);
-        }
+			//Iterate through the childObjects of the paragraph 1 
+			foreach (DocumentObject childObj in p1.ChildObjects)
+			{
+				//Determine if the childObj is TextRange
+				if (childObj is TextRange)
+				{
+					//Change text color
+					TextRange tr = childObj as TextRange;
+					tr.CharacterFormat.TextColor = Color.RosyBrown;
+				}
+			}
+
+			//Get the second paragraph
+			Paragraph p2 = section.Paragraphs[1];
+
+			//Iterate through the childObjects of the paragraph 2
+			foreach (DocumentObject childObj in p2.ChildObjects)
+			{
+				//Determine if the childObj is TextRange
+				if (childObj is TextRange)
+				{
+					//Change text color
+					TextRange tr = childObj as TextRange;
+					tr.CharacterFormat.TextColor = Color.DarkGreen;
+				}
+			}
+         string output = "ChangeFontColor.docx";
+
+        //Save the document
+        doc.SaveToFile(output, FileFormat.Docx);
+
+        //Dispose the document
+        doc.Dispose();
+
+        Viewer(output);
+		}
+
         private void Viewer(string fileName)
         {
             try

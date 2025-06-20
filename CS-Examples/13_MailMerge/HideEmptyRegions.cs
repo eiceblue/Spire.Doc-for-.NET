@@ -22,17 +22,29 @@ namespace HideEmptyRegions
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\HideEmptyRegions.doc");
-            string[] filedNames = new string[] { "Contact Name", "Fax","Date" };
-            string[] filedValues = new string[] { "John Smith", "+1 (69) 123456", DateTime.Now.Date.ToString() };
-            //Set the value to remove paragraphs which contain empty field.
-            document.MailMerge.HideEmptyParagraphs = true;
-            //Set the value to remove group which contain empty field.
-            document.MailMerge.HideEmptyGroup = true;
-            document.MailMerge.Execute(filedNames, filedValues);
-            //Save doc file.
-            document.SaveToFile("Sample.docx", FileFormat.Docx);
+			Document document = new Document();
+
+			//Load the file from disk
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\HideEmptyRegions.doc");
+
+			//Prepare sample data
+			string[] filedNames = new string[] { "Contact Name", "Fax", "Date" };
+			string[] filedValues = new string[] { "John Smith", "+1 (69) 123456", DateTime.Now.Date.ToString() };
+
+			//Set the value to remove paragraphs which contain empty field.
+			document.MailMerge.HideEmptyParagraphs = true;
+
+			//Set the value to remove group which contain empty field.
+			document.MailMerge.HideEmptyGroup = true;
+
+			//Begin mail merge
+			document.MailMerge.Execute(filedNames, filedValues);
+
+			//Save the document
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Dispose the document object
+			document.Dispose();
             //Launch the Word file.
             FileViewer("Sample.docx");
         }

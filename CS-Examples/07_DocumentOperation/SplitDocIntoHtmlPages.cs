@@ -18,66 +18,87 @@ namespace SplitDocIntoHtmlPages
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\..\Data\SplitDocIntoHtmlPages.doc";
-            string outDir = Path.Combine("output");
-            Directory.CreateDirectory(outDir);
+           // Define the input file path
+			String input = @"..\..\..\..\..\..\..\Data\SplitDocIntoHtmlPages.doc";
 
-            //Split a document into multiple html pages.
-            SplitDocIntoMultipleHtml(input, outDir);
-       }
-        private void SplitDocIntoMultipleHtml(String input, string outDirectory)
-        {
-            Document document = new Document();
-            document.LoadFromFile(input);
+			// Define the output directory path
+			string outDir = Path.Combine("output");
 
-            Document subDoc = null;
-            bool first = true;
-            int index = 0;
-            foreach (Section sec in document.Sections)
-            {
-                foreach (DocumentObject element in sec.Body.ChildObjects)
-                {
-                    if (IsInNextDocument(element))
-                    {
-                        if (!first)
-                        {
-                            //Embed css tyle and image data into html page
-                            subDoc.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
-                            subDoc.HtmlExportOptions.ImageEmbedded = true;
-                            //Save to html file
-                            subDoc.SaveToFile(Path.Combine(outDirectory, String.Format("out-{0}.html", index++)),FileFormat.Html);
-                            subDoc = null;
-                        }
-                        first = false;
-                    }
-                    if (subDoc == null)
-                    {
-                        subDoc = new Document();
-                        subDoc.AddSection();
-                    }
-                    subDoc.Sections[0].Body.ChildObjects.Add(element.Clone());
-                }
-            }
-            if (subDoc != null)
-            {
-                //Embed css tyle and image data into html page
-                subDoc.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
-                subDoc.HtmlExportOptions.ImageEmbedded = true;
-                //Save to html file
-                subDoc.SaveToFile(Path.Combine(outDirectory, String.Format("out-{0}.html", index++)), FileFormat.Html);
-            }
+			// Create the output directory if it doesn't exist
+			Directory.CreateDirectory(outDir);
+
+			// Split the document into multiple HTML pages
+			SplitDocIntoMultipleHtml(input, outDir);
         }
-        private bool IsInNextDocument(DocumentObject element)
-        {
-            if (element is Paragraph)
-            {
-                Paragraph p = element as Paragraph;
-                if (p.StyleName == "Heading1")
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+			// Split the document into multiple HTML pages
+			private static void SplitDocIntoMultipleHtml(String input, string outDirectory)
+			{
+				// Load the document
+				Document document = new Document();
+				document.LoadFromFile(input);
+				
+				// Variable to hold the sub-document
+				Document subDoc = null; 
+				
+				// Flag to check if it's the first element in the sub-document
+				bool first = true; 
+				
+				// Index for naming the output HTML files
+				int index = 0; 
+
+				// Iterate through sections in the document
+				foreach (Section sec in document.Sections)
+				{
+					// Iterate through elements in the section
+					foreach (DocumentObject element in sec.Body.ChildObjects)
+					{
+						// Check if the element should be in the next document
+						if (IsInNextDocument(element))
+						{
+							if (!first)
+							{
+								// Save the previous sub-document as an HTML file
+								subDoc.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
+								subDoc.HtmlExportOptions.ImageEmbedded = true;
+								subDoc.SaveToFile(Path.Combine(outDirectory, String.Format("out-{0}.html", index++)), FileFormat.Html);
+								subDoc = null;
+							}
+							first = false;
+						}
+
+						// Create a new sub-document if it doesn't exist
+						if (subDoc == null)
+						{
+							subDoc = new Document();
+							subDoc.AddSection();
+						}
+
+						// Add the element to the sub-document
+						subDoc.Sections[0].Body.ChildObjects.Add(element.Clone());
+					}
+				}
+
+				// Save the last sub-document as an HTML file, if it exists
+				if (subDoc != null)
+				{
+					subDoc.HtmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
+					subDoc.HtmlExportOptions.ImageEmbedded = true;
+					subDoc.SaveToFile(Path.Combine(outDirectory, String.Format("out-{0}.html", index++)), FileFormat.Html);
+				}
+			}
+	
+			// Check if the document element should be in the next document
+			private static bool IsInNextDocument(DocumentObject element)
+			{
+				if (element is Paragraph)
+				{
+					Paragraph p = element as Paragraph;
+					if (p.StyleName == "Heading1")
+					{
+						return true;
+					}
+				}
+				return false;
+			}
     }
 }

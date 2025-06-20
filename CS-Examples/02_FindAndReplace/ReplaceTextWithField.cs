@@ -18,39 +18,58 @@ namespace ReplaceTextWithField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a new document
+            // Create a new Word document object
             Document document = new Document();
-            //Load file from disk
+
+            // Load a Word document from a specific path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextWithField.docx");
-            //Find the target text
-            TextSelection selection= document.FindString("summary", false,true);
-            //Get text range
-            TextRange textRange=selection.GetAsOneRange();
-            //Get it's owner paragraph
+
+            // Find the first occurrence of the string "summary" in the document, and return its TextSelection object
+            TextSelection selection = document.FindString("summary", false, true);
+
+            // Convert the TextSelection object to a TextRange object
+            TextRange textRange = selection.GetAsOneRange();
+
+            // Get the Paragraph object that contains the TextRange object
             Paragraph ownParagraph = textRange.OwnerParagraph;
-            //Get the index of this text range
+
+            // Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
             int rangeIndex = ownParagraph.ChildObjects.IndexOf(textRange);
-            //Remove the text range
+
+            // Remove the TextRange object from the ChildObjects collection of the Paragraph object at its index
             ownParagraph.ChildObjects.RemoveAt(rangeIndex);
-            //Remove the objects which are behind the text range
+
+            // Create a new list to store cloned objects
             List<DocumentObject> tempList = new List<DocumentObject>();
-            for(int i = rangeIndex; i < ownParagraph.ChildObjects.Count; i++)
+
+            // Loop through the ChildObjects collection of the Paragraph object, starting from the index after the removed TextRange object
+            for (int i = rangeIndex; i < ownParagraph.ChildObjects.Count; i++)
             {
-                //Add a copy of these objects into a temp list
+                // Clone the current object in the ChildObjects collection and add it to the tempList
                 tempList.Add(ownParagraph.ChildObjects[rangeIndex].Clone());
+                // Remove the current object from the ChildObjects collection at its index
                 ownParagraph.ChildObjects.RemoveAt(rangeIndex);
             }
-            //Append field to the paragraph
+
+            // Append a field called "MyFieldName" to the end of the Paragraph, with a field type of MergeField
             ownParagraph.AppendField("MyFieldName", FieldType.FieldMergeField);
-            //Put these objects back into the paragraph one by one
+
+            // Loop through each object in the tempList
             foreach (DocumentObject obj in tempList)
             {
+                // Add each object from the tempList back into the ChildObjects collection of the Paragraph
                 ownParagraph.ChildObjects.Add(obj);
             }
 
-            //Save the document
+            // Define the output file path and filename
             string output = "ReplaceTextWithField_output.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+
+            // Save the document to the specified path with a .docx file format
+            document.SaveToFile(output, FileFormat.Docx);
+
+            // Dispose of the document object to release its resources
+            document.Dispose();
+			
             WordDocViewer(output);
         }
         private void WordDocViewer(string fileName)

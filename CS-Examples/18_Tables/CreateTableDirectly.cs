@@ -16,53 +16,62 @@ namespace CreateTableDirectly
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a Word document
-            Document doc = new Document();
+  
+			// Create a new Document object
+			Document doc = new Document();
 
-            //Add a section
-            Section section = doc.AddSection();
+			// Add a new section to the document
+			Section section = doc.AddSection();
 
-            //Create a table 
-            Table table = new Table(doc);
-            //Set the width of table
+			// Create a new table with the document as its parent
+			Table table = new Table(doc);
+			table.ResetCells(1, 2);
+
+            // Set the preferred width of the table to 100% of the page width
             table.PreferredWidth = new PreferredWidth(WidthType.Percentage, (short)100);
-            //Set the border of table
-            table.TableFormat.Borders.BorderType = Spire.Doc.Documents.BorderStyle.Single;
 
-            //Create a table row
-            TableRow row = new TableRow(doc);
-            row.Height = 50.0f;
-            table.Rows.Add(row);
+			// Set the border type of the table to single line
+            table.Format.Borders.BorderType = Spire.Doc.Documents.BorderStyle.Single;
 
-            //Create a table cell
-            TableCell cell1 = new TableCell(doc);
-            //Add a paragraph
-            Paragraph para1 = cell1.AddParagraph();
-            //Append text in the paragraph
-            para1.AppendText("Row 1, Cell 1");
-            //Set the horizontal alignment of paragrah
-            para1.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            //Set the background color of cell
-            cell1.CellFormat.BackColor = Color.CadetBlue;
-            //Set the vertical alignment of paragraph
-            cell1.CellFormat.VerticalAlignment = VerticalAlignment.Middle;
-            row.Cells.Add(cell1);
+			// Create a new row for the table
+			TableRow row = table.Rows[0];
+  
+			// Set the height of the row to 50.0f
+			row.Height = 50.0f; 
 
-            //Create a table cell
-            TableCell cell2 = new TableCell(doc);
+			// Create the first cell of the row
+			TableCell cell1 = table.Rows[0].Cells[0];
+			Paragraph para1 = cell1.AddParagraph();
+			// Add text to the cell
+			para1.AppendText("Row 1, Cell 1"); 
+			// Set the horizontal alignment of the text
+			para1.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center; 
+			// Set the background color of the cell
+            cell1.CellFormat.Shading.BackgroundPatternColor = Color.CadetBlue;
+            // Set the vertical alignment of the content in the cell
+            cell1.CellFormat.VerticalAlignment = VerticalAlignment.Middle; 
+
+			// Create the second cell of the row
+			TableCell cell2 = table.Rows[0].Cells[1];
             Paragraph para2 = cell2.AddParagraph();
-            para2.AppendText("Row 1, Cell 2");
-            para2.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            cell2.CellFormat.BackColor = Color.CadetBlue;
-            cell2.CellFormat.VerticalAlignment = VerticalAlignment.Middle;
-            row.Cells.Add(cell2);
+			// Add text to the cell
+			para2.AppendText("Row 1, Cell 2"); 
+			// Set the horizontal alignment of the text
+			para2.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+            // Set the background color of the cell
+            cell2.CellFormat.Shading.BackgroundPatternColor = Color.CadetBlue; 
+			// Set the vertical alignment of the content in the cell
+			cell2.CellFormat.VerticalAlignment = VerticalAlignment.Middle; 
 
-            //Add the table in the section
-            section.Tables.Add(table);
+			// Add the table to the section
+			section.Tables.Add(table);
 
-            //Save the document
-            string output = "CreateTableDirectly_out.docx";
-            doc.SaveToFile(output, FileFormat.Docx2013);
+			// Save the document to a file in Docx2013 format
+			string output = "CreateTableDirectly_out.docx";
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose of the document object to free up resources
+			doc.Dispose();
 
             //Launch the document
             WordDocViewer(output);

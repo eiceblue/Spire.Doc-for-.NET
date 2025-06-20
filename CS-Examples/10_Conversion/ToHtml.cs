@@ -19,12 +19,17 @@ namespace ConvertToHtml
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ToHtmlTemplate.docx");
+            // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Save doc file.
-            document.SaveToFile("Sample.html", FileFormat.Html);
+			// Load a Word document from the specified file path using relative path notation.
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ToHtmlTemplate.docx");
+
+			// Save the loaded document as an HTML file named "Sample.html".
+			document.SaveToFile("Sample.html", FileFormat.Html);
+
+			// Release system resources associated with the Document object.
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.html");

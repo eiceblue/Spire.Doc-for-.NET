@@ -19,25 +19,29 @@ namespace InsertRtfStringToDoc
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new Document object.
             Document document = new Document();
 
-            //Add a new section.
+            // Add a new Section to the document.
             Section section = document.AddSection();
 
-            //Add a paragraph to the section.
+            // Add a new Paragraph to the Section.
             Paragraph para = section.AddParagraph();
 
-            //Declare a String variable to store the Rtf string.
+            // Define an RTF string containing formatted text.
             String rtfString = @"{\rtf1\ansi\deff0 {\fonttbl {\f0 hakuyoxingshu7000;}}\f0\fs28 Hello, World}";
 
-            //Append Rtf string to paragraph.
+            // Append the RTF string to the Paragraph, preserving the formatting.
             para.AppendRTF(rtfString);
 
+            // Specify the file name for the resulting Word document.
             String result = "Result-InsertRtfStringToWord.docx";
 
-            //Save to file.
+            // Save the Document object to a file in Docx format.
             document.SaveToFile(result, FileFormat.Docx);
+
+            // Dispose the Document object.
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

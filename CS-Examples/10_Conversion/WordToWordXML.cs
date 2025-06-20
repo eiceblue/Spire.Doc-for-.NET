@@ -19,20 +19,23 @@ namespace WordToWordXML
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
-          
-            String result1 = "Result-WordToWordML.xml";          
-            String result2 = "Result-WordToWordXML.xml";
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //For word 2003:
-            document.SaveToFile(result1, FileFormat.WordML);
+			string result1 = "Result-WordToWordML.xml";
+			string result2 = "Result-WordToWordXML.xml";
 
-            //For word 2007:
-            document.SaveToFile(result2, FileFormat.WordXml);
+			//For word 2003:
+			document.SaveToFile(result1, FileFormat.WordML);
+
+			//For word 2007:
+			document.SaveToFile(result2, FileFormat.WordXml);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the files.
             WordDocViewer(result1);

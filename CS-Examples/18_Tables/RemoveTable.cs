@@ -18,17 +18,24 @@ namespace RemoveTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
+
             string input = @"..\..\..\..\..\..\Data\Template.docx";
-            Document doc = new Document();
+            // Create a new Document object
+		    Document doc = new Document();
+
+		    // Load an existing Word document from a file
             doc.LoadFromFile(input);
 
             //Remove the first Table            
             doc.Sections[0].Tables.RemoveAt(0);
 
-            //Save and launch document
+            //Save the document
             string output = "RemoveTable.docx";
             doc.SaveToFile(output, FileFormat.Docx);
+			
+			//Dispose of the document object to free up resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

@@ -16,25 +16,37 @@ namespace NestedMailMerage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            List<DictionaryEntry> list = new List<DictionaryEntry>();
-            DataSet dsData = new DataSet();
+            // Create a list to store DictionaryEntry objects
+			List<DictionaryEntry> list = new List<DictionaryEntry>();
 
-            dsData.ReadXml(@"..\..\..\..\..\..\Data\Orders.xml");
+			// Create a DataSet object
+			DataSet dsData = new DataSet();
 
-            //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\NestedMailMerge.doc");
+			// Read XML data into the DataSet
+			dsData.ReadXml(@"..\..\..\..\..\..\Data\Orders.xml");
 
-            DictionaryEntry dictionaryEntry = new DictionaryEntry("Customer", string.Empty);
-            list.Add(dictionaryEntry);
+			// Create a Document object
+			Document document = new Document();
 
-            dictionaryEntry = new DictionaryEntry("Order", "Customer_Id = %Customer.Customer_Id%");
-            list.Add(dictionaryEntry);
+			// Load a Word document from file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\NestedMailMerge.doc");
 
-            document.MailMerge.ExecuteWidthNestedRegion(dsData, list);
-          
-            //Save as docx file.
-            document.SaveToFile("Sample.docx", FileFormat.Docx);
+			// Create a DictionaryEntry for "Customer" with an empty value and add it to the list
+			DictionaryEntry dictionaryEntry = new DictionaryEntry("Customer", string.Empty);
+			list.Add(dictionaryEntry);
+
+			// Create a DictionaryEntry for "Order" with a nested region condition and add it to the list
+			dictionaryEntry = new DictionaryEntry("Order", "Customer_Id = %Customer.Customer_Id%");
+			list.Add(dictionaryEntry);
+
+			// Execute mail merge with nested regions using the DataSet and list of DictionaryEntry objects
+			document.MailMerge.ExecuteWidthNestedRegion(dsData, list);
+
+			// Save the merged document to a file 
+			document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			// Dispose the Document object 
+			document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");

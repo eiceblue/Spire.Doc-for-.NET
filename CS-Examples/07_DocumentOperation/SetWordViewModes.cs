@@ -19,21 +19,29 @@ namespace SetWordViewModes
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Set Word view modes.
-            document.ViewSetup.DocumentViewType = DocumentViewType.WebLayout;
-            document.ViewSetup.ZoomPercent = 150;
-            document.ViewSetup.ZoomType = ZoomType.None;
+			// Set the document view type to WebLayout
+			document.ViewSetup.DocumentViewType = DocumentViewType.WebLayout;
 
-            String result = "Result-SetWordViewModes.docx";
+			// Set the zoom percentage to 150%
+			document.ViewSetup.ZoomPercent = 150;
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Set the zoom type to None
+			document.ViewSetup.ZoomType = ZoomType.None;
+
+			// Specify the file name for the result document
+			String result = "Result-SetWordViewModes.docx";
+
+			// Save the modified document to the specified file path in the Docx2013 format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the document object to release resources
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

@@ -18,29 +18,38 @@ namespace ModifyPageSetupOfSection
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Word from disk
+            // Create a new instance of the Document class.
             Document doc = new Document();
+
+            // Load a Word document from a specified file path using the LoadFromFile method.
             doc.LoadFromFile(@"../../../../../../Data/Template_N2.docx");
 
-            //Loop through all sections
+            // Iterate through each section in the document.
             foreach (Section section in doc.Sections)
             {
-                //Modify the margins
+                // Set the page margins of the current section using the MarginsF class.
                 section.PageSetup.Margins = new MarginsF(100, 80, 100, 80);
-                //Modify the page size
+
+                // Set the page size of the current section to Letter size.
                 section.PageSetup.PageSize = PageSize.Letter;
             }
-
-            // Or only modify one section
+			
+			// Or only modify one section
             // For example, modify the page setup of the first section
             //Section section0 = doc.Sections[0];
             //section0.PageSetup.Margins = new MarginsF(100, 80, 100, 80);
             //section0.PageSetup.FooterDistance = 35.4f;
             //section0.PageSetup.HeaderDistance = 34.4f;
 
-            //Save the Word file
+            // Specify the output file name for the modified page setup document.
             string output = "ModifyPageSetupOfAllSections_out.docx";
-            doc.SaveToFile(output,FileFormat.Docx2013);
+
+            // Save the document to a file with the specified output file name and Docx2013 format.
+            doc.SaveToFile(output, FileFormat.Docx2013);
+
+            // Release system resources used by the document.
+            doc.Dispose();
+
 
             //Launch the file
             WordDocViewer(output);

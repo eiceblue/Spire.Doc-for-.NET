@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Spire.Doc;
 using Spire.Doc.Documents;
+using System.Drawing.Imaging;
 
 namespace ConvertToImage
 {
@@ -20,12 +21,19 @@ namespace ConvertToImage
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+			Document document = new Document();
 
-            //Save doc file.
-            Image img = document.SaveToImages(0, ImageType.Metafile);
-            img.Save("sample.png", System.Drawing.Imaging.ImageFormat.Png);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+			//Save the first page to image
+			Image img = document.SaveToImages(0, ImageType.Bitmap);
+
+			//Save the image to file
+			img.Save("sample.png", ImageFormat.Png);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launching the image file.
             WordDocViewer("sample.png");

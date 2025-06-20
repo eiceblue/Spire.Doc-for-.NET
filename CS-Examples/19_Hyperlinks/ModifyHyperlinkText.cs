@@ -16,41 +16,61 @@ namespace ModifyHyperlinkText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
-            string input = @"..\..\..\..\..\..\Data\Hyperlinks.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+     
+			// Specify the input file path for the document containing hyperlinks
+			string input = @"..\..\..\..\..\..\Data\Hyperlinks.docx";
 
-            //Find all hyperlinks in the Word document
-            List<Field> hyperlinks = new List<Field>();
-            foreach (Section section in doc.Sections)
-            {
-                foreach (DocumentObject sec in section.Body.ChildObjects)
-                {
-                    if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
-                    {
-                        foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
-                        {
-                            if (para.DocumentObjectType == DocumentObjectType.Field)
-                            {
-                                Field field = para as Field;
+			// Create a new Document object
+			Document doc = new Document();
 
-                                if (field.Type == FieldType.FieldHyperlink)
-                                {
-                                    hyperlinks.Add(field);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+			// Load the document from the specified file path
+			doc.LoadFromFile(input);
 
-            //Reset the property of hyperlinks[0].FieldText by using the index of the hyperlink
-            hyperlinks[0].FieldText = "Spire.Doc component";
+			// Create a list to store the hyperlinks
+			List<Field> hyperlinks = new List<Field>();
 
-            //Save and launch document
-            string output = "ModifyText.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			// Iterate through the sections in the document
+			foreach (Section section in doc.Sections)
+			{
+				// Iterate through the child objects in the body of the section
+				foreach (DocumentObject sec in section.Body.ChildObjects)
+				{
+					// Check if the child object is a paragraph
+					if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
+					{
+						// Iterate through the child objects in the paragraph
+						foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
+						{
+							// Check if the child object is a field
+							if (para.DocumentObjectType == DocumentObjectType.Field)
+							{
+								// Cast the child object to a Field
+								Field field = para as Field;
+
+								// Check if the field is a hyperlink
+								if (field.Type == FieldType.FieldHyperlink)
+								{
+									// Add the field to the list of hyperlinks
+									hyperlinks.Add(field);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Modify the text of the first hyperlink field
+			hyperlinks[0].FieldText = "Spire.Doc component";
+
+			// Specify the output file path for the modified document
+			string output = "ModifyText.docx";
+
+			// Save the modified document to the output file path in DOCX format
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document object to free up resources
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

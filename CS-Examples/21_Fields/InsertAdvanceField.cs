@@ -20,26 +20,32 @@ namespace InsertAdvanceField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open a Word document.
-            Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
+          
+			// Load the document from a specified file path
+			Document document = new Document(@"..\..\..\..\..\..\Data\SampleB_2.docx");
 
-            //Get the first section
-            Section section = document.Sections[0];
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            Paragraph par = section.AddParagraph();
-           
-            //Add advance field
-            Field field
-            = par.AppendField("Field", FieldType.FieldAdvance);
+			// Add a paragraph to the section
+			Paragraph par = section.AddParagraph();
 
-            //Add field code
-            field.Code = "ADVANCE \\d 10 \\l 10 \\r 10 \\u 0 \\x 100 \\y 100 ";
+			// Append a field with the specified type and text
+			Field field = par.AppendField("Field", FieldType.FieldAdvance);
 
-            //Update field
-            document.IsUpdateFields = true;
+			// Set the code for the field using the specified parameters
+			field.Code = "ADVANCE \\d 10 \\l 10 \\r 10 \\u 0 \\x 100 \\y 100 ";
 
-            String result="result.docx";
-            document.SaveToFile(result, FileFormat.Docx);
+			// Enable the automatic update of fields in the document
+			document.IsUpdateFields = true;
+
+			// Save the modified document to a file with the specified name
+			String result = "result.docx";
+			document.SaveToFile(result, FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();			
+			
             //Launch result file
             WordDocViewer(result);
 

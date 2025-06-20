@@ -19,43 +19,53 @@ namespace SetTableStyleAndBorder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document and load file
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
+         
+			// Create a new document object
+			Document document = new Document();
 
-            Section section = document.Sections[0];
+			// Load a document from a file, specified by the file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\TableSample.docx");
 
-            //Get the first table
-            Table table = section.Tables[0] as Table;
+			// Get the first section of the document
+			Section section = document.Sections[0];
 
-            //Apply the table style
-            table.ApplyStyle(DefaultTableStyle.ColorfulList);
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
 
-            //Set right border of table
-            table.TableFormat.Borders.Right.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
-            table.TableFormat.Borders.Right.LineWidth = 1.0F;
-            table.TableFormat.Borders.Right.Color = Color.Red;
+			// Apply a predefined table style to the table
+			table.ApplyStyle(DefaultTableStyle.ColorfulList);
 
-            //Set top border of table
-            table.TableFormat.Borders.Top.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
-            table.TableFormat.Borders.Top.LineWidth = 1.0F;
-            table.TableFormat.Borders.Top.Color = Color.Green;
+			// Set the right border of the table
+			table.Format.Borders.Right.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
+			table.Format.Borders.Right.LineWidth = 1.0F;
+			table.Format.Borders.Right.Color = Color.Red;
 
-            //Set left border of table
-            table.TableFormat.Borders.Left.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
-            table.TableFormat.Borders.Left.LineWidth = 1.0F;
-            table.TableFormat.Borders.Left.Color = Color.Yellow;
+			// Set the top border of the table
+			table.Format.Borders.Top.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
+			table.Format.Borders.Top.LineWidth = 1.0F;
+			table.Format.Borders.Top.Color = Color.Green;
 
-            //Set bottom border is none
-            table.TableFormat.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.DotDash;
+			// Set the left border of the table
+			table.Format.Borders.Left.BorderType = Spire.Doc.Documents.BorderStyle.Hairline;
+			table.Format.Borders.Left.LineWidth = 1.0F;
+			table.Format.Borders.Left.Color = Color.Yellow;
 
-            //Set vertical and horizontal border 
-            table.TableFormat.Borders.Vertical.BorderType = Spire.Doc.Documents.BorderStyle.Dot;
-            table.TableFormat.Borders.Horizontal.BorderType = Spire.Doc.Documents.BorderStyle.None;
-            table.TableFormat.Borders.Vertical.Color = Color.Orange;
+			// Set the bottom border of the table
+			table.Format.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.DotDash;
 
-            //Save the file and launch it
-            document.SaveToFile("TableStyleAndBorder.docx", FileFormat.Docx);
+			// Set the vertical borders of the table
+			table.Format.Borders.Vertical.BorderType = Spire.Doc.Documents.BorderStyle.Dot;
+			table.Format.Borders.Vertical.Color = Color.Orange;
+
+			// Set the horizontal borders of the table to none
+			table.Format.Borders.Horizontal.BorderType = Spire.Doc.Documents.BorderStyle.None;
+
+			// Save the modified document to a file named "TableStyleAndBorder.docx", using Docx format
+			document.SaveToFile("TableStyleAndBorder.docx", FileFormat.Docx);
+
+			// Dispose of the document object
+			document.Dispose();
+			
             FileViewer("TableStyleAndBorder.docx");
         }
         private void FileViewer(string fileName)

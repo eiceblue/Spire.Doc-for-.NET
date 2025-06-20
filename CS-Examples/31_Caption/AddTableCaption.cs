@@ -14,24 +14,31 @@ namespace AddTableCaption
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+          
+            // Create a new instance of Document
             Document document = new Document();
-            //Load file
+
+            // Load the Word document from the specified file
             document.LoadFromFile(@"..\..\..\..\..\..\Data\TableTemplate.docx");
 
-            //Get the first table
+            // Get the body of the first section in the document
             Body body = document.Sections[0].Body;
+
+            // Get the first table in the body
             Table table = body.Tables[0] as Table;
 
-            //Add caption to the table
+            // Add a caption to the table with the "Table" label, numbering format as "Number", and position below the table
             table.AddCaption("Table", CaptionNumberingFormat.Number, CaptionPosition.BelowItem);
 
-            //Update fields
+            // Enable field updating in the document
             document.IsUpdateFields = true;
 
-            //Save the file
+            // Specify the output file name and format (Docx)
             string output = "AddTableCaption_result.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+            document.SaveToFile(output, FileFormat.Docx);
+
+            // Dispose of the document object when finished using it
+            document.Dispose();
 
             //Launching the file
             WordDocViewer(output);

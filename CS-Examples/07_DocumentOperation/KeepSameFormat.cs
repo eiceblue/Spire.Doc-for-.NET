@@ -15,26 +15,35 @@ namespace KeepSameFormat
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the source document from disk
-            Document srcDoc = new Document();
-            srcDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N2.docx");
+            // Create a new instance of the Document class and load a document from the specified file path ("Template_N2.docx").
+			Document srcDoc = new Document();
+			srcDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N2.docx");
 
-            //Load the destination document from disk
-            Document destDoc = new Document();
-            destDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N3.docx");
+			// Create a new instance of the Document class and load another document from the specified file path ("Template_N3.docx").
+			Document destDoc = new Document();
+			destDoc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N3.docx");
 
-            //Keep same format of source document
-            srcDoc.KeepSameFormat = true;
+			// Set the KeepSameFormat property of the source document to true.
+			srcDoc.KeepSameFormat = true;
 
-            //Copy the sections of source document to destination document
-            foreach (Section section in srcDoc.Sections)
-            {
-                destDoc.Sections.Add(section.Clone());
-            }
+			// Iterate through each section in the source document.
+			foreach (Section section in srcDoc.Sections)
+			{
+				// Clone each section and add it to the destination document.
+				destDoc.Sections.Add(section.Clone());
+			}
 
-            //Save the Word document
-            string output="KeepSameFormating_out.docx";
-            destDoc.SaveToFile(output, FileFormat.Docx2013);
+			// Specify the output file name.
+			string output = "KeepSameFormating_out.docx";
+
+			// Save the modified destination document to a file with the specified output file name and format (Docx2013).
+			destDoc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Clean up resources used by the source document.
+			srcDoc.Dispose();
+
+			// Clean up resources used by the destination document.
+			destDoc.Dispose();
 
             //Launch the file
             WordDocViewer(output);

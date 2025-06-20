@@ -20,95 +20,110 @@ namespace AddShapeGroup
 
         private void button1_Click(object sender, EventArgs e)
         {
-           //create a document
-            Document doc = new Document();
-            Section sec = doc.AddSection();
+			
+			//create a document
+			Document doc = new Document();
 
-            //add a new paragraph
-            Paragraph para = sec.AddParagraph();
-            //add a shape group with the height and width
-            ShapeGroup shapegroup = para.AppendShapeGroup(375, 462);
-            shapegroup.HorizontalPosition = 180;
-            //calcuate the scale ratio
-            float X = (float)(shapegroup.Width / 1000.0f);
-            float Y = (float)(shapegroup.Height / 1000.0f);
-
+			// Add a section to the document
+			Section sec = doc.AddSection();
+	
+			// Add a paragraph to the section
+			Paragraph para = sec.AddParagraph();
+	
+			// Create a shape group and set its width and height
+			ShapeGroup shapegroup = para.AppendShapeGroup(375, 462);
+	
+			// Set the horizontal position of the shape group
+			shapegroup.HorizontalPosition = 180;
+	
+			// Calculate the scaling factors for width and height
+			float X = (float)(shapegroup.Width / 1000.0f);
+			float Y = (float)(shapegroup.Height / 1000.0f);
+	
+			// Add a text box to the shape group
             Spire.Doc.Fields.TextBox txtBox = new Spire.Doc.Fields.TextBox(doc);
-            txtBox.SetShapeType(ShapeType.RoundRectangle);
-            txtBox.Width = 125 / X;
-            txtBox.Height = 54 / Y;
-            Paragraph paragraph = txtBox.Body.AddParagraph();
+			txtBox.SetShapeType(ShapeType.RoundRectangle);
+			txtBox.Width = 125 / X;
+			txtBox.Height = 54 / Y;
+			Paragraph paragraph = txtBox.Body.AddParagraph();
             paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            paragraph.AppendText("Start");
-            txtBox.HorizontalPosition = 19/ X;
-            txtBox.VerticalPosition = 27 / Y;
-            txtBox.Format.LineColor = Color.Green;
-            shapegroup.ChildObjects.Add(txtBox);
-
-            ShapeObject arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
-            arrowLineShape.Width = 16 / X;
-            arrowLineShape.Height = 40 / Y;
-            arrowLineShape.HorizontalPosition = 69 / X;
-            arrowLineShape.VerticalPosition = 87 / Y;
-            arrowLineShape.StrokeColor = Color.Purple;
-            shapegroup.ChildObjects.Add(arrowLineShape);
-
+			paragraph.AppendText("Start");
+			txtBox.HorizontalPosition = 19 / X;
+			txtBox.VerticalPosition = 27 / Y;
+			txtBox.Format.LineColor = Color.Green;
+			shapegroup.ChildObjects.Add(txtBox);
+	
+			// Add an arrow shape to the shape group
+			ShapeObject arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
+			arrowLineShape.Width = 16 / X;
+			arrowLineShape.Height = 40 / Y;
+			arrowLineShape.HorizontalPosition = 69 / X;
+			arrowLineShape.VerticalPosition = 87 / Y;
+			arrowLineShape.StrokeColor = Color.Purple;
+			shapegroup.ChildObjects.Add(arrowLineShape);
+	
+			// Add another text box to the shape group
             txtBox = new Spire.Doc.Fields.TextBox(doc);
-            txtBox.SetShapeType(ShapeType.Rectangle);
-            txtBox.Width = 125 / X;
-            txtBox.Height = 54 / Y;
-            paragraph = txtBox.Body.AddParagraph();
+			txtBox.SetShapeType(ShapeType.Rectangle);
+			txtBox.Width = 125 / X;
+			txtBox.Height = 54 / Y;
+			paragraph = txtBox.Body.AddParagraph();
             paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            paragraph.AppendText("Step 1");
-            txtBox.HorizontalPosition = 19/ X;
-            txtBox.VerticalPosition = 131/ Y;
-            txtBox.Format.LineColor = Color.Blue;
-            shapegroup.ChildObjects.Add(txtBox);
-
-            arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
-            arrowLineShape.Width = 16 / X;
-            arrowLineShape.Height = 40 / Y;
-            arrowLineShape.HorizontalPosition = 69 / X;
-            arrowLineShape.VerticalPosition = 192 / Y;
-            arrowLineShape.StrokeColor = Color.Purple;
-            shapegroup.ChildObjects.Add(arrowLineShape);
-
+			paragraph.AppendText("Step 1");
+			txtBox.HorizontalPosition = 19 / X;
+			txtBox.VerticalPosition = 131 / Y;
+			txtBox.Format.LineColor = Color.Blue;
+			shapegroup.ChildObjects.Add(txtBox);
+	
+			// Add another arrow shape to the shape group
+			arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
+			arrowLineShape.Width = 16 / X;
+			arrowLineShape.Height = 40 / Y;
+			arrowLineShape.HorizontalPosition = 69 / X;
+			arrowLineShape.VerticalPosition = 192 / Y;
+			arrowLineShape.StrokeColor = Color.Purple;
+			shapegroup.ChildObjects.Add(arrowLineShape);
+	
+			// Add another text box to the shape group
             txtBox = new Spire.Doc.Fields.TextBox(doc);
-            txtBox.SetShapeType(ShapeType.Parallelogram);
-            txtBox.Width = 149 / X;
-            txtBox.Height = 59/ Y;
-            paragraph = txtBox.Body.AddParagraph();
+			txtBox.SetShapeType(ShapeType.Parallelogram);
+			txtBox.Width = 149 / X;
+			txtBox.Height = 59 / Y;
+			paragraph = txtBox.Body.AddParagraph();
             paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            paragraph.AppendText("Step 2");
-            txtBox.HorizontalPosition = 7 / X;
-            txtBox.VerticalPosition = 236/ Y;
-            txtBox.Format.LineColor = Color.BlueViolet;
-            shapegroup.ChildObjects.Add(txtBox);
-
-            arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
-            arrowLineShape.Width = 16 / X;
-            arrowLineShape.Height = 40/ Y;
-            arrowLineShape.HorizontalPosition = 66 / X;
-            arrowLineShape.VerticalPosition = 300 / Y;
-            arrowLineShape.StrokeColor = Color.Purple;
-            shapegroup.ChildObjects.Add(arrowLineShape);
-
+			paragraph.AppendText("Step 2");
+			txtBox.HorizontalPosition = 7 / X;
+			txtBox.VerticalPosition = 236 / Y;
+			txtBox.Format.LineColor = Color.BlueViolet;
+			shapegroup.ChildObjects.Add(txtBox);
+	
+			// Add another arrow shape to the shape group
+			arrowLineShape = new ShapeObject(doc, ShapeType.DownArrow);
+			arrowLineShape.Width = 16 / X;
+			arrowLineShape.Height = 40 / Y;
+			arrowLineShape.HorizontalPosition = 66 / X;
+			arrowLineShape.VerticalPosition = 300 / Y;
+			arrowLineShape.StrokeColor = Color.Purple;
+			shapegroup.ChildObjects.Add(arrowLineShape);
+	
+			// Add another text box to the shape group
             txtBox = new Spire.Doc.Fields.TextBox(doc);
-            txtBox.SetShapeType(ShapeType.Rectangle);
-            txtBox.Width = 125 / X;
-            txtBox.Height = 54 / Y;
-            paragraph = txtBox.Body.AddParagraph();
+			txtBox.SetShapeType(ShapeType.Rectangle);
+			txtBox.Width = 125 / X;
+			txtBox.Height = 54 / Y;
+			paragraph = txtBox.Body.AddParagraph();
             paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
-            paragraph.AppendText("Step 3");
-            txtBox.HorizontalPosition = 19 / X;
-            txtBox.VerticalPosition = 345 / Y;
-            txtBox.Format.LineColor = Color.Blue;
-            shapegroup.ChildObjects.Add(txtBox);
-
-
-
-            //save the document
-            doc.SaveToFile("ShapeGroup.docx", FileFormat.Docx2010);
+			paragraph.AppendText("Step 3");
+			txtBox.HorizontalPosition = 19 / X;
+			txtBox.VerticalPosition = 345 / Y;
+			txtBox.Format.LineColor = Color.Blue;
+			shapegroup.ChildObjects.Add(txtBox);
+	
+			// Save the document
+			doc.SaveToFile("ShapeGroup.docx", FileFormat.Docx2010);
+	
+			// Dispose the document
+			doc.Dispose();
 
             FileViewer("ShapeGroup.docx");
         }

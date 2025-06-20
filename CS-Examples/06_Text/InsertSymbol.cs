@@ -20,28 +20,32 @@ namespace InsertSymbol
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+           // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Add a section.
-            Section section = document.AddSection();
+			// Add a new section to the document.
+			Section section = document.AddSection();
 
-            //Add a paragraph.
-            Paragraph paragraph = section.AddParagraph();
+			// Add a new paragraph to the section.
+			Paragraph paragraph = section.AddParagraph();
 
-            //Use unicode characters to create symbol Ä.
-            TextRange tr = paragraph.AppendText('\u00c4'.ToString());
+			// Use a unicode character (U+00C4) to create the symbol Ä and append it to the paragraph.
+			TextRange tr = paragraph.AppendText('\u00C4'.ToString());
 
-            //Set the color of symbol Ä.
-            tr.CharacterFormat.TextColor = Color.Red;
+			// Set the text color of the symbol Ä to red.
+			tr.CharacterFormat.TextColor = Color.Red;
 
-            //Add symbol Ë.
-            paragraph.AppendText('\u00cb'.ToString());
+			// Append the symbol Ë to the paragraph using a unicode character (U+00CB).
+			paragraph.AppendText('\u00CB'.ToString());
 
-            String result = "Result-InsertSymbol.docx";
+			// Specify the file name for the resulting document.
+			string result = "Result-InsertSymbol.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the document to a file with the specified file name and format (Docx 2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

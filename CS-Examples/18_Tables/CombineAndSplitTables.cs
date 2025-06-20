@@ -23,29 +23,34 @@ namespace CombineAndSplitTables
         }
         private void CombineTables()
         {
-            //Load document from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\CombineAndSplitTables.docx");
+            //Create a Word document
+			Document doc = new Document();
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Load document from disk
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\CombineAndSplitTables.docx");
 
-            //Get the first and second table
-            Table table1 = section.Tables[0] as Table;
-            Table table2 = section.Tables[1] as Table;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Add the rows of table2 to table1
-            for (int i = 0; i < table2.Rows.Count; i++)
-            {
-                table1.Rows.Add(table2.Rows[i].Clone());
-            }
+			//Get the first and second table
+			Table table1 = section.Tables[0] as Table;
+			Table table2 = section.Tables[1] as Table;
 
-            //Remove the table2
-            section.Tables.Remove(table2);
+			//Add the rows of table2 to table1
+			for (int i = 0; i < table2.Rows.Count; i++)
+			{
+				table1.Rows.Add(table2.Rows[i].Clone());
+			}
 
-            //Save the Word file
-            string output = "CombineTables_out.docx";
-            section.Document.SaveToFile(output, FileFormat.Docx2013);
+			//Remove the table2
+			section.Tables.Remove(table2);
+
+			//Save the Word file
+			string output = "CombineTables_out.docx";
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			//Dispose the document
+			doc.Dispose();
 
             //Launch the file
             WordDocViewer(output);
@@ -53,40 +58,45 @@ namespace CombineAndSplitTables
         }
         private void SplitTable()
         {
-            //Load document from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\CombineAndSplitTables.docx");
+            //Create a Word document
+			Document doc = new Document();
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Load the file from disk
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\CombineAndSplitTables.docx");
 
-            //Get the first table
-            Table table = section.Tables[0] as Table;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //We will split the table at the third row;
-            int splitIndex = 2;
+			//Get the first table
+			Table table = section.Tables[0] as Table;
 
-            //Create a new table for the split table
-            Table newTable = new Table(section.Document);
+			//We will split the table at the third row;
+			int splitIndex = 2;
 
-            //Add rows to the new table
-            for (int i = splitIndex; i < table.Rows.Count; i++)
-            {
-                newTable.Rows.Add(table.Rows[i].Clone());
-            }
+			//Create a new table for the split table
+			Table newTable = new Table(section.Document);
 
-            //Remove rows from original table
-            for (int i = table.Rows.Count - 1; i >= splitIndex; i--)
-            {
-                table.Rows.RemoveAt(i);
-            }
+			//Add rows to the new table
+			for (int i = splitIndex; i < table.Rows.Count; i++)
+			{
+				newTable.Rows.Add(table.Rows[i].Clone());
+			}
 
-            //Add the new table in section
-            section.Tables.Add(newTable);
+			//Remove rows from original table
+			for (int i = table.Rows.Count - 1; i >= splitIndex; i--)
+			{
+				table.Rows.RemoveAt(i);
+			}
 
-            //Save the Word file
-            string output = "SplitTable_out.docx";
-            section.Document.SaveToFile(output, FileFormat.Docx2013);
+			//Add the new table in section
+			section.Tables.Add(newTable);
+
+			//Save the Word file
+			string output = "SplitTable_out.docx";
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			//Dispose the document
+			doc.Dispose();
 
             //Launch the file
             WordDocViewer(output);

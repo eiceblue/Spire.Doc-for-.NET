@@ -19,16 +19,23 @@ namespace SimpleInsertFile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the Word document
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N5.docx");
+            // Create a new instance of the Document class.
+			Document doc = new Document();
 
-            //Insert document from file
-            doc.InsertTextFromFile(@"..\..\..\..\..\..\..\Data\Template_N3.docx", FileFormat.Auto);
+			// Load the document from the specified file path.
+			doc.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_N5.docx");
 
-            //Save the document
-            string output="SimpleInsertFile_out.docx";
-            doc.SaveToFile(output,FileFormat.Docx2013);
+			// Insert text from another document into the current document, specifying the file path and allowing automatic file format detection.
+			doc.InsertTextFromFile(@"..\..\..\..\..\..\..\Data\Template_N3.docx", FileFormat.Auto);
+
+			// Specify the output file name.
+			string output = "SimpleInsertFile_out.docx";
+
+			// Save the modified document to a file with the specified file name and file format as Docx2013.
+			doc.SaveToFile(output, FileFormat.Docx2013);
+
+			// Dispose of the document to release resources.
+			doc.Dispose();
 
             //Launch the document
             WordDocViewer(output);

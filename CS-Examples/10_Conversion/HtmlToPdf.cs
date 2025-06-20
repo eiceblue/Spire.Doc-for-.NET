@@ -19,16 +19,19 @@ namespace HtmlToPdf
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            //Create a Word document.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html", FileFormat.Html, XHTMLValidationType.None);
 
-            String result = "Result-HtmlToPdf.pdf";
+			string result = "Result-HtmlToPdf.pdf";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.PDF);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.PDF);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Pdf file.
             WordDocViewer(result);

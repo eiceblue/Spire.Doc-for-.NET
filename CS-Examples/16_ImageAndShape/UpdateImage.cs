@@ -17,34 +17,50 @@ namespace UpdateImage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\ImageTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get all pictures in the Word document
-            List<DocumentObject> pictures = new List<DocumentObject>();
-            foreach (Section sec in doc.Sections)
-            {
-                foreach (Paragraph para in sec.Paragraphs)
-                { 
-                    foreach (DocumentObject docObj in para.ChildObjects)
-                    {
-                        if (docObj.DocumentObjectType == DocumentObjectType.Picture)
-                        {
-                            pictures.Add(docObj);
-                        }
-                    }
-                }
-            }
+			//Create a word document
+			Document doc = new Document();
 
-            //Replace the first picture with a new image file
-            DocPicture picture = pictures[0] as DocPicture;
-            picture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "ReplaceWithNewImage.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Create a list to store the pictures
+			List<DocumentObject> pictures = new List<DocumentObject>();
+
+			//Loop through the sections
+			foreach (Section sec in doc.Sections)
+			{
+				//Loop through the paragraphs
+				foreach (Paragraph para in sec.Paragraphs)
+				{
+
+					//Loop through the child objects of the paragraph
+					foreach (DocumentObject docObj in para.ChildObjects)
+					{
+						//Determine if the type is picture or not
+						if (docObj.DocumentObjectType == DocumentObjectType.Picture)
+						{
+							//Add the picure to list
+							pictures.Add(docObj);
+						}
+					}
+				}
+			}
+
+			//Create a DocPicture instance
+			DocPicture picture = pictures[0] as DocPicture;
+
+			//Replace the first picture with a new image file
+			picture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+
+			//Save the document
+			string output = "ReplaceWithNewImage.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

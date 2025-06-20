@@ -14,27 +14,32 @@ namespace SetDocumentProperties
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the document from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
+			// Load the document from the specified file path using a relative path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
-            //Set the build-in Properties.
-            document.BuiltinDocumentProperties.Title = "Document Demo Document";
-            document.BuiltinDocumentProperties.Author = "James";
-            document.BuiltinDocumentProperties.Company = "e-iceblue";
-            document.BuiltinDocumentProperties.Keywords = "Document, Property, Demo";
-            document.BuiltinDocumentProperties.Comments = "This document is just a demo.";
+			// Set the values of various built-in document properties
+			document.BuiltinDocumentProperties.Title = "Document Demo Document";
+			document.BuiltinDocumentProperties.Author = "James";
+			document.BuiltinDocumentProperties.Company = "e-iceblue";
+			document.BuiltinDocumentProperties.Keywords = "Document, Property, Demo";
+			document.BuiltinDocumentProperties.Comments = "This document is just a demo.";
 
-            //Set the custom properties.
-            CustomDocumentProperties custom = document.CustomDocumentProperties;
-            custom.Add("e-iceblue", true);
-            custom.Add("Authorized By", "John Smith");
-            custom.Add("Authorized Date", DateTime.Today);
+			// Get the collection of custom document properties
+			CustomDocumentProperties custom = document.CustomDocumentProperties;
 
-            //Save the document.
-            document.SaveToFile("Output.docx", FileFormat.Docx);
+			// Add custom document properties to the collection
+			custom.Add("e-iceblue", true);
+			custom.Add("Authorized By", "John Smith");
+			custom.Add("Authorized Date", DateTime.Today);
+
+			// Save the modified document to a file with the specified output file name and file format (Docx)
+			document.SaveToFile("Output.docx", FileFormat.Docx);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

@@ -15,25 +15,37 @@ namespace CloneSection
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load source file
+            // Create a new instance of the Document class.
             Document srcDoc = new Document();
+
+            // Load a Word document from a specified file path using the LoadFromFile method.
             srcDoc.LoadFromFile(@"..\..\..\..\..\..\Data\SectionTemplate.docx");
-            
-            //Create destination file
+
+            // Create a new instance of the Document class.
             Document desDoc = new Document();
-            
-            Section cloneSection=null;
+
+            // Initialize a variable to store a cloned section.
+            Section cloneSection = null;
+
+            // Iterate through each section in the source document.
             foreach (Section section in srcDoc.Sections)
             {
-                //Clone section
+                // Clone the current section and assign it to the cloneSection variable.
                 cloneSection = section.Clone();
-                //Add the cloneSection in destination file
+
+                // Add the cloned section to the destination document's Sections collection.
                 desDoc.Sections.Add(cloneSection);
             }
 
-            //Save the Word
-            string output="CloneSection_out.docx";
+            // Specify the output file name for the cloned section document.
+            string output = "CloneSection_out.docx";
+
+            // Save the destination document to a file with the specified output file name and Docx2013 format.
             desDoc.SaveToFile(output, FileFormat.Docx2013);
+
+            // Release system resources used by the source and destination documents.
+            srcDoc.Dispose();
+            desDoc.Dispose();
 
             //Launch Word file
             WordDocViewer(output);

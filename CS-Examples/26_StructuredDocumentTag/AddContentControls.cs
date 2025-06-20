@@ -20,16 +20,22 @@ namespace AddContentControls
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Creat a new word document.
+            // Create a new document object
             Document document = new Document();
+
+            // Add a section to the document
             Section section = document.AddSection();
+
+            // Add a paragraph to the section and append text
             Paragraph paragraph = section.AddParagraph();
             TextRange txtRange = paragraph.AppendText("The following example shows how to add content controls in a Word document.");
+
+            // Add an empty paragraph to the section
             paragraph = section.AddParagraph();
-            
-            //Add Combo Box Content Control.
+
+            // Add a paragraph to the section and append text indicating adding a ComboBox content control
             paragraph = section.AddParagraph();
-            txtRange=paragraph.AppendText("Add Combo Box Content Control:  ");
+            txtRange = paragraph.AppendText("Add Combo Box Content Control:  ");
             txtRange.CharacterFormat.Italic = true;
             StructureDocumentTagInline sd = new StructureDocumentTagInline(document);
             paragraph.ChildObjects.Add(sd);
@@ -43,9 +49,10 @@ namespace AddContentControls
             rt.Text = cb.ListItems[0].DisplayText;
             sd.SDTContent.ChildObjects.Add(rt);
 
+            // Add an empty paragraph to the section
             section.AddParagraph();
 
-            //Add Text Content Control.
+            // Add a paragraph to the section and append text indicating adding a Text content control
             paragraph = section.AddParagraph();
             txtRange = paragraph.AppendText("Add Text Content Control:  ");
             txtRange.CharacterFormat.Italic = true;
@@ -59,9 +66,10 @@ namespace AddContentControls
             rt.Text = "Text";
             sd.SDTContent.ChildObjects.Add(rt);
 
+            // Add an empty paragraph to the section
             section.AddParagraph();
 
-            //Add Picture Content Control.
+            // Add a paragraph to the section and append text indicating adding a Picture content control
             paragraph = section.AddParagraph();
             txtRange = paragraph.AppendText("Add Picture Content Control:  ");
             txtRange.CharacterFormat.Italic = true;
@@ -74,9 +82,10 @@ namespace AddContentControls
             pic.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
             sd.SDTContent.ChildObjects.Add(pic);
 
+            // Add an empty paragraph to the section
             section.AddParagraph();
 
-            //Add Date Picker Content Control.
+            // Add a paragraph to the section and append text indicating adding a Date Picker content control
             paragraph = section.AddParagraph();
             txtRange = paragraph.AppendText("Add Date Picker Content Control:  ");
             txtRange.CharacterFormat.Italic = true;
@@ -92,9 +101,10 @@ namespace AddContentControls
             rt.Text = "1990.02.08";
             sd.SDTContent.ChildObjects.Add(rt);
 
+            // Add an empty paragraph to the section
             section.AddParagraph();
 
-            //Add Drop-Down List Content Control.
+            // Add a paragraph to the section and append text indicating adding a Drop-Down List content control
             paragraph = section.AddParagraph();
             txtRange = paragraph.AppendText("Add Drop-Down List Content Control:  ");
             txtRange.CharacterFormat.Italic = true;
@@ -109,9 +119,14 @@ namespace AddContentControls
             rt.Text = sddl.ListItems[0].DisplayText;
             sd.SDTContent.ChildObjects.Add(rt);
 
-            //Save the document.
+            // Specify the output file name
             string resultfile = "Output.docx";
+
+            // Save the document to a file in Docx format
             document.SaveToFile(resultfile, FileFormat.Docx);
+
+            // Dispose the document object
+            document.Dispose();
 
             //Launch the Word file.
             FileViewer(resultfile);

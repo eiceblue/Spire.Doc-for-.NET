@@ -20,8 +20,10 @@ namespace RemoveBookmark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk.
+			//Create a word document
             Document document = new Document();
+			
+			//Load the document from disk.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
 
             //Get the bookmark by name.
@@ -33,6 +35,9 @@ namespace RemoveBookmark
             //Save the document.
             document.SaveToFile("RemoveBookMark.docx", FileFormat.Docx);
 
+			// Dispose the document
+			document.Dispose();
+			
             //Launch the Word file.
             FileViewer("RemoveBookMark.docx");
         }

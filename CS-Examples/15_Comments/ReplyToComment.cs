@@ -19,29 +19,41 @@ namespace ReplyToComment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk.
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Comment.docx");
+            //Create a word document
+			Document doc = new Document();
 
-            //get the first comment.
-            Comment comment1 = doc.Comments[0];
+			//Load the document from disk.
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\Comment.docx");
 
-            //create a new comment and specify the author and content.
-            Comment replyComment1 = new Comment(doc);
-            replyComment1.Format.Author = "E-iceblue";
-            replyComment1.Body.AddParagraph().AppendText("Spire.Doc is a professional Word .NET library on operating Word documents.");
+			//get the first comment.
+			Comment comment1 = doc.Comments[0];
 
-            //add the new comment as a reply to the selected comment.
-            comment1.ReplyToComment(replyComment1);
+			//create a new comment
+			Comment replyComment1 = new Comment(doc);
 
-            DocPicture docPicture = new DocPicture(doc);
-            Image img = Image.FromFile(@"..\..\..\..\..\..\Data\logo.png");
-            docPicture.LoadImage(img);
-            //insert a picture in the comment
-            replyComment1.Body.Paragraphs[0].ChildObjects.Add(docPicture);
+			//Set the author
+			replyComment1.Format.Author = "E-iceblue";
+
+			//Append text
+			replyComment1.Body.AddParagraph().AppendText("Spire.Doc is a professional Word .NET library on operating Word documents.");
+
+			//add the new comment as a reply to the selected comment.
+			comment1.ReplyToComment(replyComment1);
+
+			//Create a DocPicture instance
+			DocPicture docPicture = new DocPicture(doc);
+
+			//Load an image
+			docPicture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
+
+			//insert a picture in the comment
+			replyComment1.Body.Paragraphs[0].ChildObjects.Add(docPicture);
 
 			//Save the document.
-            doc.SaveToFile("ReplyToComment.docx", FileFormat.Docx);
+			doc.SaveToFile("ReplyToComment.docx", FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
 			
             //Launch the Word file.
             WordDocViewer("ReplyToComment.docx");

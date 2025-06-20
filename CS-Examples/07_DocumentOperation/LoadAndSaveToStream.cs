@@ -18,29 +18,37 @@ namespace LoadAndSaveToStream
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String input = @"..\..\..\..\..\..\Data\Template.docx";
+            // Define the input file path using a relative path
+			string input = @"..\..\..\..\..\..\Data\Template.docx";
 
-            // Open the stream. Read only access is enough to load a document.
-            Stream stream = File.OpenRead(input);
+			// Open the input file in read mode and obtain a Stream object
+			Stream stream = File.OpenRead(input);
 
-            // Load the entire document into memory.
-            Document doc = new Document(stream);
+			// Create a new instance of the Document class by loading the document from the input stream
+			Document doc = new Document(stream);
 
-            // You can close the stream now, it is no longer needed because the document is in memory.
-            stream.Close();
-            // Do something with the document
+			// Close the input stream to release resources
+			stream.Close();
 
-            // Convert the document to a different format and save to stream.
-            MemoryStream newStream = new MemoryStream();
-            doc.SaveToStream(newStream, FileFormat.Rtf);
+			// Perform operations on the document
 
-            // Rewind the stream position back to zero so it is ready for the next reader.
-            newStream.Position = 0;
+			// Create a new MemoryStream to store the document
+			MemoryStream newStream = new MemoryStream();
 
-            // Save the document from stream, to disk. Normally you would do something with the stream directly,
-            // For example, writing the data to a database.
-            String result = "LoadAndSaveToStream_out.rtf";
-            File.WriteAllBytes(result, newStream.ToArray());
+			// Save the document to the new memory stream in RTF format
+			doc.SaveToStream(newStream, FileFormat.Rtf);
+
+			// Reset the position of the memory stream to the beginning
+			newStream.Position = 0;
+
+			// Specify the output file name
+			string result = "LoadAndSaveToStream_out.rtf";
+
+			// Write the contents of the memory stream to a file with the specified output file name
+			File.WriteAllBytes(result, newStream.ToArray());
+
+			// Dispose of the document object to free up resources
+			doc.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

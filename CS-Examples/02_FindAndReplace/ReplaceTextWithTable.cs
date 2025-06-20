@@ -20,36 +20,43 @@ namespace ReplaceTextWithTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new Word document object
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load a Word document from a specific path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Return TextSection by finding the key text string "Christmas Day, December 25".
+            // Find the first occurrence of the string "Christmas Day, December 25" in the document, and return its TextSelection object
             Section section = document.Sections[0];
             TextSelection selection = document.FindString("Christmas Day, December 25", true, true);
 
-            //Return TextRange from TextSection, then get OwnerParagraph through TextRange.
+            // Convert the TextSelection object to a TextRange object
             TextRange range = selection.GetAsOneRange();
+            // Get the Paragraph object that contains the TextRange object
             Paragraph paragraph = range.OwnerParagraph;
-
-            //Return the zero-based index of the specified paragraph.
+            // Get the text body that contains the paragraph
             Body body = paragraph.OwnerTextBody;
+            // Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
             int index = body.ChildObjects.IndexOf(paragraph);
 
-            //Create a new table.
+            // Add a new table and reset the number of rows and columns to 3
             Table table = section.AddTable(true);
             table.ResetCells(3, 3);
 
-            //Remove the paragraph and insert table into the collection at the specified index.
+            // Remove the TextRange object from the ChildObjects collection of the Paragraph object
             body.ChildObjects.Remove(paragraph);
+
+            // Insert the table into the ChildObjects collection at the position of the previous TextRange object
             body.ChildObjects.Insert(index, table);
 
-            String result = "Result-ReplaceTextWithTable.docx";
+            // Define the output file path and filename
+            string result = "Result-ReplaceTextWithTable.docx";
 
-            //Save to file.
+            // Save the document to the specified path with a .docx file format
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Dispose of the document object to release its resources
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

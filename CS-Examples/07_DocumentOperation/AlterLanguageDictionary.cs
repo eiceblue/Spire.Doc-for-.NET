@@ -20,21 +20,29 @@ namespace AlterLanguageDictionary
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Add new section and paragraph to the document.
-            Section sec = document.AddSection();
-            Paragraph para = sec.AddParagraph();
+			// Add a section to the document.
+			Section sec = document.AddSection();
 
-            //Add a textRange for the paragraph and append some Peru Spanish words.
-            TextRange txtRange = para.AppendText("corrige seg¨²n diccionario en ingl¨¦s");
-            txtRange.CharacterFormat.LocaleIdASCII = 10250;
+			// Add a paragraph to the section.
+			Paragraph para = sec.AddParagraph();
 
-            String result = "Result-AlterLanguageDictionary.docx";
+			// Append text "corrige seg¨²n diccionario en ingl¨¦s" to the paragraph.
+			TextRange txtRange = para.AppendText("corrige seg¨²n diccionario en ingl¨¦s");
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Set the LocaleIdASCII property of the CharacterFormat for the text range to 10250.
+			txtRange.CharacterFormat.LocaleIdASCII = 10250;
+
+			// Specify the output file name.
+			string result = "Result-AlterLanguageDictionary.docx";
+
+			// Save the document to a file with the specified output file name and format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

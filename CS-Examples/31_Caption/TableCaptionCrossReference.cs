@@ -16,25 +16,26 @@ namespace TableCaptionCrossReference
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
+            // Create a new instance of Document
             Document document = new Document();
 
-            //Get the first section
+            // Add a section to the document
             Section section = document.AddSection();
 
-            //Create a table
+            // Add a table to the section with 2 rows and 3 columns
             Table table = section.AddTable(true);
             table.ResetCells(2, 3);
-            //Add caption to the table
+
+            // Add a caption to the table with the "Table" label, numbering format as "Number", and position below the table
             IParagraph captionParagraph = table.AddCaption("Table", CaptionNumberingFormat.Number, CaptionPosition.BelowItem);
 
-            //Create a bookmark
+            // Add a bookmark at the specified location
             string bookmarkName = "Table_1";
             Paragraph paragraph = section.AddParagraph();
             paragraph.AppendBookmarkStart(bookmarkName);
             paragraph.AppendBookmarkEnd(bookmarkName);
 
-            //Replace bookmark content
+            // Navigate to the bookmark and replace its content with the caption paragraph
             BookmarksNavigator navigator = new BookmarksNavigator(document);
             navigator.MoveToBookmark(bookmarkName);
             TextBodyPart part = navigator.GetBookmarkContent();
@@ -42,44 +43,51 @@ namespace TableCaptionCrossReference
             part.BodyItems.Add(captionParagraph);
             navigator.ReplaceBookmarkContent(part);
 
-            //Create cross-reference field to point to bookmark "Table_1"
+            // Create a cross-reference field for the bookmark
             Field field = new Field(document);
             field.Type = FieldType.FieldRef;
             field.Code = @"REF Table_1 \p \h";
 
-            //Insert line breaks
+            // Add line breaks before the next paragraph
             for (int i = 0; i < 3; i++)
             {
                 paragraph.AppendBreak(BreakType.LineBreak);
             }
 
-            //Insert field to paragraph
+            // Add a new paragraph for the caption cross-reference
             paragraph = section.AddParagraph();
+
+            // Add text to the paragraph
             TextRange range = paragraph.AppendText("This is a table caption cross-reference, ");
             range.CharacterFormat.FontSize = 14;
+
+            // Add the field for referencing the table caption
             paragraph.ChildObjects.Add(field);
 
-            //Insert FieldSeparator object
+            // Add a field separator
             FieldMark fieldSeparator = new FieldMark(document, FieldMarkType.FieldSeparator);
             paragraph.ChildObjects.Add(fieldSeparator);
 
-            //Set display text of the field
+            // Add the text "Table 1" as the reference text
             TextRange tr = new TextRange(document);
             tr.Text = "Table 1";
             tr.CharacterFormat.FontSize = 14;
             tr.CharacterFormat.TextColor = System.Drawing.Color.DeepSkyBlue;
             paragraph.ChildObjects.Add(tr);
 
-            //Insert FieldEnd object to mark the end of the field
+            // Add a field end mark
             FieldMark fieldEnd = new FieldMark(document, FieldMarkType.FieldEnd);
             paragraph.ChildObjects.Add(fieldEnd);
 
-            //Update fields
+            // Enable field updating in the document
             document.IsUpdateFields = true;
 
-            //Save the file
+            // Specify the output file name and format (Docx)
             string output = "TableCaptionCrossReference.docx";
-            document.SaveToFile(output,FileFormat.Docx);
+            document.SaveToFile(output, FileFormat.Docx);
+
+            // Dispose of the document object when finished using it
+            document.Dispose();
 
             //Launching the file
             WordDocViewer(output);

@@ -16,36 +16,39 @@ namespace GetCharacterSpacing
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the document from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Insert.docx");
+			//Load the document from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Insert.docx");
 
-            //Get the first section of document
-            Section section = document.Sections[0];
+			//Get the first section of document
+			Section section = document.Sections[0];
 
-            //Get the first paragraph 
-            Paragraph paragraph = section.Paragraphs[0];
+			//Get the first paragraph 
+			Paragraph paragraph = section.Paragraphs[0];
 
-            //Define two variables
-            String fontName = "";
-            float fontSpacing = 0;
+			//Define two variables
+			string fontName = "";
+			float fontSpacing = 0;
 
-            //Traverse the ChildObjects 
-            foreach (DocumentObject docObj in paragraph.ChildObjects)
-            {
-                //If it is TextRange
-                if (docObj is TextRange)
-                {
-                    TextRange textRange = docObj as TextRange;
+			//Traverse the ChildObjects 
+			foreach (DocumentObject docObj in paragraph.ChildObjects)
+			{
+				//If it is TextRange
+				if (docObj is TextRange)
+				{
+					TextRange textRange = docObj as TextRange;
 
-                    //Get the font name
-                    fontName = textRange.CharacterFormat.Font.Name;
+					//Get the font name
+					fontName = textRange.CharacterFormat.Font.Name;
 
-                    //Get the character spacing
-                    fontSpacing = textRange.CharacterFormat.CharacterSpacing;
-                }
-            }
+					//Get the character spacing
+					fontSpacing = textRange.CharacterFormat.CharacterSpacing;
+				}
+			}
+
+			//Dispose the document
+			document.Dispose();
 
             //Show the result in message box
             MessageBox.Show("The font of first paragraph is " + fontName + ", the character spacing is " + fontSpacing + "pt.");

@@ -20,31 +20,42 @@ namespace InsertPageBreakFirstApproach
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
+			// Load a Word document from a specific file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_2.docx");
 
-            //Find the specified word "technology" where we want to insert the page break.
-            TextSelection[] selections = document.FindAllString("technology", true, true);
+			// Find all occurrences of the word "technology" in the document
+			TextSelection[] selections = document.FindAllString("technology", true, true);
 
-            //Traverse each word "technology".
-            foreach (TextSelection ts in selections)
-            {
-                TextRange range = ts.GetAsOneRange();
-                Paragraph paragraph = range.OwnerParagraph;
-                int index = paragraph.ChildObjects.IndexOf(range);
+			// Iterate through each found text selection
+			foreach (TextSelection ts in selections)
+			{
+				// Get the range of the text selection as one continuous range
+				TextRange range = ts.GetAsOneRange();
 
-                //Create a new instance of page break and insert a page break after the word "technology".
-                Break pageBreak = new Break(document, BreakType.PageBreak);
-                paragraph.ChildObjects.Insert(index + 1, pageBreak);
-            }
+				// Get the paragraph that contains the text range
+				Paragraph paragraph = range.OwnerParagraph;
 
-            String result = "Result-InsertPageBreakAtSpecifiedLocation.docx";
+				// Get the index of the text range within the paragraph's child objects
+				int index = paragraph.ChildObjects.IndexOf(range);
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+				// Insert a page break after the text range by creating a Break object with BreakType.PageBreak
+				Break pageBreak = new Break(document, BreakType.PageBreak);
+
+				// Insert the page break at the next index position in the paragraph's child objects
+				paragraph.ChildObjects.Insert(index + 1, pageBreak);
+			}
+
+			// Specify the file name for the resulting document with inserted page breaks
+			string result = "Result-InsertPageBreakAtSpecifiedLocation.docx";
+
+			// Save the modified document to the specified file path in the DOCX format (version: Word 2013)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document object
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

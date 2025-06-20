@@ -16,46 +16,46 @@ namespace FromBookmark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create the source document
+            // Create a new Document object to represent the source document.
             Document sourcedocument = new Document();
 
-            //Load the source document from disk.
+            // Load the Word document from the specified file path.
             sourcedocument.LoadFromFile(@"..\..\..\..\..\..\Data\Bookmark.docx");
 
-            //Create a destination document
+            // Create a new Document object to represent the destination document.
             Document destinationDoc = new Document();
 
-            //Add a section for destination document
+            // Add a section to the destination document.
             Section section = destinationDoc.AddSection();
 
-            //Add a paragraph for destination document
+            // Add a paragraph to the section.
             Paragraph paragraph = section.AddParagraph();
 
-            //Locate the bookmark in source document
+            // Create a BookmarksNavigator object using the source document.
             BookmarksNavigator navigator = new BookmarksNavigator(sourcedocument);
 
-            //Find bookmark by name
+            // Move the navigator to the bookmark with the specified name.
             navigator.MoveToBookmark("Test", true, true);
 
-            //get text body part
+            // Get the content of the bookmark as a TextBodyPart.
             TextBodyPart textBodyPart = navigator.GetBookmarkContent();
 
-            //Create a TextRange type list
+            // Create a list to store the TextRanges extracted from the bookmark.
             List<TextRange> list = new List<TextRange>();
 
-            //Traverse the items of text body
+            // Iterate over each body item in the TextBodyPart.
             foreach (var item in textBodyPart.BodyItems)
             {
-                //if it is paragraph
+                // Check if the body item is a Paragraph.
                 if (item is Paragraph)
                 {
-                    //Traverse the ChildObjects of the paragraph
+                    // Iterate over each child object in the Paragraph.
                     foreach (var childObject in (item as Paragraph).ChildObjects)
                     {
-                        //if it is TextRange
+                        // Check if the child object is a TextRange.
                         if (childObject is TextRange)
                         {
-                            //Add it into list
+                            // Cast the child object to TextRange and add it to the list.
                             TextRange range = childObject as TextRange;
                             list.Add(range);
                         }
@@ -63,14 +63,18 @@ namespace FromBookmark
                 }
             }
 
-            //Add the extract content to destinationDoc document
+            // Copy the TextRanges from the list to the destination document's paragraph.
             for (int m = 0; m < list.Count; m++)
             {
                 paragraph.Items.Add(list[m].Clone());
             }
 
-            //Save the document.
+            // Save the destination document to a file.
             destinationDoc.SaveToFile("Output.docx", FileFormat.Docx);
+
+            // Dispose of the source and destination documents to free up resources.
+            sourcedocument.Dispose();
+            destinationDoc.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");

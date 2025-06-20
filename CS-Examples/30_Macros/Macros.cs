@@ -18,16 +18,19 @@ namespace Macros
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Create a new instance of Document
             Document document = new Document();
 
-            //Loading documetn with macros.
+            // Load the Word document from the specified file that may contain VBA macros
             document.LoadFromFile(@"../../../../../../Data/Macros.docm", FileFormat.Docm);
 
-
-            //Save docm file.
+            // Save the document to a new file with the specified name and format (Docm for macro-enabled document)
             document.SaveToFile("Sample.docm", FileFormat.Docm);
 
-            //Launching the MS Word file.
+            // Dispose of the document object when finished using it
+            document.Dispose();
+
+            //Launching the Word file.
             WordDocViewer("Sample.docm");
         }
 

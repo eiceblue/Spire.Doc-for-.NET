@@ -15,40 +15,48 @@ namespace GetRowCellIndex
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Word from disk
-            Document doc = new Document();
-            doc.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextInTable.docx");
+			// Create a new Document object
+			Document doc = new Document();
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			// Load an existing Word document from a file
+			doc.LoadFromFile(@"..\..\..\..\..\..\Data\ReplaceTextInTable.docx");
 
-            //Get the first table in the section
-            Table table = section.Tables[0] as Table;
+			// Get the first section of the document
+			Section section = doc.Sections[0];
 
-            StringBuilder content = new StringBuilder();
+			// Get the first table in the section
+			Table table = section.Tables[0] as Table;
 
-            //Get table collections
-            Spire.Doc.Collections.TableCollection collections = section.Tables;
+			// Create a StringBuilder to store the output content
+			StringBuilder content = new StringBuilder();
 
-            //Get the table index
-            int tableIndex = collections.IndexOf(table);
+			// Get the collection of tables in the section
+			Spire.Doc.Collections.TableCollection collections = section.Tables;
 
-            //Get the index of the last table row
-            TableRow row = table.LastRow;
-            int rowIndex = row.GetRowIndex();
+			// Get the index of the table in the collection
+			int tableIndex = collections.IndexOf(table);
 
-            //Get the index of the last table cell
-            TableCell cell = row.LastChild as TableCell;
-            int cellIndex = cell.GetCellIndex();
+			// Get the last row in the table and its index
+			TableRow row = table.LastRow;
+			int rowIndex = row.GetRowIndex();
 
-            //Append these information into content
-            content.AppendLine("Table index is " + tableIndex.ToString());
-            content.AppendLine("Row index is " + rowIndex.ToString());
-            content.AppendLine("Cell index is " + cellIndex.ToString());
+			// Get the last cell in the row and its index
+			TableCell cell = row.LastChild as TableCell;
+			int cellIndex = cell.GetCellIndex();
 
-            //Save to txt file
-            string output = "GetRowCellIndex_out.txt";
-            File.WriteAllText(output, content.ToString());
+			// Append the table, row, and cell indices to the output content
+			content.AppendLine("Table index is " + tableIndex.ToString());
+			content.AppendLine("Row index is " + rowIndex.ToString());
+			content.AppendLine("Cell index is " + cellIndex.ToString());
+
+			// Specify the output file path
+			string output = "GetRowCellIndex_out.txt";
+
+			// Write the output content to the output file
+			File.WriteAllText(output, content.ToString());
+
+			// Dispose of the document object to free up resources
+			doc.Dispose();
 
             //Launch the file
             WordDocViewer(output);

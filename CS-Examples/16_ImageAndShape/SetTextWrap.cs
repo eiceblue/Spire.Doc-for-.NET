@@ -16,38 +16,51 @@ namespace SetTextWrap
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\ImageTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            foreach (Section sec in doc.Sections)
-            {
-                foreach (Paragraph para in sec.Paragraphs)
-                {
-                    List<DocumentObject> pictures = new List<DocumentObject>();
-                    //Get all pictures in the Word document
-                    foreach (DocumentObject docObj in para.ChildObjects)
-                    {
-                        if (docObj.DocumentObjectType == DocumentObjectType.Picture)
-                        {
-                            pictures.Add(docObj);
-                        }
-                    }
+			//Create a word document
+			Document doc = new Document();
 
-                    //Set text wrap styles for each piture
-                    foreach (DocumentObject pic in pictures)
-                    {
-                        DocPicture picture = pic as DocPicture;
-                        picture.TextWrappingStyle = TextWrappingStyle.Through;
-                        picture.TextWrappingType = TextWrappingType.Both;
-                    }
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "SetTextWrap.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Loop through the sections
+			foreach (Section sec in doc.Sections)
+			{
+				//Loop through the paragraphs
+				foreach (Paragraph para in sec.Paragraphs)
+				{
+					//Create a list to store the pictures
+					List<DocumentObject> pictures = new List<DocumentObject>();
+
+					//Get all pictures in the Word document
+					foreach (DocumentObject docObj in para.ChildObjects)
+					{
+						if (docObj.DocumentObjectType == DocumentObjectType.Picture)
+						{
+							pictures.Add(docObj);
+						}
+					}
+
+					//Set text wrap styles for each piture
+					foreach (DocumentObject pic in pictures)
+					{
+						//Create a DocPicture instance
+						DocPicture picture = pic as DocPicture;
+
+						//Set teh wrap style and type
+						picture.TextWrappingStyle = TextWrappingStyle.Through;
+						picture.TextWrappingType = TextWrappingType.Both;
+					}
+				}
+			}
+
+			//Save the document
+			string output = "SetTextWrap.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

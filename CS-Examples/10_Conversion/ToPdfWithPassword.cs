@@ -18,18 +18,24 @@ namespace ToPdfWithPassword
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+            // Create a new Document instance
+			Document document = new Document();
 
-            //create a parameter
-            ToPdfParameterList toPdf = new ToPdfParameterList();
+			// Load the Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
 
-            //set the password
-            string password = "E-iceblue";
-            toPdf.PdfSecurity.Encrypt(password, password, Spire.Pdf.Security.PdfPermissionsFlags.Default, Spire.Pdf.Security.PdfEncryptionKeySize.Key128Bit);        
-            //save doc file.
-            document.SaveToFile("EncryptWithPassword.pdf", toPdf);
+			// Create a ToPdfParameterList instance to configure PDF conversion options
+			ToPdfParameterList toPdf = new ToPdfParameterList();
+
+			// Set a password for the PDF encryption
+			string password = "E-iceblue";
+			toPdf.PdfSecurity.Encrypt(password, password, PdfPermissionsFlags.Default, PdfEncryptionKeySize.Key128Bit);
+
+			// Save the document as a PDF file with encryption and the specified output file name
+			document.SaveToFile("EncryptWithPassword.pdf", toPdf);
+
+			// Dispose the Document object after use
+			document.Dispose();
 
             //view the PDF file.
             WordDocViewer("EncryptWithPassword.pdf");

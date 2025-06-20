@@ -15,24 +15,30 @@ namespace ApplyEmphasisMark
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+           // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Load the document from disk
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
+			// Load a Word document from a specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
-            //Find text to emphasize
-            TextSelection[] textSelections = document.FindAllString("Spire.Doc for .NET", false, true);
+			// Find all occurrences of the string "Spire.Doc for .NET" in the document.
+			TextSelection[] textSelections = document.FindAllString("Spire.Doc for .NET", false, true);
 
-            //Set emphasis mark to the found text
-            foreach (TextSelection selection in textSelections)
-            {
-                selection.GetAsOneRange().CharacterFormat.EmphasisMark = Emphasis.Dot;
-            }
+			// Iterate through each text selection result.
+			foreach (TextSelection selection in textSelections)
+			{
+				// Get the found text range as a single range and apply an emphasis mark (dot) to its character format.
+				selection.GetAsOneRange().CharacterFormat.EmphasisMark = Emphasis.Dot;
+			}
 
-            //Save the file
-            string output = "ApplyEmphasisMark.docx";
-            document.SaveToFile(output, FileFormat.Docx);
+			// Specify the file name for the resulting document.
+			string output = "ApplyEmphasisMark.docx";
+
+			// Save the modified document to a file with the specified file name and format (Docx).
+			document.SaveToFile(output, FileFormat.Docx);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //Launching the file
             WordDocViewer(output);

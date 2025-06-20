@@ -19,22 +19,27 @@ namespace RemoveAllParagraphs
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new instance of the Document class.
             Document document = new Document();
 
-            //Load the file from disk.
+            // Load a Word document from a specified file path.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Remove paragraphs from every section in the document
+            // Iterate through each section in the document.
             foreach (Section section in document.Sections)
             {
+                // Clear all paragraphs within the section.
                 section.Paragraphs.Clear();
             }
 
+            // Specify the file name for the resulting document.
             String result = "Result-RemoveAllParagraphs.docx";
 
-            //Save to file.
+            // Save the modified document to a file with the specified file name and format (Docx2013).
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Clean up resources used by the document.
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

@@ -19,21 +19,32 @@ namespace CallPreviewControl
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
-            string input = @"..\..\..\..\..\..\Data\Sample.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
+			// Specify the input file path
+			String input = @"..\..\..\..\..\..\Data\Sample.docx";
 
-            //Get the PrintDocument object
-            PrintDocument printDoc = doc.PrintDocument;
+			// Create a new instance of Document
+			Document doc = new Document();
 
-            //Call print preview dialog
-            PrintPreviewDialog printPreviewDialog = new PrintPreviewDialog();
-            printPreviewDialog.Document = doc.PrintDocument;
+			// Load the Word document from the specified input file
+			doc.LoadFromFile(input);
 
-            //Set the preview dialog size of client area
-            printPreviewDialog.ClientSize = new Size(600, 800);
-            printPreviewDialog.ShowDialog();
+			// Get the PrintDocument associated with the document
+			PrintDocument printDoc = doc.PrintDocument;
+
+			// Create a new PrintPreviewDialog
+			PrintPreviewDialog printPreviewDialog = new PrintPreviewDialog();
+
+			// Set the PrintDocument for the PrintPreviewDialog
+			printPreviewDialog.Document = doc.PrintDocument;
+
+			// Set the size of the PrintPreviewDialog's client area
+			printPreviewDialog.ClientSize = new Size(600, 800);
+
+			// Show the PrintPreviewDialog
+			printPreviewDialog.ShowDialog();
+
+			// Dispose of the document object when finished using it
+			doc.Dispose();
         }
     }
 }

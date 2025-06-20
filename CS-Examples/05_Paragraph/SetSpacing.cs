@@ -20,31 +20,40 @@ namespace SetSpacing
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new instance of the Document class.
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
+			// Load a Word document from a specified file path.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx");
 
-            //Add the text strings to the paragraph and set the style.
-            Paragraph para = new Paragraph(document);
-            TextRange textRange1 = para.AppendText("This is an inserted paragraph.");
-            textRange1.CharacterFormat.TextColor = Color.Blue;
-            textRange1.CharacterFormat.FontSize = 15;
+			// Create a new paragraph object and associate it with the document.
+			Paragraph para = new Paragraph(document);
 
-            //set the spacing before and after.
-            para.Format.BeforeAutoSpacing = false;
-            para.Format.BeforeSpacing = 10;
-            para.Format.AfterAutoSpacing = false;
-            para.Format.AfterSpacing = 10;
+			// Append text to the paragraph and apply formatting properties.
+			TextRange textRange1 = para.AppendText("This is an inserted paragraph.");
+			textRange1.CharacterFormat.TextColor = Color.Blue;
+			textRange1.CharacterFormat.FontSize = 15;
 
-            //insert the added paragraph to the word document.
-            document.Sections[0].Paragraphs.Insert(1, para);
+			// Disable automatic spacing before the paragraph.
+			para.Format.BeforeAutoSpacing = false;
+			// Set the amount of spacing before the paragraph to 10 points.
+			para.Format.BeforeSpacing = 10;
+			// Disable automatic spacing after the paragraph.
+			para.Format.AfterAutoSpacing = false;
+			// Set the amount of spacing after the paragraph to 10 points.
+			para.Format.AfterSpacing = 10;
 
-            String result = "Result-SetTheSpacing.docx";
+			// Insert the newly created paragraph at index 1 within the paragraphs collection of the first section in the document.
+			document.Sections[0].Paragraphs.Insert(1, para);
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Specify the file name for the resulting document.
+			string result = "Result-SetTheSpacing.docx";
+
+			// Save the modified document to a file with the specified file name and format (Docx2013).
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Clean up resources used by the document.
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

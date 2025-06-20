@@ -20,21 +20,30 @@ namespace AllowBreakAcrossPages
         private void button1_Click(object sender, EventArgs e)
         {
             //Create word document
-            Document document = new Document();
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\AllowBreakAcrossPages.docx");
+			Document document = new Document();
 
-            Section section = document.Sections[0];
-            Table table = section.Tables[0] as Table;
+			//Load the file from disk
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\AllowBreakAcrossPages.docx");
 
-            foreach (TableRow row in table.Rows)
-            {
-                //Allow break across pages
-                row.RowFormat.IsBreakAcrossPages = true;
-            }
+			//Get the first section
+			Section section = document.Sections[0];
 
-            //Save the Word document
-            string output = "AllowBreakAcrossPages_out.docx";
-            document.SaveToFile(output, FileFormat.Docx2013);
+			//Get the first table
+			Table table = section.Tables[0] as Table;
+
+			//Loop through the table rows
+			foreach (TableRow row in table.Rows)
+			{
+				//Allow break across pages
+				row.RowFormat.IsBreakAcrossPages = true;
+			}
+
+			//Save the Word document
+			string output = "AllowBreakAcrossPages_out.docx";
+			document.SaveToFile(output, FileFormat.Docx2013);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the file
             WordDocViewer(output);

@@ -18,31 +18,43 @@ namespace CopyHeaderAndFooter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the source file
             string input = @"..\..\..\..\..\..\Data\HeaderAndFooter.docx";
-            Document doc1 = new Document();
-            doc1.LoadFromFile(input);
 
-            //Get the header section from the source document
-            HeaderFooter header = doc1.Sections[0].HeadersFooters.Header;
+			//Create a word document
+			Document doc1 = new Document();
 
-            //Load the destination file
-            input = @"..\..\..\..\..\..\Data\Template.docx";
-            Document doc2 = new Document();
-            doc2.LoadFromFile(input);
+			//Load the source file
+			doc1.LoadFromFile(input);
 
-            //Copy each object in the header of source file to destination file
-            foreach (Section section in doc2.Sections)
-            {
-                foreach (DocumentObject obj in header.ChildObjects)
-                {
-                    section.HeadersFooters.Header.ChildObjects.Add(obj.Clone());
-                }
-            }
+			//Get the header section from the source document
+			HeaderFooter header = doc1.Sections[0].HeadersFooters.Header;
 
-            //Save and launch document
-            string output = "CopyHeaderAndFooter.docx";
-            doc2.SaveToFile(output, FileFormat.Docx);
+			input = @"..\..\..\..\..\..\Data\Template.docx";
+			
+			//Create a word document
+			Document doc2 = new Document();
+
+			//Load the destination file
+			doc2.LoadFromFile(input);
+
+			//Loop through the sections of doc2
+			foreach (Section section in doc2.Sections)
+			{
+				//Loop through the child objects of heder
+				foreach (DocumentObject obj in header.ChildObjects)
+				{
+					//Copy each object in the header of source file to destination file
+					section.HeadersFooters.Header.ChildObjects.Add(obj.Clone());
+				}
+			}
+
+			//Save the document
+			string output = "CopyHeaderAndFooter.docx";
+			doc2.SaveToFile(output, FileFormat.Docx);
+
+			// Dispose the documents
+			doc1.Dispose();
+			doc2.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

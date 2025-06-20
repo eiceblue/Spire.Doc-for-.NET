@@ -20,26 +20,35 @@ namespace CopyDocumentStyles
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load source document from disk
-            Document srcDoc = new Document();
-            srcDoc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Toc.docx");
+            //Create a Word document.
+			Document srcDoc = new Document();
 
-            //Load destination document from disk
-            Document destDoc= new Document();
-            destDoc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_N3.docx");
+			//Load the file from disk.
+			srcDoc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Toc.docx");
 
-            //Get the style collections of source document
-            Spire.Doc.Collections.StyleCollection styles = srcDoc.Styles;
+			//Create another Word document
+			Document destDoc = new Document();
 
-            //Add the style to destination document
-            foreach (Style style in styles)
-            {
-                destDoc.Styles.Add(style);
-            }
+			//Load destination document from disk
+			destDoc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_N3.docx");
 
-            //Save the Word file
-            string output = "CopyDocumentStyles_out.docx";
-            destDoc.SaveToFile(output, FileFormat.Docx2013);
+			//Get the style collections of source document
+			Spire.Doc.Collections.StyleCollection styles = srcDoc.Styles;
+
+			//Loop throughthe styles of source document
+			foreach (Style style in styles)
+			{
+				//Add the style to destination document
+				destDoc.Styles.Add(style);
+			}
+
+			//Save the Word file
+			string output = "CopyDocumentStyles_out.docx";
+			destDoc.SaveToFile(output, FileFormat.Docx2013);
+
+			//Dispose the document
+			srcDoc.Dispose();
+			destDoc.Dispose();
 
             //Launch the file
             FileViewer(output);

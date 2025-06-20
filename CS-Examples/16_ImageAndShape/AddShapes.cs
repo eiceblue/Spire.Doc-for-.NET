@@ -15,36 +15,51 @@ namespace AddShapes
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document doc = new Document();
-            Section sec = doc.AddSection();
-            Paragraph para = sec.AddParagraph();
-            int x = 60, y = 40, lineCount = 0;
-            for (int i = 1; i < 20; i++)
-            {
-                if (lineCount > 0 && lineCount % 8 == 0)
-                {
-                    para.AppendBreak(BreakType.PageBreak);
-                    x = 60;
-                    y = 40;
-                    lineCount = 0;
-                }
-                //Add shape and set its size and position.
-                ShapeObject shape = para.AppendShape(50, 50, (ShapeType)i);
-                shape.HorizontalOrigin = HorizontalOrigin.Page;
-                shape.HorizontalPosition = x;
-                shape.VerticalOrigin = VerticalOrigin.Page;
-                shape.VerticalPosition = y + 50;
-                x = x + (int)shape.Width + 50;
-                if (i > 0 && i % 5 == 0)
-                {
-                    y = y + (int)shape.Height + 120;
-                    lineCount++;
-                    x = 60;
-                }
+            // Create a new document
+			Document doc = new Document();
 
-            }
-            doc.SaveToFile("AddShape.docx", FileFormat.Docx);
+			// Add a section to the document
+			Section sec = doc.AddSection();
+
+			// Add a paragraph to the section
+			Paragraph para = sec.AddParagraph();
+
+			int x = 60, y = 40, lineCount = 0;
+			for (int i = 1; i < 20; i++)
+			{
+				// Check if the current line count is a multiple of 8
+				if (lineCount > 0 && lineCount % 8 == 0)
+				{
+					// Append a page break to start a new page
+					para.AppendBreak(BreakType.PageBreak);
+					x = 60;
+					y = 40;
+					lineCount = 0;
+				}
+
+				// Append a shape to the paragraph
+				ShapeObject shape = para.AppendShape(50, 50, (ShapeType)i);
+				shape.HorizontalOrigin = HorizontalOrigin.Page;
+				shape.HorizontalPosition = x;
+				shape.VerticalOrigin = VerticalOrigin.Page;
+				shape.VerticalPosition = y + 50;
+				x = x + (int)shape.Width + 50;
+
+				// Check if the shape count is a multiple of 5
+				if (i > 0 && i % 5 == 0)
+				{
+					// Adjust the vertical position and line count
+					y = y + (int)shape.Height + 120;
+					lineCount++;
+					x = 60;
+				}
+			}
+
+			// Save the document
+			doc.SaveToFile("AddShape.docx", FileFormat.Docx);
+
+			// Dispose the document
+			doc.Dispose();
 
             //Launch Word file.
             WordDocViewer("AddShape.docx");

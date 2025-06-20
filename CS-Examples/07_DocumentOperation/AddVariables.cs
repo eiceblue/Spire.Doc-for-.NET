@@ -19,28 +19,32 @@ namespace AddVariables
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+            // Create a new document
+			Document document = new Document();
 
-            //Add a section.
-            Section section = document.AddSection();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //Add a paragraph.
-            Paragraph paragraph = section.AddParagraph();
+			// Add a paragraph to the section
+			Paragraph paragraph = section.AddParagraph();
 
-            //Add a DocVariable field.
-            paragraph.AppendField("A1", FieldType.FieldDocVariable);
+			// Append a field with the text "A1" and field type FieldDocVariable to the paragraph
+			paragraph.AppendField("A1", FieldType.FieldDocVariable);
 
-            //Add a document variable to the DocVariable field.
-            document.Variables.Add("A1", "12");
+			// Add a variable named "A1" with a value of "12" to the document's variables collection
+			document.Variables.Add("A1", "12");
 
-            //Update fields.
-            document.IsUpdateFields = true;
+			// Set the IsUpdateFields property of the document to true, enabling field updates
+			document.IsUpdateFields = true;
 
-            String result = "Result-AddVariables.docx";
+			// Specify the file name for the saved document
+			string result = "Result-AddVariables.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the document to a file in DOCX format (using Word 2013 format)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

@@ -16,36 +16,51 @@ namespace ExtractBookmarkText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Document
             string input = @"..\..\..\..\..\..\Data\BookmarkTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Creates a BookmarkNavigator instance to access the bookmark
-            BookmarksNavigator navigator = new BookmarksNavigator(doc);
-            //Locate a specific bookmark by bookmark name
-            navigator.MoveToBookmark("Content");
-            TextBodyPart textBodyPart = navigator.GetBookmarkContent();
+			//Create a word document
+			Document doc = new Document();
 
-            //Iterate through the items in the bookmark content to get the text
-            string text = null;
-            foreach (var item in textBodyPart.BodyItems)
-            {
-                if (item is Paragraph)
-                {
-                    foreach (var childObject in (item as Paragraph).ChildObjects)
-                    {
-                        if (childObject is TextRange)
-                        {
-                            text += (childObject as TextRange).Text;
-                        }
-                    }
-                }
-            }
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save to TXT File and launch it
-            string output = "ExtractBookmarkText.txt";
-            File.WriteAllText(output, text);
+			//Creates a BookmarkNavigator instance to access the bookmark
+			BookmarksNavigator navigator = new BookmarksNavigator(doc);
+
+			//Locate a specific bookmark by bookmark name
+			navigator.MoveToBookmark("Content");
+
+			//Get the bookmark content
+			TextBodyPart textBodyPart = navigator.GetBookmarkContent();
+
+			//Define a variable to store the text
+			string text = null;
+
+			//Iterate through the items in the bookmark content to get the text
+			foreach (var item in textBodyPart.BodyItems)
+			{
+				if (item is Paragraph)
+				{
+					//Iterate through the child objects of the paragraph
+					foreach (var childObject in (item as Paragraph).ChildObjects)
+					{
+						if (childObject is TextRange)
+						{
+							//Append the text
+							text += (childObject as TextRange).Text;
+						}
+					}
+				}
+			}
+
+
+			string output = "ExtractBookmarkText.txt";
+
+			//Save to TXT File and launch it
+			File.WriteAllText(output, text);
+
+			// Dispose the document
+			doc.Dispose();
             Viewer(output);
         }
         private void Viewer(string fileName)

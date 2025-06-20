@@ -20,15 +20,18 @@ namespace RtfToHtml
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_RtfFile.rtf");
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_RtfFile.rtf");
 
-            String result = "Result-RtfToHtml.html";
+			string result = "Result-RtfToHtml.html";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Html);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.Html);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the Html file.
             WordDocViewer(result);

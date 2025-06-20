@@ -21,221 +21,297 @@ namespace ConvertObjectToImage
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a document
-            Document document = new Document();
-            //Load file
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertObjectToImage.docx");
-            //Get the first section
-            Section section = document.Sections[0];
-            //Get body of section
-            Body body = section.Body;
+			Document document = new Document();
 
-            //Get the first paragraph
-            Paragraph paragraph = body.Paragraphs[0]; 
-            Image image = ConvertParagraphToImage(paragraph);
-            image.Save("ConvertParagraphToImage.png",ImageFormat.Png);
+			//Load the document from a file
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\ConvertObjectToImage.docx");
 
-            //Get the first table
-            Table table = body.Tables[0] as Table;
-            image = ConvertTableToImage(table);
-            image.Save("ConvertTableToImage.jpg", ImageFormat.Jpeg);
+			//Get the first section
+			Section section = document.Sections[0];
 
-            //Get the first row of the first table
-            TableRow row = table.Rows[0];
-            image = ConvertTableRowToImage(row);
-            image.Save("ConvertTableRowToImage.bmp", ImageFormat.Bmp);
+			//Get body of section
+			Body body = section.Body;
 
-            //Get the first cell of the first row
-            TableCell cell = row.Cells[0];
-            image = ConvertTableCellToImage(cell);
-            image.Save("ConvertTableCellToImage.png", ImageFormat.Png);
+			//Get the first paragraph
+			Paragraph paragraph = body.Paragraphs[0];
 
-            //Get a shape
-            int i = 0;
-            foreach (Paragraph p in section.Paragraphs)
-            {
-                foreach (DocumentObject obj in p.ChildObjects)
-                {
-                    if (obj.DocumentObjectType == DocumentObjectType.Shape)
-                    {
-                        image = ConvertShapeToImage(obj as ShapeObject);
-                        image.Save(String.Format("ConvertShapeToImage-{0}.png",i), ImageFormat.Png);
-                        i++;
-                    }
-                }
-            }
+			//Convert the paragraph to an image
+			Image image = ConvertParagraphToImage(paragraph);
+
+			//Save the image
+			image.Save("ConvertParagraphToImage.png", ImageFormat.Png);
+
+			//Get the first table
+			Table table = body.Tables[0] as Table;
+
+			//Convert the table to an image
+			image = ConvertTableToImage(table);
+
+			//Save the image
+			image.Save("ConvertTableToImage.jpg", ImageFormat.Jpeg);
+
+			//Get the first row of the first table
+			TableRow row = table.Rows[0];
+			image = ConvertTableRowToImage(row);
+
+			//Save the image
+			image.Save("ConvertTableRowToImage.bmp", ImageFormat.Bmp);
+
+			//Get the first cell of the first row
+			TableCell cell = row.Cells[0];
+			image = ConvertTableCellToImage(cell);
+
+			//Save the image
+			image.Save("ConvertTableCellToImage.png", ImageFormat.Png);
+
+			int i = 0;
+
+			//Iterate over paragraphs in the section
+			foreach (Paragraph p in section.Paragraphs)
+			{
+				// Iterate over child objects in the paragraph
+				foreach (DocumentObject obj in p.ChildObjects)
+				{
+					//Check if the object is a shape
+					if (obj.DocumentObjectType == DocumentObjectType.Shape)
+					{
+						//Convert the shape to an image
+						image = ConvertShapeToImage(obj as ShapeObject);
+
+						//Save the image
+						image.Save(String.Format("ConvertShapeToImage-{0}.png", i), ImageFormat.Png);
+						i++;
+					}
+				}
+			}
+
+			//Dispose the document
+			document.Dispose();
            
         }
-        private Image ConvertParagraphToImage(Paragraph obj)
-        {
-            Document doc = new Document();
-            Section section = doc.AddSection();
-     
-            section.Body.ChildObjects.Add(obj.Clone());
-            Image image = doc.SaveToImages(0, ImageType.Bitmap);
-            doc.Close();    
-            return CutImageWhitePart(image as Bitmap, 1); 
-        }
-        private Image ConvertTableToImage(Table obj)
-        {
-            Document doc = new Document();
-            Section section = doc.AddSection();
+        
+		private Image ConvertParagraphToImage(Paragraph obj)
+		{
+			//Create a new document
+			Document doc = new Document();
 
-            section.Body.ChildObjects.Add(obj.Clone());
+			//Add a new section
+			Section section = doc.AddSection();
 
-            Image image = doc.SaveToImages(0, ImageType.Bitmap);
-            doc.Close();    
-            return CutImageWhitePart(image as Bitmap, 1); 
-        }
-        private Image ConvertTableRowToImage(TableRow obj)
-        {
-            Document doc = new Document();
-            Section section = doc.AddSection();
-            Table table = section.AddTable();
-            table.Rows.Add(obj.Clone());
-            Image image = doc.SaveToImages(0, ImageType.Bitmap);
-            doc.Close();    
-            return CutImageWhitePart(image as Bitmap, 1); 
-        }
-        private Image ConvertTableCellToImage(TableCell obj)
-        {
-            Document doc = new Document();
-            Section section = doc.AddSection();
-            Table table = section.AddTable();
-            table.AddRow().Cells.Add(obj.Clone());
-            Image image = doc.SaveToImages(0, ImageType.Bitmap);
-            doc.Close();    
-            return CutImageWhitePart(image as Bitmap, 1); 
-        }
-        private Image ConvertShapeToImage(ShapeObject obj)
-        {
-            Document doc = new Document();
-            Section section = doc.AddSection();
-            section.AddParagraph().ChildObjects.Add(obj.Clone());
-            MemoryStream ms = new MemoryStream();
-            doc.SaveToStream(ms, FileFormat.Docx);
-            doc.LoadFromStream(ms,FileFormat.Docx);
-            Image image = doc.SaveToImages(0, ImageType.Bitmap);
-            ms.Close();
-            doc.Close();          
-            return CutImageWhitePart(image as Bitmap, 1); 
-        }
-        public Image CutImageWhitePart(Bitmap bmp, int WhiteBarRate)
-        {
-            int top = 0, left = 0;
-            int right = bmp.Width, bottom = bmp.Height;
-            Color white = Color.White;
+			//Add a deep clone of the paragraph to the section
+			section.Body.ChildObjects.Add(obj.Clone());
 
-            for (int i = 0; i < bmp.Height; i++)
-            {
-                bool find = false;
-                for (int j = 0; j < bmp.Width; j++)
-                {
-                    Color c = bmp.GetPixel(j, i);
-                    if (IsWhite(c))
-                    {
-                        top = i;
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) break;
-            }
+			//Save the image
+			Image image = doc.SaveToImages(0, ImageType.Bitmap);
 
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                bool find = false;
-                for (int j = top; j < bmp.Height; j++)
-                {
-                    Color c = bmp.GetPixel(i, j);
-                    if (IsWhite(c))
-                    {
-                        left = i;
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) break; ;
-            }
+			//Close the document
+			doc.Close();
+			return CutImageWhitePart(image as Bitmap, 1);
+		}
+		private Image ConvertTableToImage(Table obj)
+		{
+			//Create a new document
+			Document doc = new Document();
 
-            for (int i = bmp.Height - 1; i >= 0; i--)
-            {
-                bool find = false;
-                for (int j = left; j < bmp.Width; j++)
-                {
-                    Color c = bmp.GetPixel(j, i);
-                    if (IsWhite(c))
-                    {
-                        bottom = i;
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) break;
-            }
+			//Add a section to the document
+			Section section = doc.AddSection();
 
-            for (int i = bmp.Width - 1; i >= 0; i--)
-            {
-                bool find = false;
-                for (int j = 0; j <= bottom; j++)
-                {
-                    Color c = bmp.GetPixel(i, j);
-                    if (IsWhite(c))
-                    {
-                        right = i;
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) break;
-            }
-            int iWidth = right - left;
-            int iHeight = bottom - left;
-            int blockWidth = Convert.ToInt32(iWidth * WhiteBarRate / 100);
-            bmp = Cut(bmp, left - blockWidth, top - blockWidth, right - left + 2 * blockWidth, bottom - top + 2 * blockWidth);
+			//Add a deep clone of the table to the section
+			section.Body.ChildObjects.Add(obj.Clone());
 
-            return bmp;
+			//Save the image
+			Image image = doc.SaveToImages(0, ImageType.Bitmap);
 
-        }
-        public Bitmap Cut(Bitmap b, int StartX, int StartY, int iWidth, int iHeight)
-        {
-            if (b == null)
-            {
-                return null;
-            }
-            int w = b.Width;
-            int h = b.Height;
-            if (StartX >= w || StartY >= h)
-            {
-                return null;
-            }
-            if (StartX + iWidth > w)
-            {
-                iWidth = w - StartX;
-            }
-            if (StartY + iHeight > h)
-            {
-                iHeight = h - StartY;
-            }
-            try
-            {
-                Bitmap bmpOut = new Bitmap(iWidth, iHeight, PixelFormat.Format24bppRgb);
-                Graphics g = Graphics.FromImage(bmpOut);
-                g.DrawImage(b, new Rectangle(0, 0, iWidth, iHeight), new Rectangle(StartX, StartY, iWidth, iHeight), GraphicsUnit.Pixel);
-                g.Dispose();
-                return bmpOut;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+			//Close the document
+			doc.Close();
+			return CutImageWhitePart(image as Bitmap, 1);
+		}
+		
+		private Image ConvertTableRowToImage(TableRow obj)
+		{
+			//Create a new document
+			Document doc = new Document();
+
+			//Add a section to the document
+			Section section = doc.AddSection();
+
+			//Add a table to the section
+			Table table = section.AddTable();
+
+			//Add a deep clone of the row to the table
+			table.Rows.Add(obj.Clone());
+
+			//Save the image
+			Image image = doc.SaveToImages(0, ImageType.Bitmap);
+			doc.Close();
+			return CutImageWhitePart(image as Bitmap, 1);
+		}
+
+		private Image ConvertTableCellToImage(TableCell obj)
+		{
+			// Create a new document
+			Document doc = new Document();
+
+			//Add a section to the document
+			Section section = doc.AddSection();
+
+			//Add a table to the section
+			Table table = section.AddTable();
+
+			//Add a new row to the table and add a deep clone of the cell to it
+			table.AddRow().Cells.Add(obj.Clone());
+
+			//Save the image
+			Image image = doc.SaveToImages(0, ImageType.Bitmap);
+			doc.Close();
+			return CutImageWhitePart(image as Bitmap, 1);
+		}
+		
+		private Image ConvertShapeToImage(ShapeObject obj)
+		{
+			//Create a new document
+			Document doc = new Document();
+
+			//Add a section to the document
+			Section section = doc.AddSection();
+
+			// Add a paragraph to the section and add a deep clone of the shape object to it
+			section.AddParagraph().ChildObjects.Add(obj.Clone());
+
+			//Create a MemoryStream
+			MemoryStream ms = new MemoryStream();
+
+			//Save the document to stream
+			doc.SaveToStream(ms, FileFormat.Docx);
+
+			//Load a document from stream
+			doc.LoadFromStream(ms, FileFormat.Docx);
+
+			//Save to image
+			Image image = doc.SaveToImages(0, ImageType.Bitmap);
+
+			//Close the document and stream
+			ms.Close();
+			doc.Close();
+			return CutImageWhitePart(image as Bitmap, 1);
+		}
+		public Image CutImageWhitePart(Bitmap bmp, int WhiteBarRate)
+	{
+		int top = 0, left = 0;
+		int right = bmp.Width, bottom = bmp.Height;
+		Color white = Color.White;
+
+		for (int i = 0; i < bmp.Height; i++)
+		{
+			bool find = false;
+			for (int j = 0; j < bmp.Width; j++)
+			{
+				Color c = bmp.GetPixel(j, i);
+				if (IsWhite(c))
+				{
+					top = i;
+					find = true;
+					break;
+				}
+			}
+			if (find) break;
+		}
+
+		for (int i = 0; i < bmp.Width; i++)
+		{
+			bool find = false;
+			for (int j = top; j < bmp.Height; j++)
+			{
+				Color c = bmp.GetPixel(i, j);
+				if (IsWhite(c))
+				{
+					left = i;
+					find = true;
+					break;
+				}
+			}
+			if (find) break; ;
+		}
+
+		for (int i = bmp.Height - 1; i >= 0; i--)
+		{
+			bool find = false;
+			for (int j = left; j < bmp.Width; j++)
+			{
+				Color c = bmp.GetPixel(j, i);
+				if (IsWhite(c))
+				{
+					bottom = i;
+					find = true;
+					break;
+				}
+			}
+			if (find) break;
+		}
+
+		for (int i = bmp.Width - 1; i >= 0; i--)
+		{
+			bool find = false;
+			for (int j = 0; j <= bottom; j++)
+			{
+				Color c = bmp.GetPixel(i, j);
+				if (IsWhite(c))
+				{
+					right = i;
+					find = true;
+					break;
+				}
+			}
+			if (find) break;
+		}
+		int iWidth = right - left;
+		int iHeight = bottom - left;
+		int blockWidth = Convert.ToInt32(iWidth * WhiteBarRate / 100);
+		bmp = Cut(bmp, left - blockWidth, top - blockWidth, right - left + 2 * blockWidth, bottom - top + 2 * blockWidth);
+
+		return bmp;
+
+	}
+		public Bitmap Cut(Bitmap b, int StartX, int StartY, int iWidth, int iHeight)
+		{
+			if (b == null)
+			{
+				return null;
+			}
+			int w = b.Width;
+			int h = b.Height;
+			if (StartX >= w || StartY >= h)
+			{
+				return null;
+			}
+			if (StartX + iWidth > w)
+			{
+				iWidth = w - StartX;
+			}
+			if (StartY + iHeight > h)
+			{
+				iHeight = h - StartY;
+			}
+			try
+			{
+				Bitmap bmpOut = new Bitmap(iWidth, iHeight, PixelFormat.Format24bppRgb);
+				Graphics g = Graphics.FromImage(bmpOut);
+				g.DrawImage(b, new Rectangle(0, 0, iWidth, iHeight), new Rectangle(StartX, StartY, iWidth, iHeight), GraphicsUnit.Pixel);
+				g.Dispose();
+				return bmpOut;
+			}
+			catch
+			{
+				return null;
+			}
+		}
 
 
-        public bool IsWhite(Color c)
-        {
-            if (c.R < 245 || c.G < 245 || c.B < 245)
-                return true;
-            else return false;
-        }
-    }
+		public bool IsWhite(Color c)
+		{
+			if (c.R < 245 || c.G < 245 || c.B < 245)
+				return true;
+			else return false;
+		}
+	}
 }

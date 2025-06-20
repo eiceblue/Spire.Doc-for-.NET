@@ -15,22 +15,33 @@ namespace AddPictureToTableCell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\TableTemplate.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first table from the first section of the document
-            Table table1 = (Table)doc.Sections[0].Tables[0];
+			//Create a Word document
+			Document doc = new Document();
 
-            //Add a picture to the specified table cell and set picture size
-            DocPicture picture = table1.Rows[1].Cells[2].Paragraphs[0].AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
-            picture.Width = 100;
-            picture.Height = 100;
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Save and launch document
-            string output = "AddPictureToTableCell.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Get the first table from the first section of the document
+			Table table1 = (Table)doc.Sections[0].Tables[0];
+
+			//Add a picture to the specified table cell
+			DocPicture picture = table1.Rows[1].Cells[2].Paragraphs[0].AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
+
+			//Set picture width
+			picture.Width = 100;
+
+			//Set picture height
+			picture.Height = 100;
+
+			//Save the document
+			string output = "AddPictureToTableCell.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

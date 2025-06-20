@@ -16,17 +16,23 @@ namespace HeaderAndFooter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create word document
-            Document document = new Document();
+             //Create word document
+			 Document document = new Document();
 
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
-            Section section = document.Sections[0];
+			 //Load the file from disk
+			 document.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.docx");
 
-            //insert header and footer
-            InsertHeaderAndFooter(section);
+			 //Get the first section
+			 Section section = document.Sections[0];
 
-            //Save as docx file.
-            document.SaveToFile("Sample.docx",FileFormat.Docx);
+			 //Insert header and footer
+			 InsertHeaderAndFooter(section);
+
+			 //Save the file.
+			 document.SaveToFile("Sample.docx", FileFormat.Docx);
+
+			 //Dispose the document
+			 document.Dispose();
 
             //Launching the MS Word file.
             WordDocViewer("Sample.docx");
@@ -34,60 +40,54 @@ namespace HeaderAndFooter
 
         private void InsertHeaderAndFooter(Section section)
         {
-            HeaderFooter header = section.HeadersFooters.Header;
-            HeaderFooter footer = section.HeadersFooters.Footer;
+            //Get the header
+			HeaderFooter header = section.HeadersFooters.Header;
 
-            //insert picture and text to header
-            Paragraph headerParagraph = header.AddParagraph();
-            DocPicture headerPicture
-                = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
+			//Get the footer
+			HeaderFooter footer = section.HeadersFooters.Footer;
 
-            //header text
-            TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
-            text.CharacterFormat.FontName = "Arial";
-            text.CharacterFormat.FontSize = 10;
-            text.CharacterFormat.Italic = true;
-            headerParagraph.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
+			// Create a new paragraph for the header and add an image
+			Paragraph headerParagraph = header.AddParagraph();
+			DocPicture headerPicture = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
 
-            //border
-            headerParagraph.Format.Borders.Bottom.BorderType
-                = Spire.Doc.Documents.BorderStyle.Single;
-            headerParagraph.Format.Borders.Bottom.Space = 0.05F;
+			// Add text to the header paragraph and set its formatting properties
+			TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
+			text.CharacterFormat.FontName = "Arial";
+			text.CharacterFormat.FontSize = 10;
+			text.CharacterFormat.Italic = true;
+            headerParagraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
 
+			// Set border properties for the bottom border of the header paragraph
+            headerParagraph.Format.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+			headerParagraph.Format.Borders.Bottom.Space = 0.05F;
 
-            //header picture layout - text wrapping
-            headerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+			// Set the text wrapping style and alignment properties for the header picture
+			headerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+			headerPicture.HorizontalOrigin = HorizontalOrigin.Page;
+			headerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
+			headerPicture.VerticalOrigin = VerticalOrigin.Page;
+			headerPicture.VerticalAlignment = ShapeVerticalAlignment.Top;
 
-            //header picture layout - position
-            headerPicture.HorizontalOrigin = HorizontalOrigin.Page;
-            headerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
-            headerPicture.VerticalOrigin = VerticalOrigin.Page;
-            headerPicture.VerticalAlignment = ShapeVerticalAlignment.Top;
+			// Create a new paragraph for the footer and add an image
+			Paragraph footerParagraph = footer.AddParagraph();
+			DocPicture footerPicture = footerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Footer.png"));
 
-            //insert picture to footer
-            Paragraph footerParagraph = footer.AddParagraph();
-            DocPicture footerPicture
-                = footerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Footer.png"));
+			// Set the text wrapping style and alignment properties for the footer picture
+			footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+			footerPicture.HorizontalOrigin = HorizontalOrigin.Page;
+			footerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
+			footerPicture.VerticalOrigin = VerticalOrigin.Page;
+			footerPicture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
 
-            //footer picture layout
-            footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
-            footerPicture.HorizontalOrigin = HorizontalOrigin.Page;
-            footerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
-            footerPicture.VerticalOrigin = VerticalOrigin.Page;
-            footerPicture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
+			// Add fields for page number and total number of pages to the footer paragraph
+			footerParagraph.AppendField("page number", FieldType.FieldPage);
+			footerParagraph.AppendText(" of ");
+			footerParagraph.AppendField("number of pages", FieldType.FieldNumPages);
+            footerParagraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Right;
 
-            //insert page number
-            footerParagraph.AppendField("page number", FieldType.FieldPage);
-            footerParagraph.AppendText(" of ");
-            footerParagraph.AppendField("number of pages", FieldType.FieldNumPages);
-            footerParagraph.Format.HorizontalAlignment
-                = Spire.Doc.Documents.HorizontalAlignment.Right;
-
-            //border
-            footerParagraph.Format.Borders.Top.BorderType
-                = Spire.Doc.Documents.BorderStyle.Single;
-            footerParagraph.Format.Borders.Top.Space = 0.05F;
+			// Set border properties for the top border of the footer paragraph
+            footerParagraph.Format.Borders.Top.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+			footerParagraph.Format.Borders.Top.Space = 0.05F;
         }
 
         private void WordDocViewer(string fileName)

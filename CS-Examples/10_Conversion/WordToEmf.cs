@@ -21,18 +21,21 @@ namespace WordToEmf
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx", FileFormat.Docx);
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Docx_1.docx", FileFormat.Docx);
 
-            //Convert the first page of document to image.
-            System.Drawing.Image image = document.SaveToImages(0, Spire.Doc.Documents.ImageType.Metafile);
+			//Convert the first page of document to image.
+			System.Drawing.Image image = document.SaveToImages(0, Spire.Doc.Documents.ImageType.Metafile);
 
-            String result = "Result-WordToEmf.emf";
+			string result = "Result-WordToEmf.emf";
 
-            //Save the file.
-            image.Save(result, ImageFormat.Emf);
+			//Save the file.
+			image.Save(result, ImageFormat.Emf);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);

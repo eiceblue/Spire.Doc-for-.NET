@@ -19,27 +19,33 @@ namespace RemoveCustomPropertyFields
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+           
+			// Create a new document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveCustomPropertyFields.docx");
+			// Load an existing document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveCustomPropertyFields.docx");
 
-            //Get custom document properties object.
-            CustomDocumentProperties cdp = document.CustomDocumentProperties;
+			// Get the collection of custom document properties
+			CustomDocumentProperties cdp = document.CustomDocumentProperties;
 
-            //Remove all custom property fields in the document.
-            for (int i = 0; i < cdp.Count; )
-            {
-                cdp.Remove(cdp[i].Name);
-            }
+			// Iterate through the custom document properties and remove them
+			for (int i = 0; i < cdp.Count; )
+			{
+				cdp.Remove(cdp[i].Name);
+			}
 
-            document.IsUpdateFields = true;
+			// Enable the automatic update of fields in the document
+			document.IsUpdateFields = true;
 
-            String result = "Result-RemoveCustomPropertyFields.docx";
+			// Specify the name for the resulting document file
+			String result = "Result-RemoveCustomPropertyFields.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the modified document to a file with the specified name and format
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose of the document object to free up resources
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

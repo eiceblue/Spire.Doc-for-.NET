@@ -15,28 +15,32 @@ namespace UpdateCheckBox
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
+         
+            // Create a new document object
             Document document = new Document();
 
-            //Load the document from disk.
+            // Load a document from the specified file path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\CheckBoxContentControl.docx");
 
-            //Call StructureTags
+            // Get all the StructureTags from the document
             StructureTags structureTags = GetAllTags(document);
 
-            //Create list 
+            // Get the list of StructureDocumentTagInline objects from the StructureTags
             List<StructureDocumentTagInline> tagInlines = structureTags.tagInlines;
 
-            //Get the controls
+            // Iterate through the list of StructureDocumentTagInline objects
             for (int i = 0; i < tagInlines.Count; i++)
             {
-                //Get the type
+                // Get the SDTType of the current StructureDocumentTagInline
                 string type = tagInlines[i].SDTProperties.SDTType.ToString();
 
-                //Update the status
+                // Check if the SDTType is "CheckBox"
                 if (type == "CheckBox")
                 {
+                    // Get the SdtCheckBox from the ControlProperties of the StructureDocumentTagInline
                     SdtCheckBox scb = tagInlines[i].SDTProperties.ControlProperties as SdtCheckBox;
+
+                    // Toggle the Checked property of the SdtCheckBox
                     if (scb.Checked)
                     {
                         scb.Checked = false;
@@ -46,44 +50,53 @@ namespace UpdateCheckBox
                         scb.Checked = true;
                     }
                 }
-
             }
-            //Save the document.
+
+            // Save the modified document to "Output.docx" in DOCX format
             document.SaveToFile("Output.docx", FileFormat.Docx);
+
+            // Dispose the document object
+            document.Dispose();
 
             //Launch the Word file.
             WordDocViewer("Output.docx");
 
         }
 
+        // Define a method named "GetAllTags" that takes a Document object as input and returns a StructureTags object
         static StructureTags GetAllTags(Document document)
         {
-
-            //Create StructureTags
+            // Create a new StructureTags object to store the StructureDocumentTagInline objects
             StructureTags structureTags = new StructureTags();
 
-            //Travel document sections
+            // Iterate through the sections in the document
             foreach (Section section in document.Sections)
             {
+                // Iterate through the child objects in the section's body
                 foreach (DocumentObject obj in section.Body.ChildObjects)
                 {
-                    //Travel document paragraphs
+                    // Check if the current object is a Paragraph
                     if (obj.DocumentObjectType == DocumentObjectType.Paragraph)
                     {
+                        // Iterate through the child objects in the paragraph
                         foreach (DocumentObject pobj in (obj as Paragraph).ChildObjects)
                         {
-                            //Get StructureDocumentTagInline
+                            // Check if the current object is a StructureDocumentTagInline
                             if (pobj.DocumentObjectType == DocumentObjectType.StructureDocumentTagInline)
                             {
+                                // Add the StructureDocumentTagInline to the tagInlines list in the StructureTags object
                                 structureTags.tagInlines.Add(pobj as StructureDocumentTagInline);
                             }
                         }
                     }
-
                 }
             }
+
+            // Return the StructureTags object containing the collected StructureDocumentTagInline objects
             return structureTags;
         }
+
+        // Define a public class named "StructureTags"
         public class StructureTags
         {
             List<StructureDocumentTagInline> m_tagInlines;

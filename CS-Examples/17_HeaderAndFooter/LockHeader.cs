@@ -19,23 +19,30 @@ namespace LockHeader
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document
             string input = @"..\..\..\..\..\..\Data\HeaderAndFooter.docx";
-            Document doc = new Document();
-            doc.LoadFromFile(input);
 
-            //Get the first section
-            Section section = doc.Sections[0];
+			//Create a word document
+			Document doc = new Document();
 
-            //Protect the document and set the ProtectionType as AllowOnlyFormFields
-            doc.Protect(ProtectionType.AllowOnlyFormFields, "123");
+			//Load the file from disk
+			doc.LoadFromFile(input);
 
-            //Set the ProtectForm as false to unprotect the section
-            section.ProtectForm = false;
+			//Get the first section
+			Section section = doc.Sections[0];
 
-            //Save and launch document
-            string output = "LockHeader.docx";
-            doc.SaveToFile(output, FileFormat.Docx);
+			//Protect the document and set the ProtectionType as AllowOnlyFormFields
+			doc.Protect(ProtectionType.AllowOnlyFormFields, "123");
+
+			//Set the ProtectForm as false to unprotect the section
+			section.ProtectForm = false;
+
+			//Save the document
+			string output = "LockHeader.docx";
+			doc.SaveToFile(output, FileFormat.Docx);
+
+			//Dispose the document
+			doc.Dispose();
+			
             Viewer(output);
         }
         private void Viewer(string fileName)

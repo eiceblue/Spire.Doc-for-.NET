@@ -21,56 +21,69 @@ namespace CreateIFField
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+           
+			// Create a new document
+			Document document = new Document();
 
-            //Add a new section.
-            Section section = document.AddSection();
+			// Add a section to the document
+			Section section = document.AddSection();
 
-            //Add a new paragraph.
-            Paragraph paragraph = section.AddParagraph();
+			// Add a paragraph to the section
+			Paragraph paragraph = section.AddParagraph();
 
-            // Define a method of creating an IF Field.
-            CreateIfField(document, paragraph);
+			// Create an IF field and add it to the paragraph
+			CreateIfField(document, paragraph);
 
-            //Define merged data.
-            string[] fieldName = { "Count" };
-            string[] fieldValue = { "2" };
+			// Set field name and value for mail merge
+			string[] fieldName = { "Count" };
+			string[] fieldValue = { "2" };
 
-            //Merge data into the IF Field.
-            document.MailMerge.Execute(fieldName, fieldValue);
+			// Execute the mail merge
+			document.MailMerge.Execute(fieldName, fieldValue);
 
-            //Update all fields in the document.
-            document.IsUpdateFields = true;
+			// Enable field update after mail merge
+			document.IsUpdateFields = true;
 
-            String result = "Result-CreateAnIFField.docx";
+			// Specify the file name for saving the document
+			String result = "Result-CreateAnIFField.docx";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Save the document to a file
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Dispose the document object
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);
         }
 
-        //Create the IF Field like:{IF { MERGEFIELD Count } > "100" "Thanks" " The minimum order is 100 units "}
-        static void CreateIfField(Document document, Paragraph paragraph)
-        {
-            IfField ifField = new IfField(document);
-            ifField.Type = FieldType.FieldIf;
-            ifField.Code = "IF ";
+  
+		// Method to create an IF field
+		static void CreateIfField(Document document, Paragraph paragraph)
+		{
+			// Create a new IF field
+			IfField ifField = new IfField(document);
+			ifField.Type = FieldType.FieldIf;
+			ifField.Code = "IF ";
 
-            paragraph.Items.Add(ifField);
-            paragraph.AppendField("Count", FieldType.FieldMergeField);
-            paragraph.AppendText(" > ");
-            paragraph.AppendText("\"100\" ");
-            paragraph.AppendText("\"Thanks\" ");
-            paragraph.AppendText("\"The minimum order is 100 units\"");
+			// Add the IF field to the paragraph
+			paragraph.Items.Add(ifField);
 
-            IParagraphBase end = document.CreateParagraphItem(ParagraphItemType.FieldMark);
-            (end as FieldMark).Type = FieldMarkType.FieldEnd;
-            paragraph.Items.Add(end);
-            ifField.End = end as FieldMark;
-        }
+			// Add the merge field and condition to the paragraph
+			paragraph.AppendField("Count", FieldType.FieldMergeField);
+			paragraph.AppendText(" > ");
+			paragraph.AppendText("\"100\" ");
+			paragraph.AppendText("\"Thanks\" ");
+			paragraph.AppendText("\"The minimum order is 100 units\"");
+
+			// Create the end mark of the IF field and add it to the paragraph
+			IParagraphBase end = document.CreateParagraphItem(ParagraphItemType.FieldMark);
+			(end as FieldMark).Type = FieldMarkType.FieldEnd;
+			paragraph.Items.Add(end);
+
+			// Set the end mark of the IF field
+			ifField.End = end as FieldMark;
+		}
 
         private void WordDocViewer(string fileName)
         {

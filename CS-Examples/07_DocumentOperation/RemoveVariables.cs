@@ -19,19 +19,26 @@ namespace RemoveVariables
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
-            Document document = new Document();
+           // Create a new Document object
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
+			// Load a Word document from the specified file path
+			document.LoadFromFile(@"..\..\..\..\..\..\..\Data\Template_Docx_6.docx");
 
-            //Remove the variable by name.
-            document.Variables.Remove("A1");
-            document.IsUpdateFields = true; 
-            String result = "Result-RemoveVariables.docx";
+			// Remove the variable named "A1" from the document's Variables collection
+			document.Variables.Remove("A1");
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Docx2013);
+			// Set the IsUpdateFields property of the document to true, enabling field updates
+			document.IsUpdateFields = true;
+
+			// Specify the file name for the saved document
+			string result = "Result-RemoveVariables.docx";
+
+			// Save the document to a file in DOCX format (using Word 2013 format)
+			document.SaveToFile(result, FileFormat.Docx2013);
+
+			// Release the resources used by the document
+			document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

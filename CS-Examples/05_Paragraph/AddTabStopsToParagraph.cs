@@ -19,64 +19,56 @@ namespace AddTabStopsToParagraph
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create Word document.
+            // Create a new document
             Document document = new Document();
 
-            //Add a section.
+            // Add a section to the document
             Section section = document.AddSection();
 
-            //Add paragraph 1.
+            // Add a paragraph to the section
             Paragraph paragraph1 = section.AddParagraph();
 
-            //Add tab and set its position (in points).
+            // Add a tab stop at position 28 to the paragraph
             Tab tab = paragraph1.Format.Tabs.AddTab(28);
-
-            //Set tab alignment.
             tab.Justification = TabJustification.Left;
 
-            //Move to next tab and append text.
+            // Append the text "Washing Machine" with a tab character
             paragraph1.AppendText("\tWashing Machine");
 
-            //Add another tab and set its position (in points).
+            // Add another tab stop at position 280 to the paragraph
             tab = paragraph1.Format.Tabs.AddTab(280);
-
-            //Set tab alignment.
             tab.Justification = TabJustification.Left;
-
-            //Specify tab leader type.
             tab.TabLeader = TabLeader.Dotted;
 
-            //Move to next tab and append text.
+            // Append the text "$650" with a tab character and dotted leader
             paragraph1.AppendText("\t$650");
 
-            //Add paragraph 2.
+            // Add a new paragraph to the section
             Paragraph paragraph2 = section.AddParagraph();
 
-            //Add tab and set its position (in points).
+            // Add a tab stop at position 28 to the second paragraph
             tab = paragraph2.Format.Tabs.AddTab(28);
-
-            //Set tab alignment.
             tab.Justification = TabJustification.Left;
 
-            //Move to next tab and append text.
-            paragraph2.AppendText("\tRefrigerator"); 
+            // Append the text "Refrigerator" with a tab character
+            paragraph2.AppendText("\tRefrigerator");
 
-            //Add another tab and set its position (in points).
+            // Add another tab stop at position 280 to the second paragraph
             tab = paragraph2.Format.Tabs.AddTab(280);
-
-            //Set tab alignment.
             tab.Justification = TabJustification.Left;
-
-            //Specify tab leader type.
             tab.TabLeader = TabLeader.NoLeader;
 
-            //Move to next tab and append text.
+            // Append the text "$800" with a tab character and no leader
             paragraph2.AppendText("\t$800");
 
-            String result = "Result-AddTabStopsToParagraph.docx";
+            // Specify the filename for the resulting document
+            string result = "Result-AddTabStopsToParagraph.docx";
 
-            //Save to file.
+            // Save the document to the specified file in the Docx2013 format
             document.SaveToFile(result, FileFormat.Docx2013);
+
+            // Dispose of the document resources
+            document.Dispose();
 
             //Launch the MS Word file.
             WordDocViewer(result);

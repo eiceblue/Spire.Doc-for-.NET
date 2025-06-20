@@ -20,15 +20,18 @@ namespace HtmlToXml
         private void button1_Click(object sender, EventArgs e)
         {
             //Create Word document.
-            Document document = new Document();
+			Document document = new Document();
 
-            //Load the file from disk.
-            document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html");
+			//Load the file from disk.
+			document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_HtmlFile.html");
 
-            String result = "Result-HtmlToXml.xml";
+			string result = "Result-HtmlToXml.xml";
 
-            //Save to file.
-            document.SaveToFile(result, FileFormat.Xml);
+			//Save to file.
+			document.SaveToFile(result, FileFormat.Xml);
+
+			//Dispose the document
+			document.Dispose();
 
             //Launch the file.
             WordDocViewer(result);
