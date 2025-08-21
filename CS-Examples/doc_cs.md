@@ -1,5 +1,3 @@
-# 代码核心功能提取
-
 # Spire.Doc C# Hello World
 ## Creating a simple Hello World document using Spire.Doc
 ```csharp
@@ -12778,4 +12776,5 @@ chart.Series.Add("Series 3",
 ```
 
 ---
+
 
