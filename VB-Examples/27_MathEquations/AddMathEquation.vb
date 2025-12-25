@@ -11,7 +11,7 @@ Namespace AddMathEquation
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
 			' Define an array of LaTeX math code strings
-			Dim latexMathCode() As String = { "x^{2}+\sqrt{x^{2}+1}=2", "2\alpha - \sin y + x", "1 \over 2 + x", "(1 + \vert x-[a-b] \vert)", "\mbox{if $x=1$ or $x=2$}", "\begin{cases} 1 & \mbox{if $x>0$,} \ 2 & \mbox{otherwise.} \end{cases}" }
+			Dim latexMathCode() As String = { "x^{2}+\sqrt{x^{2}+1}=2", "2\alpha - \sin y + x", "1 \over 2 + x", "(1 + \vert x-[a-b] \vert)", "\mbox{if $x=1$ or $x=2$}", "\begin{cases} 1 & \mbox{if $x>0$,} \\ 2 & \mbox{otherwise.} \end{cases}" }
 
 			' Create a new document object
 			Dim doc As New Document()

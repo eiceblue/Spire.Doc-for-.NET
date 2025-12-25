@@ -1,7 +1,8 @@
+Imports Spire.Doc
+Imports Spire.Doc.Collections
+Imports Spire.Doc.Documents
 Imports System.ComponentModel
 Imports System.Text
-Imports Spire.Doc
-Imports Spire.Doc.Documents
 
 Namespace FormACatalogue
 	Partial Public Class Form1
@@ -11,84 +12,63 @@ Namespace FormACatalogue
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new document object
+			' Create a new Document object.
 			Dim document As New Document()
 
-			' Add a section to the document
+			'Add a new section. 
 			Dim section As Section = document.AddSection()
+			Dim paragraph As Spire.Doc.Documents.Paragraph = If(section.Paragraphs.Count > 0, section.Paragraphs(0), section.AddParagraph())
 
-			' Create a paragraph and add it to the section
-			Dim paragraph As Paragraph = If(section.Paragraphs.Count > 0, section.Paragraphs(0), section.AddParagraph())
-
-			' Add a new paragraph to the section
+			'Add Heading 1.
 			paragraph = section.AddParagraph()
-
-			' Set the text content of the paragraph as Heading1 style
 			paragraph.AppendText(BuiltinStyle.Heading1.ToString())
-
-			' Apply the Heading1 style to the paragraph
 			paragraph.ApplyStyle(BuiltinStyle.Heading1)
-
-			' Apply a numbered list format to the paragraph
 			paragraph.ListFormat.ApplyNumberedStyle()
 
-			' Add another paragraph to the section
+			'Add Heading 2.
 			paragraph = section.AddParagraph()
-
-			' Set the text content of the paragraph as Heading2 style
 			paragraph.AppendText(BuiltinStyle.Heading2.ToString())
-
-			' Apply the Heading2 style to the paragraph
 			paragraph.ApplyStyle(BuiltinStyle.Heading2)
 
-			' Create a new numbered list style with the ListType.Numbered type
-			Dim listSty2 As New ListStyle(document, ListType.Numbered)
+			'List style for Headings 2.
 
-			' Configure the list levels of the list style
-			For Each listLev As ListLevel In listSty2.Levels
+			Dim listStyle2 As ListStyle = document.Styles.Add(ListType.Numbered, "MyStyle2")
+			Dim Levels As ListLevelCollection = listStyle2.ListRef.Levels
+			For Each listLev As ListLevel In Levels
 				listLev.UsePrevLevelPattern = True
 				listLev.NumberPrefix = "1."
 			Next listLev
 
-			' Set the name of the list style
-			listSty2.Name = "MyStyle2"
+			paragraph.ListFormat.ApplyStyle(listStyle2.Name)
 
-			' Add the list style to the document's list styles collection
-			document.ListStyles.Add(listSty2)
+			'Add list style 3.
 
-			' Apply the list style to the paragraph
-			paragraph.ListFormat.ApplyStyle(listSty2.Name)
-
-			' Create another numbered list style with the ListType.Numbered type
-			Dim listSty3 As New ListStyle(document, ListType.Numbered)
-
-			' Configure the list levels of the list style
-			For Each listLev As ListLevel In listSty3.Levels
+			Dim listStyle3 As ListStyle = document.Styles.Add(ListType.Numbered, "MyStyle3")
+			Dim Levels1 As ListLevelCollection = listStyle3.ListRef.Levels
+			For Each listLev As ListLevel In Levels1
 				listLev.UsePrevLevelPattern = True
 				listLev.NumberPrefix = "1.1."
 			Next listLev
 
-			' Set the name of the list style
-			listSty3.Name = "MyStyle3"
-
-			' Add the list style to the document's list styles collection
-			document.ListStyles.Add(listSty3)
-
-			' Add paragraphs with Heading3 style and apply the list style
+			'Add Heading 3.
 			For i As Integer = 0 To 3
 				paragraph = section.AddParagraph()
+
+				'Append text
 				paragraph.AppendText(BuiltinStyle.Heading3.ToString())
+
+				'Apply list style 3 for Heading 3
 				paragraph.ApplyStyle(BuiltinStyle.Heading3)
-				paragraph.ListFormat.ApplyStyle(listSty3.Name)
+
+				paragraph.ListFormat.ApplyStyle(listStyle3.Name)
+
 			Next i
 
-			' Specify the file name for the resulting document
+			' Specify the file name for the resulting Word document.
 			Dim result As String = "Result-FormACatalogue.docx"
 
-			' Save the document to a file in Docx format
+			' Save the Document object to a file in Docx format and dispose it.
 			document.SaveToFile(result, FileFormat.Docx)
-
-			' Dispose the document object to free resources
 			document.Dispose()
 
 			'Launch the MS Word file.

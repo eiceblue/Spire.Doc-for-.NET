@@ -1,0 +1,163 @@
+Imports System.ComponentModel
+Imports System.Text
+Imports Spire.Doc
+Imports Spire.Doc.Documents
+Imports Spire.Doc.Fields
+
+Namespace RemoveControlsKeepContent
+	Partial Public Class Form1
+		Inherits Form
+		Public Sub New()
+			InitializeComponent()
+		End Sub
+
+		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+
+			' Create a new document object
+			Dim doc As Document = New Document()
+
+			' Load a document file from a specified path
+			doc.LoadFromFile("..\..\..\..\..\..\Data\RemoveControlsKeepContent.docx")
+
+			' Iterate through the sections in the document
+			For s As Integer = 0 To doc.Sections.Count - 1
+				' Get the current section
+				Dim section As Section = doc.Sections(s)
+
+				' Iterate through the child objects in the section's body
+				For i As Integer = 0 To section.Body.ChildObjects.Count - 1
+					' Check if the child object is a paragraph
+					If TypeOf section.Body.ChildObjects(i) Is Paragraph Then
+						' Get the paragraph object
+						Dim para As Paragraph = TryCast(section.Body.ChildObjects(i), Paragraph)
+
+						' Iterate through the child objects in the paragraph
+						For j As Integer = 0 To para.ChildObjects.Count - 1
+							' Check if the child object is a StructureDocumentTagInline
+							If TypeOf para.ChildObjects(j) Is StructureDocumentTagInline Then
+								' Get the StructureDocumentTagInline object
+								Dim sdt As StructureDocumentTagInline = TryCast(para.ChildObjects(j), StructureDocumentTagInline)
+
+								' Remove this control while retaining its content
+								sdt.RemoveSelfOnly()
+							End If
+						Next
+					End If
+
+					' Check if the child object is a StructureDocumentTag
+					If TypeOf section.Body.ChildObjects(i) Is StructureDocumentTag Then
+						' Get the StructureDocumentTag object
+						Dim sdt As StructureDocumentTag = TryCast(section.Body.ChildObjects(i), StructureDocumentTag)
+
+						' Remove this control while retaining its content
+						sdt.RemoveSelfOnly()
+					End If
+				Next
+			Next
+
+			' Save the modified document to a new file
+			Dim output As String = "RemoveControlsKeepContent_result.docx"
+			doc.SaveToFile(output, FileFormat.Docx2016)
+
+			' Dispose the document object
+			doc.Dispose()
+			'Launch the Word file.
+			FileViewer(output)
+		End Sub
+		Private Sub FileViewer(ByVal fileName As String)
+			Try
+				Process.Start(fileName)
+			Catch
+			End Try
+		End Sub
+		''' <summary>
+		''' Required designer variable.
+		''' </summary>
+		Private components As System.ComponentModel.IContainer = Nothing
+
+		''' <summary>
+		''' Clean up any resources being used.
+		''' </summary>
+		''' <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+			If disposing AndAlso (components IsNot Nothing) Then
+				components.Dispose()
+			End If
+			MyBase.Dispose(disposing)
+		End Sub
+
+#Region "Windows Form Designer generated code"
+
+		''' <summary>
+		''' Required method for Designer support - do not modify
+		''' the contents of this method with the code editor.
+		''' </summary>
+		Private Sub InitializeComponent()
+			Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+			Me.pictureBox1 = New System.Windows.Forms.PictureBox()
+			Me.button1 = New System.Windows.Forms.Button()
+			Me.label1 = New System.Windows.Forms.Label()
+			CType(Me.pictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+			Me.SuspendLayout()
+			'
+			'pictureBox1
+			'
+			Me.pictureBox1.Image = Global.My.Resources.Resources.Word
+			Me.pictureBox1.Location = New System.Drawing.Point(12, 12)
+			Me.pictureBox1.Name = "pictureBox1"
+			Me.pictureBox1.Size = New System.Drawing.Size(56, 48)
+			Me.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+			Me.pictureBox1.TabIndex = 0
+			Me.pictureBox1.TabStop = False
+			'
+			'button1
+			'
+			Me.button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+			Me.button1.BackColor = System.Drawing.Color.Transparent
+			Me.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
+			Me.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+			Me.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer))
+			Me.button1.Image = CType(resources.GetObject("button1.Image"), System.Drawing.Image)
+			Me.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+			Me.button1.Location = New System.Drawing.Point(376, 83)
+			Me.button1.Name = "button1"
+			Me.button1.Size = New System.Drawing.Size(96, 27)
+			Me.button1.TabIndex = 63
+			Me.button1.Text = "Run"
+			Me.button1.UseVisualStyleBackColor = False
+			'
+			'label1
+			'
+			Me.label1.Font = New System.Drawing.Font("Verdana", 8.25!)
+			Me.label1.Location = New System.Drawing.Point(85, 12)
+			Me.label1.Name = "label1"
+			Me.label1.Size = New System.Drawing.Size(387, 65)
+			Me.label1.TabIndex = 64
+			Me.label1.Text = resources.GetString("label1.Text")
+			'
+			'Form1
+			'
+			Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+			Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+			Me.AutoSize = True
+			Me.ClientSize = New System.Drawing.Size(484, 122)
+			Me.Controls.Add(Me.label1)
+			Me.Controls.Add(Me.button1)
+			Me.Controls.Add(Me.pictureBox1)
+			Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+			Me.Name = "Form1"
+			Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+			Me.Text = "Remove the controls but keep their content"
+			CType(Me.pictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+			Me.ResumeLayout(False)
+
+		End Sub
+
+#End Region
+
+		Private pictureBox1 As PictureBox
+		Private WithEvents button1 As Button
+		Private label1 As Label
+
+	End Class
+End Namespace

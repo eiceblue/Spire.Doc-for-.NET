@@ -1,4 +1,5 @@
 Imports Spire.Doc
+Imports Spire.Doc.Collections
 Imports Spire.Doc.Documents
 
 Namespace RestartList
@@ -21,66 +22,61 @@ Namespace RestartList
 			'Append Text
 			paragraph.AppendText("List 1")
 
-			Dim numberList As New ListStyle(document, ListType.Numbered)
-			numberList.Name = "Numbered1"
-			document.ListStyles.Add(numberList)
+
+			Dim numberList As ListStyle = document.Styles.Add(ListType.Numbered, "Numbered1")
+
 
 			'Add paragraph and apply the list style
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 1")
 			paragraph.ListFormat.ApplyStyle(numberList.Name)
 
-			'Add paragraph and apply the list style
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 2")
 			paragraph.ListFormat.ApplyStyle(numberList.Name)
 
-			'Add paragraph and apply the list style
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 3")
 			paragraph.ListFormat.ApplyStyle(numberList.Name)
 
-			'Add paragraph and apply the list style
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 4")
 			paragraph.ListFormat.ApplyStyle(numberList.Name)
 
-			'Add paragraph and append text
+			'Append Text
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List 2")
 
-			'Create a numbered list
-			Dim numberList2 As New ListStyle(document, ListType.Numbered)
-			numberList2.Name = "Numbered2"
-			'set start number of second list
-			numberList2.Levels(0).StartAt = 10
-			document.ListStyles.Add(numberList2)
 
-			'Add paragraph and apply the numbered list
+			Dim numberList2 As ListStyle = document.Styles.Add(ListType.Numbered, "Numbered2")
+			Dim Levels As ListLevelCollection = numberList2.ListRef.Levels
+
+			'set start number of second list
+			Levels(0).StartAt = 10
+
+
+			'Add paragraph and apply the list style
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 5")
 			paragraph.ListFormat.ApplyStyle(numberList2.Name)
 
-			'Add paragraph and apply the numbered list
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 6")
 			paragraph.ListFormat.ApplyStyle(numberList2.Name)
 
-			'Add paragraph and apply the numbered list
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 7")
 			paragraph.ListFormat.ApplyStyle(numberList2.Name)
 
-			'Add paragraph and apply the numbered list
 			paragraph = section.AddParagraph()
 			paragraph.AppendText("List Item 8")
 			paragraph.ListFormat.ApplyStyle(numberList2.Name)
 
-			'Save the document
+			'Save to docx file.
 			Dim output As String = "RestartList.docx"
-			document.SaveToFile(output)
+			document.SaveToFile(output, FileFormat.Docx)
 
-			'Dispose of the document object
+			'Dispose the document
 			document.Dispose()
 			WordDocViewer(output)
 		End Sub
