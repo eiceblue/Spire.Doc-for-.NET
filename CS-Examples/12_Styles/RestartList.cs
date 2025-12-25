@@ -1,7 +1,8 @@
+using Spire.Doc;
+using Spire.Doc.Collections;
+using Spire.Doc.Documents;
 using System;
 using System.Windows.Forms;
-using Spire.Doc;
-using Spire.Doc.Documents;
 
 namespace RestartList
 {
@@ -17,71 +18,68 @@ namespace RestartList
             //Create word document
 			Document document = new Document();
 
-			//Create a new section
-			Section section = document.AddSection();
+            //Create a new section
+            Section section = document.AddSection();
 
-			//Create a new paragraph
-			Paragraph paragraph = section.AddParagraph();
+            //Create a new paragraph
+            Paragraph paragraph = section.AddParagraph();
 
-			//Append Text
-			paragraph.AppendText("List 1");
+            //Append Text
+            paragraph.AppendText("List 1");
 
 
-			//Create a numberList
-			ListStyle numberList = new ListStyle(document, ListType.Numbered);
+            ListStyle numberList = document.Styles.Add(ListType.Numbered, "Numbered1");
 
-			//Set the name
-			numberList.Name = "Numbered1";
 
-			//Add the numberList to document
-			document.ListStyles.Add(numberList);
+            //Add paragraph and apply the list style
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 1");
+            paragraph.ListFormat.ApplyStyle(numberList.Name);
 
-			//Add paragraph and apply the list style
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 1");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 2");
+            paragraph.ListFormat.ApplyStyle(numberList.Name);
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 2");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 3");
+            paragraph.ListFormat.ApplyStyle(numberList.Name);
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 3");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 4");
+            paragraph.ListFormat.ApplyStyle(numberList.Name);
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 4");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            //Append Text
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List 2");
 
-			//Append Text
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List 2");
 
-			ListStyle numberList2 = new ListStyle(document, ListType.Numbered);
-			numberList2.Name = "Numbered2";
-			//set start number of second list
-			numberList2.Levels[0].StartAt = 10;
-			document.ListStyles.Add(numberList2);
+            ListStyle numberList2 = document.Styles.Add(ListType.Numbered, "Numbered2");
+            ListLevelCollection Levels = numberList2.ListRef.Levels;
 
-			//Add paragraph and apply the list style
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 5");
-			paragraph.ListFormat.ApplyStyle(numberList2.Name);
+            //set start number of second list
+            Levels[0].StartAt = 10;
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 6");
-			paragraph.ListFormat.ApplyStyle(numberList2.Name);
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 7");
-			paragraph.ListFormat.ApplyStyle(numberList2.Name);
+            //Add paragraph and apply the list style
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 5");
+            paragraph.ListFormat.ApplyStyle(numberList2.Name);
 
-			paragraph = section.AddParagraph();
-			paragraph.AppendText("List Item 8");
-			paragraph.ListFormat.ApplyStyle(numberList2.Name);
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 6");
+            paragraph.ListFormat.ApplyStyle(numberList2.Name);
 
-			string output = "RestartList.docx";
-			document.SaveToFile(output);
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 7");
+            paragraph.ListFormat.ApplyStyle(numberList2.Name);
+
+            paragraph = section.AddParagraph();
+            paragraph.AppendText("List Item 8");
+            paragraph.ListFormat.ApplyStyle(numberList2.Name);
+
+            //Save to docx file.
+            string output = "RestartList.docx";
+            document.SaveToFile(output, FileFormat.Docx);
 
 			//Dispose the document
 			document.Dispose();

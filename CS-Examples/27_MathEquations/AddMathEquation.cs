@@ -23,7 +23,7 @@ namespace AddMathEquation
                 @"1 \over 2 + x",
                 @"(1 + \vert x-[a-b] \vert)",
                 @"\mbox{if $x=1$ or $x=2$}",
-                @"\begin{cases} 1 & \mbox{if $x>0$,} \ 2 & \mbox{otherwise.} \end{cases}"
+                @"\begin{cases} 1 & \mbox{if $x>0$,} \\ 2 & \mbox{otherwise.} \end{cases}"
             };
 
             // Create a new document object

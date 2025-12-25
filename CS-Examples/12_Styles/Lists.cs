@@ -1,7 +1,9 @@
+using Spire.Doc;
+using Spire.Doc.Collections;
+using Spire.Doc.Documents;
 using System;
 using System.Windows.Forms;
-using Spire.Doc;
-using Spire.Doc.Documents;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Text
 {
@@ -15,123 +17,98 @@ namespace Text
         private void button1_Click(object sender, EventArgs e)
         {
             //Create a Word document
-			Document document = new Document();
+            Document document = new Document();
 
-			//Add a section
-			Section sec = document.AddSection();
+            //Add a section
+            Spire.Doc.Section sec = document.AddSection();
 
-			//Add paragraph and set list style
-			Paragraph paragraph = sec.AddParagraph();
+            //Add paragraph and apply style
+            Spire.Doc.Documents.Paragraph paragraph = sec.AddParagraph();
+            paragraph.AppendText("Lists");
+            paragraph.ApplyStyle(BuiltinStyle.Title);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("Numbered List:").CharacterFormat.Bold = true;
 
-			//Append text
-			paragraph.AppendText("Lists");
+            //Create list style
+            ListStyle listStyle = document.Styles.Add(ListType.Numbered, "numberList");
+            ListLevelCollection Levels = listStyle.ListRef.Levels;
+            Levels[1].NumberPrefix = "\x0000.";
+            Levels[1].PatternType = ListPatternType.Arabic;
+            Levels[2].NumberPrefix = "\x0000.\x0001.";
+            Levels[2].PatternType = ListPatternType.Arabic;
 
-			//Apply the Title style
-			paragraph.ApplyStyle(BuiltinStyle.Title);
+            ListStyle bulletList = document.Styles.Add(ListType.Bulleted, "bulletList");
+            //Add paragraph and apply the list style
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 1");
+            paragraph.ListFormat.ApplyStyle(listStyle);
 
-			//Add a new paragraph
-			paragraph = sec.AddParagraph();
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2");
+            paragraph.ListFormat.ApplyStyle(listStyle);
 
-			//Append text and set the the bold style 
-			paragraph.AppendText("Numbered List:").CharacterFormat.Bold = true;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.1");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 1;
 
-			//Create list style
-			ListStyle numberList = new ListStyle(document, ListType.Numbered);
-			numberList.Name = "numberList";
-			numberList.Levels[1].NumberPrefix = "\x0000.";
-			numberList.Levels[1].PatternType = ListPatternType.Arabic;
-			numberList.Levels[2].NumberPrefix = "\x0000.\x0001.";
-			numberList.Levels[2].PatternType = ListPatternType.Arabic;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.2");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 1;
 
-			ListStyle bulletList = new ListStyle(document, ListType.Bulleted);
-			bulletList.Name = "bulletList";
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.2.1");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 2;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.2.2");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 2;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.2.3");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 2;
 
-			//add the list styles into document
-			document.ListStyles.Add(numberList);
-			document.ListStyles.Add(bulletList);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.3");
+            paragraph.ListFormat.ApplyStyle(listStyle);
+            paragraph.ListFormat.ListLevelNumber = 1;
 
-			//Add paragraph and apply the list style
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 1");
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 3");
+            paragraph.ListFormat.ApplyStyle(listStyle);
 
-			//Apply the number List style
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("Bulleted List:").CharacterFormat.Bold = true;
 
-			//Add a paragrahph
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 1");
+            paragraph.ListFormat.ApplyStyle(bulletList);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2");
+            paragraph.ListFormat.ApplyStyle(bulletList);
 
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.1");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 1;
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.2");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 1;
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.2.1");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 2;
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.2.2");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 2;
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.2.3");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 2;
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.3");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-			paragraph.ListFormat.ListLevelNumber = 1;
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 3");
-			paragraph.ListFormat.ApplyStyle(numberList.Name);
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("Bulleted List:").CharacterFormat.Bold = true;
-
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 1");
-
-			//Apply the bullet list style
-			paragraph.ListFormat.ApplyStyle(bulletList.Name);
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.1");
+            paragraph.ListFormat.ApplyStyle(bulletList);
+            paragraph.ListFormat.ListLevelNumber = 1;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 2.2");
+            paragraph.ListFormat.ApplyStyle(bulletList);
+            paragraph.ListFormat.ListLevelNumber = 1;
+            paragraph = sec.AddParagraph();
+            paragraph.AppendText("List Item 3");
+            paragraph.ListFormat.ApplyStyle(bulletList);
 
 
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2");
-			paragraph.ListFormat.ApplyStyle(bulletList.Name);
 
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.1");
-			paragraph.ListFormat.ApplyStyle(bulletList.Name);
-			paragraph.ListFormat.ListLevelNumber = 1;
+            //Save doc file.
+            document.SaveToFile("lists-out.docx", FileFormat.Docx);
+            document.Close();
 
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 2.2");
-			paragraph.ListFormat.ApplyStyle(bulletList.Name);
-			paragraph.ListFormat.ListLevelNumber = 1;
-
-			paragraph = sec.AddParagraph();
-			paragraph.AppendText("List Item 3");
-			paragraph.ListFormat.ApplyStyle(bulletList.Name);
-
-			//Save doc file.
-			string filePath = "Lists.docx";
-			document.SaveToFile(filePath, FileFormat.Docx);
-
-			//Dispose the document
-			document.Dispose();
-
-            //Launching the MS Word file.
-            WordDocViewer(filePath);
+           //Launching the MS Word file.
+           WordDocViewer("lists-out.docx");
 
 
         }

@@ -1,3 +1,6 @@
+using Spire.Doc;
+using Spire.Doc.Collections;
+using Spire.Doc.Documents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,8 +8,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Spire.Doc;
-using Spire.Doc.Documents;
 
 namespace FormACatalogue
 {
@@ -22,67 +23,56 @@ namespace FormACatalogue
             // Create a new Document object.
             Document document = new Document();
 
-            // Add a Section to the document.
+            //Add a new section. 
             Section section = document.AddSection();
+            Spire.Doc.Documents.Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
 
-            // Get the first Paragraph of the Section, or add a new Paragraph if none exists.
-            Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
-
-            // Add a new Paragraph to the Section.
+            //Add Heading 1.
             paragraph = section.AddParagraph();
-
-            // Set the text content of the Paragraph and apply the Heading1 style.
             paragraph.AppendText(BuiltinStyle.Heading1.ToString());
             paragraph.ApplyStyle(BuiltinStyle.Heading1);
-
-            // Apply a numbered list format to the Paragraph.
             paragraph.ListFormat.ApplyNumberedStyle();
 
-            // Add another Paragraph to the Section.
+            //Add Heading 2.
             paragraph = section.AddParagraph();
-
-            // Set the text content of the Paragraph and apply the Heading2 style.
             paragraph.AppendText(BuiltinStyle.Heading2.ToString());
             paragraph.ApplyStyle(BuiltinStyle.Heading2);
 
-            // Create a new ListStyle object with the Numbered list type.
-            ListStyle listSty2 = new ListStyle(document, ListType.Numbered);
+            //List style for Headings 2.
 
-            // Iterate over the levels of the ListStyle and customize them.
-            foreach (ListLevel listLev in listSty2.Levels)
+            ListStyle listStyle2 = document.Styles.Add(ListType.Numbered, "MyStyle2");
+            ListLevelCollection Levels = listStyle2.ListRef.Levels;
+            foreach (ListLevel listLev in Levels)
             {
                 listLev.UsePrevLevelPattern = true;
                 listLev.NumberPrefix = "1.";
             }
 
-            // Set the name of the ListStyle and add it to the document's ListStyles collection.
-            listSty2.Name = "MyStyle2";
-            document.ListStyles.Add(listSty2);
+            paragraph.ListFormat.ApplyStyle(listStyle2.Name);
 
-            // Apply the ListStyle to the current Paragraph.
-            paragraph.ListFormat.ApplyStyle(listSty2.Name);
+            //Add list style 3.
 
-            // Create another ListStyle object with the Numbered list type.
-            ListStyle listSty3 = new ListStyle(document, ListType.Numbered);
-
-            // Iterate over the levels of the ListStyle and customize them.
-            foreach (ListLevel listLev in listSty3.Levels)
+            ListStyle listStyle3 = document.Styles.Add(ListType.Numbered, "MyStyle3");
+            ListLevelCollection Levels1 = listStyle3.ListRef.Levels;
+            foreach (ListLevel listLev in Levels1)
             {
                 listLev.UsePrevLevelPattern = true;
                 listLev.NumberPrefix = "1.1.";
             }
 
-            // Set the name of the ListStyle and add it to the document's ListStyles collection.
-            listSty3.Name = "MyStyle3";
-            document.ListStyles.Add(listSty3);
-
-            // Add four Paragraphs to the Section and apply Heading3 style and ListStyle to each.
+            //Add Heading 3.
             for (int i = 0; i < 4; i++)
             {
                 paragraph = section.AddParagraph();
+
+                //Append text
                 paragraph.AppendText(BuiltinStyle.Heading3.ToString());
+
+                //Apply list style 3 for Heading 3
                 paragraph.ApplyStyle(BuiltinStyle.Heading3);
-                paragraph.ListFormat.ApplyStyle(listSty3.Name);
+
+                paragraph.ListFormat.ApplyStyle(listStyle3.Name);
+
             }
 
             // Specify the file name for the resulting Word document.

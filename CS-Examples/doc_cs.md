@@ -764,70 +764,56 @@ s2.Paragraphs.Add(NewPara2);
 # spire.doc csharp catalogue
 ## create a catalogue structure with custom list styles
 ```csharp
-// Create a new Document object.
-Document document = new Document();
-
-// Add a Section to the document.
+//Add a new section. 
 Section section = document.AddSection();
+Spire.Doc.Documents.Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
 
-// Get the first Paragraph of the Section, or add a new Paragraph if none exists.
-Paragraph paragraph = section.Paragraphs.Count > 0 ? section.Paragraphs[0] : section.AddParagraph();
-
-// Add a new Paragraph to the Section.
+//Add Heading 1.
 paragraph = section.AddParagraph();
-
-// Set the text content of the Paragraph and apply the Heading1 style.
 paragraph.AppendText(BuiltinStyle.Heading1.ToString());
 paragraph.ApplyStyle(BuiltinStyle.Heading1);
-
-// Apply a numbered list format to the Paragraph.
 paragraph.ListFormat.ApplyNumberedStyle();
 
-// Add another Paragraph to the Section.
+//Add Heading 2.
 paragraph = section.AddParagraph();
-
-// Set the text content of the Paragraph and apply the Heading2 style.
 paragraph.AppendText(BuiltinStyle.Heading2.ToString());
 paragraph.ApplyStyle(BuiltinStyle.Heading2);
 
-// Create a new ListStyle object with the Numbered list type.
-ListStyle listSty2 = new ListStyle(document, ListType.Numbered);
+//List style for Headings 2.
 
-// Iterate over the levels of the ListStyle and customize them.
-foreach (ListLevel listLev in listSty2.Levels)
+ListStyle listStyle2 = document.Styles.Add(ListType.Numbered, "MyStyle2");
+ListLevelCollection Levels = listStyle2.ListRef.Levels;
+foreach (ListLevel listLev in Levels)
 {
     listLev.UsePrevLevelPattern = true;
     listLev.NumberPrefix = "1.";
 }
 
-// Set the name of the ListStyle and add it to the document's ListStyles collection.
-listSty2.Name = "MyStyle2";
-document.ListStyles.Add(listSty2);
+paragraph.ListFormat.ApplyStyle(listStyle2.Name);
 
-// Apply the ListStyle to the current Paragraph.
-paragraph.ListFormat.ApplyStyle(listSty2.Name);
+//Add list style 3.
 
-// Create another ListStyle object with the Numbered list type.
-ListStyle listSty3 = new ListStyle(document, ListType.Numbered);
-
-// Iterate over the levels of the ListStyle and customize them.
-foreach (ListLevel listLev in listSty3.Levels)
+ListStyle listStyle3 = document.Styles.Add(ListType.Numbered, "MyStyle3");
+ListLevelCollection Levels1 = listStyle3.ListRef.Levels;
+foreach (ListLevel listLev in Levels1)
 {
     listLev.UsePrevLevelPattern = true;
     listLev.NumberPrefix = "1.1.";
 }
 
-// Set the name of the ListStyle and add it to the document's ListStyles collection.
-listSty3.Name = "MyStyle3";
-document.ListStyles.Add(listSty3);
-
-// Add four Paragraphs to the Section and apply Heading3 style and ListStyle to each.
+//Add Heading 3.
 for (int i = 0; i < 4; i++)
 {
     paragraph = section.AddParagraph();
+
+    //Append text
     paragraph.AppendText(BuiltinStyle.Heading3.ToString());
+
+    //Apply list style 3 for Heading 3
     paragraph.ApplyStyle(BuiltinStyle.Heading3);
-    paragraph.ListFormat.ApplyStyle(listSty3.Name);
+
+    paragraph.ListFormat.ApplyStyle(listStyle3.Name);
+
 }
 ```
 
@@ -4793,29 +4779,43 @@ foreach (DocumentObject childObj in p.ChildObjects)
 Document document = new Document();
 Section section = document.AddSection();
 
-//Create a list style based on ASCII characters
-ListStyle listStyle = new ListStyle(document, ListType.Bulleted);
+//Create four list styles based on different ASCII characters
+ListStyle listStyle1 = document.Styles.Add(ListType.Bulleted, "liststyle");
+ListLevelCollection Levels = listStyle1.ListRef.Levels;
 
-//Set the style name
-listStyle.Name = "liststyle";
+Levels[0].BulletCharacter = "\x006e";
+Levels[0].CharacterFormat.FontName = "Wingdings";
 
-//Set the bullet character
-listStyle.Levels[0].BulletCharacter = "\x006e";
+//ListStyle listStyle2 = new ListStyle(document, ListType.Bulleted);
+//listStyle2.Name = "liststyle2";
+ListStyle listStyle2 = document.Styles.Add(ListType.Bulleted, "liststyle2");
+ListLevelCollection Levels2 = listStyle2.ListRef.Levels;
+Levels2[0].BulletCharacter = "\x0075";
+Levels2[0].CharacterFormat.FontName = "Wingdings";
 
-//Set the font name
-listStyle.Levels[0].CharacterFormat.FontName = "Wingdings";
+ListStyle listStyle3 = document.Styles.Add(ListType.Bulleted, "liststyle3");
+ListLevelCollection Levels3 = listStyle3.ListRef.Levels;
+Levels3[0].BulletCharacter = "\x00b2";
+Levels3[0].CharacterFormat.FontName = "Wingdings";
 
-//Add the list style to the document
-document.ListStyles.Add(listStyle);
+ListStyle listStyle4 = document.Styles.Add(ListType.Bulleted, "liststyle4");
+ListLevelCollection Levels4 = listStyle4.ListRef.Levels;
+Levels4[0].BulletCharacter = "\x00d8";
+Levels4[0].CharacterFormat.FontName = "Wingdings";
 
-//Create a paragraph
-Paragraph paragraph = section.Body.AddParagraph();
-
-//Append text
-paragraph.AppendText("Spire.Doc for .NET");
-
-//Apply the style
-paragraph.ListFormat.ApplyStyle(listStyle.Name);
+//Add four paragraphs and apply list style separately
+Paragraph p1 = section.Body.AddParagraph();
+p1.AppendText("Spire.Doc for .NET");
+p1.ListFormat.ApplyStyle(listStyle1.Name);
+Paragraph p2 = section.Body.AddParagraph();
+p2.AppendText("Spire.Doc for .NET");
+p2.ListFormat.ApplyStyle(listStyle2.Name);
+Paragraph p3 = section.Body.AddParagraph();
+p3.AppendText("Spire.Doc for .NET");
+p3.ListFormat.ApplyStyle(listStyle3.Name);
+Paragraph p4 = section.Body.AddParagraph();
+p4.AppendText("Spire.Doc for .NET");
+p4.ListFormat.ApplyStyle(listStyle4.Name);
 ```
 
 ---
@@ -5134,105 +5134,86 @@ foreach (Section section in doc.Sections)
 Document document = new Document();
 
 //Add a section
-Section sec = document.AddSection();
+Spire.Doc.Section sec = document.AddSection();
 
-//Add paragraph and set list style
-Paragraph paragraph = sec.AddParagraph();
+//Add paragraph and apply style
+Spire.Doc.Documents.Paragraph paragraph = sec.AddParagraph();
 paragraph.AppendText("Lists");
 paragraph.ApplyStyle(BuiltinStyle.Title);
-
-//Add numbered list header
 paragraph = sec.AddParagraph();
 paragraph.AppendText("Numbered List:").CharacterFormat.Bold = true;
 
-//Create numbered list style
-ListStyle numberList = new ListStyle(document, ListType.Numbered);
-numberList.Name = "numberList";
-numberList.Levels[1].NumberPrefix = "\x0000.";
-numberList.Levels[1].PatternType = ListPatternType.Arabic;
-numberList.Levels[2].NumberPrefix = "\x0000.\x0001.";
-numberList.Levels[2].PatternType = ListPatternType.Arabic;
+//Create list style
+ListStyle listStyle = document.Styles.Add(ListType.Numbered, "numberList");
+ListLevelCollection Levels = listStyle.ListRef.Levels;
+Levels[1].NumberPrefix = "\x0000.";
+Levels[1].PatternType = ListPatternType.Arabic;
+Levels[2].NumberPrefix = "\x0000.\x0001.";
+Levels[2].PatternType = ListPatternType.Arabic;
 
-//Create bullet list style
-ListStyle bulletList = new ListStyle(document, ListType.Bulleted);
-bulletList.Name = "bulletList";
-
-//Add the list styles to document
-document.ListStyles.Add(numberList);
-document.ListStyles.Add(bulletList);
-
-//Create numbered list items
+ListStyle bulletList = document.Styles.Add(ListType.Bulleted, "bulletList");
+//Add paragraph and apply the list style
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 1");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 
-//Create nested numbered list items
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.1");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 1;
 
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.2");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 1;
 
-//Create deeper nested numbered list items
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.2.1");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 2;
-
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.2.2");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 2;
-
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.2.3");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 2;
 
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.3");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 paragraph.ListFormat.ListLevelNumber = 1;
 
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 3");
-paragraph.ListFormat.ApplyStyle(numberList.Name);
+paragraph.ListFormat.ApplyStyle(listStyle);
 
-//Add bullet list header
 paragraph = sec.AddParagraph();
 paragraph.AppendText("Bulleted List:").CharacterFormat.Bold = true;
 
-//Create bullet list items
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 1");
-paragraph.ListFormat.ApplyStyle(bulletList.Name);
-
+paragraph.ListFormat.ApplyStyle(bulletList);
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2");
-paragraph.ListFormat.ApplyStyle(bulletList.Name);
+paragraph.ListFormat.ApplyStyle(bulletList);
 
-//Create nested bullet list items
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.1");
-paragraph.ListFormat.ApplyStyle(bulletList.Name);
+paragraph.ListFormat.ApplyStyle(bulletList);
 paragraph.ListFormat.ListLevelNumber = 1;
-
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 2.2");
-paragraph.ListFormat.ApplyStyle(bulletList.Name);
+paragraph.ListFormat.ApplyStyle(bulletList);
 paragraph.ListFormat.ListLevelNumber = 1;
-
 paragraph = sec.AddParagraph();
 paragraph.AppendText("List Item 3");
-paragraph.ListFormat.ApplyStyle(bulletList.Name);
+paragraph.ListFormat.ApplyStyle(bulletList);
 ```
 
 ---
@@ -5376,14 +5357,21 @@ para.Format.LineSpacing = 10;
 # spire.doc csharp list numbering
 ## restart list numbering in word document
 ```csharp
-//Create a numberList
-ListStyle numberList = new ListStyle(document, ListType.Numbered);
+//Create word document
+Document document = new Document();
 
-//Set the name
-numberList.Name = "Numbered1";
+//Create a new section
+Section section = document.AddSection();
 
-//Add the numberList to document
-document.ListStyles.Add(numberList);
+//Create a new paragraph
+Paragraph paragraph = section.AddParagraph();
+
+//Append Text
+paragraph.AppendText("List 1");
+
+
+ListStyle numberList = document.Styles.Add(ListType.Numbered, "Numbered1");
+
 
 //Add paragraph and apply the list style
 paragraph = section.AddParagraph();
@@ -5402,11 +5390,17 @@ paragraph = section.AddParagraph();
 paragraph.AppendText("List Item 4");
 paragraph.ListFormat.ApplyStyle(numberList.Name);
 
-ListStyle numberList2 = new ListStyle(document, ListType.Numbered);
-numberList2.Name = "Numbered2";
+//Append Text
+paragraph = section.AddParagraph();
+paragraph.AppendText("List 2");
+
+
+ListStyle numberList2 = document.Styles.Add(ListType.Numbered, "Numbered2");
+ListLevelCollection Levels = numberList2.ListRef.Levels;
+
 //set start number of second list
-numberList2.Levels[0].StartAt = 10;
-document.ListStyles.Add(numberList2);
+Levels[0].StartAt = 10;
+
 
 //Add paragraph and apply the list style
 paragraph = section.AddParagraph();
@@ -5454,25 +5448,25 @@ foreach (Section section in doc.Sections)
 # spire.doc csharp document styling
 ## create and apply styles to word document
 ```csharp
-//Initialize a document
+// Initialize a document
 Document document = new Document();
 
-//Add a section
+// Add a section
 Section sec = document.AddSection();
 
-//Add default title style to document and modify
+// Add default title style to document and modify
 Style titleStyle = document.AddStyle(BuiltinStyle.Title);
-
-//Set the font and font size
-titleStyle.CharacterFormat.Font = new System.Drawing.Font("cambria", 28);
-
-//Set the text color
-titleStyle.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
 
 //judge if it is Paragraph Style and then set paragraph format
 if (titleStyle is ParagraphStyle)
 {
     ParagraphStyle ps = titleStyle as ParagraphStyle;
+
+    //Set the font and font size
+    ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 28);
+
+    //Set the text color
+    ps.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
 
     //Set the BorderType
     ps.ParagraphFormat.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.Single;
@@ -5487,37 +5481,52 @@ if (titleStyle is ParagraphStyle)
     ps.ParagraphFormat.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Left;
 }
 
-//Add default normal style and modify
+// Add the normal text style
 Style normalStyle = document.AddStyle(BuiltinStyle.Normal);
-normalStyle.CharacterFormat.Font = new System.Drawing.Font("cambria", 11);
 
-//Add default heading1 style
+if (normalStyle is ParagraphStyle)
+{
+    ParagraphStyle ps = normalStyle as ParagraphStyle;
+    ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 11);
+}
+
+
+// Add default heading1 style
 Style heading1Style = document.AddStyle(BuiltinStyle.Heading1);
-heading1Style.CharacterFormat.Font = new System.Drawing.Font("cambria", 14);
-heading1Style.CharacterFormat.Bold = true;
-heading1Style.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
+if (heading1Style is ParagraphStyle)
+{
+    ParagraphStyle ps = heading1Style as ParagraphStyle;
+    ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 14);
+    ps.CharacterFormat.Bold = true;
+    ps.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
 
-//Add default heading2 style
+}
+
+// Add default heading2 style
 Style heading2Style = document.AddStyle(BuiltinStyle.Heading2);
-heading2Style.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
-heading2Style.CharacterFormat.Bold = true;
 
-//Create a bulletList
-ListStyle bulletList = new ListStyle(document, ListType.Bulleted);
-bulletList.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
+if (heading2Style is ParagraphStyle)
+{
+    ParagraphStyle ps = heading2Style as ParagraphStyle;
+    ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
+    ps.CharacterFormat.Bold = true;
+}
 
-//Set the bulletList name
-bulletList.Name = "bulletList";
+// Create a bulleted list style for itemized content
+ListStyle bulletList = document.Styles.Add(ListType.Bulleted, "bulletList");
 
-//Add the style
-document.ListStyles.Add(bulletList);
+if (bulletList != null && bulletList is ICharacterStyle)
+{
+    ICharacterStyle style = bulletList as ICharacterStyle;
+    style.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
 
-//Apply the Title style
+}
+
+// Apply styles
 Paragraph paragraph = sec.AddParagraph();
 paragraph.AppendText("Your Name");
 paragraph.ApplyStyle(BuiltinStyle.Title);
 
-//Apply styles to additional paragraphs
 paragraph = sec.AddParagraph();
 paragraph.AppendText("Address, City, ST ZIP Code | Telephone | Email");
 paragraph.ApplyStyle(BuiltinStyle.Normal);
@@ -5526,10 +5535,67 @@ paragraph = sec.AddParagraph();
 paragraph.AppendText("Objective");
 paragraph.ApplyStyle(BuiltinStyle.Heading1);
 
-//Apply bullet list style
+paragraph = sec.AddParagraph();
+paragraph.AppendText("To get started right away, just click any placeholder text (such as this) and start typing to replace it with your own.");
+paragraph.ApplyStyle(BuiltinStyle.Normal);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Education");
+paragraph.ApplyStyle(BuiltinStyle.Heading1);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("DEGREE | DATE EARNED | SCHOOL");
+paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
 paragraph = sec.AddParagraph();
 paragraph.AppendText("Major:Text");
-paragraph.ListFormat.ApplyStyle("bulletList");
+paragraph.ListFormat.ApplyStyle(bulletList);
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Minor:Text");
+paragraph.ListFormat.ApplyStyle(bulletList);
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Related coursework:Text");
+paragraph.ListFormat.ApplyStyle(bulletList);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Skills & Abilities");
+paragraph.ApplyStyle(BuiltinStyle.Heading1);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("MANAGEMENT");
+paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Think a document that looks this good has to be difficult to format? Think again! To easily apply any text formatting you see in this document with just a click, on the Home tab of the ribbon, check out Styles.");
+paragraph.ListFormat.ApplyStyle(bulletList);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("COMMUNICATION");
+paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("You delivered that big presentation to rave reviews. Don’t be shy about it now! This is the place to show how well you work and play with others.");
+paragraph.ListFormat.ApplyStyle(bulletList);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("LEADERSHIP");
+paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Are you president of your fraternity, head of the condo board, or a team lead for your favorite charity? You’re a natural leader—tell it like it is!");
+paragraph.ListFormat.ApplyStyle(bulletList);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("Experience");
+paragraph.ApplyStyle(BuiltinStyle.Heading1);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("JOB TITLE | COMPANY | DATES FROM - TO");
+paragraph.ApplyStyle(BuiltinStyle.Heading2);
+
+paragraph = sec.AddParagraph();
+paragraph.AppendText("This is the place for a brief summary of your key responsibilities and most stellar accomplishments.");
+paragraph.ListFormat.ApplyStyle(bulletList);
 ```
 
 ---
@@ -12773,6 +12839,736 @@ chart.Series.Add("Series 2",
 chart.Series.Add("Series 3",
     new string[] { "Word", "PDF", "Excel", "GoogleDocs", "Office" },
     new double[] { 500000, 820000, 1500000, 400000, 100000 });
+```
+
+---
+
+# spire.doc csharp find and highlight
+## Find and highlight keywords in a paragraph
+```csharp
+//Get the first section
+Section s = document.Sections[0];
+
+//Get the second paragraph
+Paragraph para = s.Paragraphs[1];
+
+//Find all matched keywords
+TextSelection[] textSelections = para.FindAllString("Word", false, true);
+
+//Highlight text
+foreach (TextSelection selection in textSelections)
+{
+    selection.GetAsOneRange().CharacterFormat.HighlightColor = Color.FromArgb(255, 255, 0);
+}
+```
+
+---
+
+# Spire.Doc Document Comparison
+## Compare documents while ignoring table differences
+```csharp
+// Create a new CompareOptions object to specify comparison settings
+CompareOptions compareoptions = new CompareOptions();
+
+// Set the option to ignore differences in tables during comparison
+compareoptions.IgnoreTable = true;
+
+// Compare the two documents using the specified options, with "E-iceblue" as the author name for tracked changes
+document1.Compare(document2, "E-iceblue", compareoptions);
+```
+
+---
+
+# Spire.Doc C# Get Move Revisions
+## Retrieve and process move revisions from a Word document
+```csharp
+// Create a DifferRevisions object to access move revisions within the document
+DifferRevisions differRevisions = new DifferRevisions(document);
+
+// Get the list of 'Move From' revisions (content that was moved from one location)
+List<DocumentObject> moveFromRevisions = differRevisions.MoveFromRevisions;
+
+// Get the list of 'Move To' revisions (content that was moved to a new location)
+List<DocumentObject> moveToRevisions = differRevisions.MoveToRevisions;
+
+// Loop through each 'Move From' revision object
+for (int i = 0; i < moveFromRevisions.Count; i++)
+{
+    // Check if the revision object is a Paragraph
+    if (moveFromRevisions[i].DocumentObjectType == DocumentObjectType.Paragraph)
+    {
+        // If it's a paragraph, get its text content
+        string text = ((Paragraph)moveFromRevisions[i]).Text;
+    }
+
+    // Check if the revision object is a TextRange (a piece of text)
+    if (moveFromRevisions[i].DocumentObjectType == DocumentObjectType.TextRange)
+    {
+        // If it's a text range, get its text content
+        string text = ((TextRange)moveFromRevisions[i]).Text;
+    }
+}
+
+// Loop through each 'Move To' revision object
+for (int i = 0; i < moveToRevisions.Count; i++)
+{
+    // Check if the revision object is a Paragraph
+    if (moveToRevisions[i].DocumentObjectType == DocumentObjectType.Paragraph)
+    {
+        // If it's a paragraph, get its text content
+        string text = ((Paragraph)moveToRevisions[i]).Text;
+    }
+
+    // Check if the revision object is a TextRange (a piece of text)
+    if (moveToRevisions[i].DocumentObjectType == DocumentObjectType.TextRange)
+    {
+        // If it's a text range, get its text content
+        string text = ((TextRange)moveToRevisions[i]).Text;
+    }
+}
+```
+
+---
+
+# spire.doc csharp document conversion
+## convert EPUB to PDF
+```csharp
+// Create a new Document object
+Document document = new Document();
+
+// Load an EPUB document from the specified file path
+document.LoadFromFile("input.epub", FileFormat.EPub);
+
+// Save the document as a PDF file
+document.SaveToFile("output.pdf", FileFormat.PDF);
+
+// Dispose of the Document object to free up resources
+document.Dispose();
+```
+
+---
+
+# Spire.Doc Word to PDF/UA-1 Conversion
+## Convert Word document to PDF with PDF/UA-1 conformance
+```csharp
+// Create a new Document instance
+Document document = new Document();
+
+// Load an existing Word document from a file path
+document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+// Create a new ToPdfParameterList instance to specify PDF conversion settings
+ToPdfParameterList toPdfParameterList = new ToPdfParameterList();
+
+// Set the PDF conformance level to Pdf_UA1 (Universal Accessibility)
+toPdfParameterList.PdfConformanceLevel = PdfConformanceLevel.Pdf_UA1;
+
+// Save the loaded Word document as a PDF file with the specified UA1 conformance level
+document.SaveToFile("ConvertWordToPDF_UA1.pdf", toPdfParameterList);
+
+// Dispose of the Document object to release resources
+document.Dispose();
+```
+
+---
+
+# Spire.Doc Default Substitution Font
+## Set default substitution font for document when specified font is not available
+```csharp
+// Create a new Document instance
+Document document = new Document();
+
+// Set the default substitution font name to "Arial"
+// This font will be used if a specified font is not available
+document.DefaultSubstitutionFontName = "Arial";
+
+// Add a new section to the document
+Section section = document.AddSection();
+
+// Add a new paragraph to the section
+Paragraph paragraph = section.AddParagraph();
+
+// Append text to the paragraph and get a reference to the text range
+TextRange textRange = paragraph.AppendText("Welcome to evaluate Spire.Doc for .NET product.");
+
+// Set the font name of the text range to "San Francisco"
+// (This font might not be available on the system)
+textRange.CharacterFormat.FontName = "San Francisco";
+
+// Set the font size of the text range to 16
+textRange.CharacterFormat.FontSize = 16;
+```
+
+---
+
+# spire.doc csharp pdf conversion
+## set image compression for word to pdf conversion
+```csharp
+// Set the image compression
+ToPdfParameterList toPdfParameterList = new ToPdfParameterList();
+toPdfParameterList.PdfImageCompression = PdfImageCompression.Jpeg;
+```
+
+---
+
+# spire.doc csharp conversion
+## convert word document to mhtml format
+```csharp
+//Create word document
+Document document = new Document();
+
+//Load the file from disk.
+document.LoadFromFile("inputPath");
+
+//Save to MHTML file.
+document.SaveToFile("output.mhtml", FileFormat.Mhtml);
+
+//Dispose the document
+document.Dispose();
+```
+
+---
+
+# spire.doc csharp text formatting
+## set text underline color in word document
+```csharp
+// Create a new Document instance
+Document document = new Document();
+
+// Add a new section to the document
+Section section = document.AddSection();
+
+// Add a new paragraph to the section
+Paragraph paragraph = section.AddParagraph();
+
+// Append text to the paragraph and get the TextRange object for formatting
+TextRange textRange = paragraph.AppendText("Welcome to evaluate Spire.Doc for .NET product.");
+
+// Set the underline style of the text to single underline
+textRange.CharacterFormat.UnderlineStyle = UnderlineStyle.Single;
+
+// Set the underline color of the text to red
+textRange.CharacterFormat.UnderlineColor = Color.Red;
+```
+
+---
+
+# Spire.Doc CSharp Shape Adjustment
+## Adjust corner radius of round rectangle shapes in Word documents
+```csharp
+// Iterate through all child objects in the section's body
+foreach (DocumentObject obj in section.Body.ChildObjects)
+{
+    // Check if the current object is a paragraph
+    if (obj is Paragraph)
+    {
+        // Cast the object to a Paragraph
+        Paragraph paragraph = (Paragraph)obj;
+
+        // Iterate through all child objects within the paragraph
+        foreach (DocumentObject Cobj in paragraph.ChildObjects)
+        {
+            // Check if the current child object is a Shape
+            if (Cobj is Shape)
+            {
+                // Cast the child object to a ShapeObject
+                ShapeObject shape = (ShapeObject)Cobj;
+
+                // Check if the shape type is a Round Rectangle
+                if (shape.ShapeType == ShapeType.RoundRectangle)
+                {
+                    // Adjust the corner radius of the round rectangle to 20
+                    shape.AdjustHandles.AdjustRoundRectangle(20);
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# spire.doc csharp hyperlink
+## modify hyperlink of image in word document
+```csharp
+// Iterate through each section in the document
+foreach (Section section in document.Sections)
+{
+    // Iterate through each paragraph within the current section
+    foreach (Paragraph paragraph in section.Paragraphs)
+    {
+        // Iterate through each child object within the current paragraph
+        foreach (DocumentObject documentObject in paragraph.ChildObjects)
+        {
+            // Check if the current document object is a picture (DocPicture)
+            if (documentObject is DocPicture)
+            {
+                // Cast the document object to a DocPicture type
+                DocPicture pic = documentObject as DocPicture;
+
+                // Check if the picture has a hyperlink associated with it
+                if (pic.HasHyperlink)
+                {
+                    // Update the hyperlink of the picture to a new URL
+                    pic.HRef = "https://www.e-iceblue.com/Introduce/word-for-net-introduce.html";
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# spire.doc csharp hyperlink
+## modify hyperlink of shape in word document
+```csharp
+// Iterate through each section in the document
+foreach (Section section in document.Sections)
+{
+    // Iterate through each paragraph within the current section
+    foreach (Paragraph paragraph in section.Paragraphs)
+    {
+        // Iterate through each child object within the current paragraph
+        foreach (DocumentObject documentObject in paragraph.ChildObjects)
+        {
+            // Check if the current document object is a shape (ShapeObject)
+            if (documentObject is ShapeObject)
+            {
+                // Cast the document object to a ShapeObject type
+                ShapeObject shape = documentObject as ShapeObject;
+
+                // Check if the shape has a hyperlink associated with it
+                if (shape.HasHyperlink)
+                {
+                    // Update the hyperlink of the shape to a new URL
+                    shape.HRef = "https://www.e-iceblue.com/Introduce/word-for-net-introduce.html";
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# spire.doc csharp document processing
+## remove structured document tags while preserving content
+```csharp
+// Iterate through the sections in the document
+for (int s = 0; s < doc.Sections.Count; s++)
+{
+    // Get the current section
+    Section section = doc.Sections[s];
+
+    // Iterate through the child objects in the section's body
+    for (int i = 0; i < section.Body.ChildObjects.Count; i++)
+    {
+        // Check if the child object is a paragraph
+        if (section.Body.ChildObjects[i] is Paragraph)
+        {
+            // Get the paragraph object
+            Paragraph para = section.Body.ChildObjects[i] as Paragraph;
+
+            // Iterate through the child objects in the paragraph
+            for (int j = 0; j < para.ChildObjects.Count; j++)
+            {
+                // Check if the child object is a StructureDocumentTagInline
+                if (para.ChildObjects[j] is StructureDocumentTagInline)
+                {
+                    // Get the StructureDocumentTagInline object
+                    StructureDocumentTagInline sdt = para.ChildObjects[j] as StructureDocumentTagInline;
+
+                    // Remove this control while retaining its content
+                    sdt.RemoveSelfOnly();
+                }
+            }
+        }
+
+        // Check if the child object is a StructureDocumentTag
+        if (section.Body.ChildObjects[i] is StructureDocumentTag)
+        {
+            // Get the StructureDocumentTag object
+            StructureDocumentTag sdt = section.Body.ChildObjects[i] as StructureDocumentTag;
+
+            // Remove this control while retaining its content
+            sdt.RemoveSelfOnly();
+        }
+    }
+}
+```
+
+---
+
+# spire.doc csharp math equations
+## add OMML code to document
+```csharp
+// Create a new Document instance
+Document document = new Document();
+
+// Add a new section to the document
+Section section = document.AddSection();
+
+// Iterate through each OMML code string
+foreach (string ommlCode in ommlCodes)
+{
+    // Create a new OfficeMath object to represent the equation
+    OfficeMath officeMath = new OfficeMath(document);
+
+    // Set the font size for the equation
+    officeMath.CharacterFormat.FontSize = 14f;
+
+    // Load the Office Math Markup Language (OMML) code into the object
+    officeMath.FromOMMLCode(ommlCode);
+
+    // Add a new paragraph to the section, then add the OfficeMath object as a child
+    section.AddParagraph().ChildObjects.Add(officeMath);
+
+    // Add an empty paragraph after the equation for spacing
+    section.AddParagraph();
+}
+```
+
+---
+
+# spire.doc office math conversion
+## convert Office Math objects to LaTeX code
+```csharp
+// Iterate through all sections in the document
+foreach (Section section in document.Sections)
+{
+    // Iterate through all paragraphs within the current section's body
+    foreach (Paragraph par in section.Body.Paragraphs)
+    {
+        // Iterate through all child objects within the current paragraph
+        foreach (DocumentObject obj in par.ChildObjects)
+        {
+            // Attempt to cast the current object to an OfficeMath object
+            OfficeMath officeMath = obj as OfficeMath;
+
+            // If the cast fails (obj is not OfficeMath), skip to the next object
+            if (officeMath == null) continue;
+
+            // Convert the OfficeMath object to its LaTeX representation
+            string LaTexCode = officeMath.ToLaTexMathCode();
+
+            // Append the LaTeX code to the StringBuilder, followed by a new line
+            stringBuilder.AppendLine(LaTexCode);
+        }
+    }
+}
+```
+
+---
+
+# spire.doc csharp combination chart
+## create combination chart with column and line
+```csharp
+// Create a new Document instance
+Document document = new Document();
+
+// Add a section to the document and then add a paragraph to that section
+Paragraph paragraph = document.AddSection().AddParagraph();
+
+// Append a chart of specified type and size to the paragraph, and get the Chart object
+Chart chart = paragraph.AppendChart(ChartType.Column, 450, 300).Chart;
+
+// Modify 'Series 3' to a line chart and set it to display on the secondary axis
+chart.ChangeSeriesType("Series 3", ChartSeriesType.Line, true);
+```
+
+---
+
+# spire.doc csharp chart axis
+## configure chart axes in word document
+```csharp
+// Loop through all sections in the document
+for (int i = 0; i < document.Sections.Count; i++)
+{
+    // Loop through all paragraphs in the current section
+    for (int j = 0; j < document.Sections[i].Paragraphs.Count; j++)
+    {
+        // Get the current paragraph
+        var paragraph = document.Sections[i].Paragraphs[j];
+
+        // Loop through all child objects in the paragraph
+        foreach (DocumentObject obj in paragraph.ChildObjects)
+        {
+            // Check if the object is a shape (e.g., chart, etc.)
+            if (obj is ShapeObject)
+            {
+                // Cast the object to a ShapeObject
+                var shape = obj as ShapeObject;
+
+                // Get the chart from the shape
+                Chart chart = shape.Chart;
+
+                // Call the method to add or update the chart axis
+                AppendChartAxis(chart);
+            }
+        }
+    }
+}
+
+public void AppendChartAxis(Spire.Doc.Fields.Shapes.Charts.Chart chart)
+{
+    for (int i = 0; i < chart.Axes.Count; i++)
+    {
+        if (i == 0)
+        {
+            chart.Axes[i].CategoryType = AxisCategoryType.Category;
+            chart.Axes[i].Bounds.Maximum = new AxisBound(5);
+            chart.Axes[i].Bounds.Minimum = new AxisBound(0);
+            chart.Axes[i].Units.Major = 1;
+            chart.Axes[i].Units.MajorTimeUnit = 0;
+            chart.Axes[i].Units.Minor = 1;
+            chart.Axes[i].Units.MinorTimeUnit = AxisTimeUnit.Days;
+            chart.Axes[i].HasMajorGridlines = false;
+            chart.Axes[i].HasMinorGridlines = true;
+            chart.Axes[i].Labels.IsAutoSpacing = false;
+            chart.Axes[i].Labels.Spacing = 1;
+            chart.Axes[i].Labels.Offset = 1;
+            chart.Axes[i].Labels.Position = AxisTickLabelPosition.Low;
+            chart.Axes[i].ReverseOrder = true;
+            chart.Axes[i].Title.Text = "x-axis";
+            chart.Axes[i].Title.Show = true;
+            chart.Axes[i].Title.Overlay = true;
+        }
+        else if (i == 1)
+        {
+            chart.Axes[i].CategoryType = 0;
+            chart.Axes[i].Units.IsMajorAuto = true;
+            chart.Axes[i].Units.IsMinorAuto = true;
+            chart.Axes[i].Bounds.LogBase = 10;
+            chart.Axes[i].HasMajorGridlines = true;
+            chart.Axes[i].HasMinorGridlines = false;
+            chart.Axes[i].ReverseOrder = false;
+            chart.Axes[i].Labels.IsAutoSpacing = true;
+            chart.Axes[i].Title.Text = "y-axis";
+            chart.Axes[i].Title.Show = true;
+            chart.Axes[i].Title.Overlay = true;
+        }
+        else
+        {
+            chart.Axes[i].Title.Text = "z-axis";
+            chart.Axes[i].Title.Show = true;
+            chart.Axes[i].Title.Overlay = false;
+        }
+        chart.Axes[i].Labels.Alignment = LabelAlignment.Left; 
+        chart.Axes[i].Units.BaseTimeUnit = 0;
+        chart.Axes[i].AxisBetweenCategories = true; 
+        chart.Axes[i].DisplayUnits.CustomUnit = 1;
+        chart.Axes[i].DisplayUnits.Unit = AxisBuiltInUnit.Custom;
+        chart.Axes[i].DisplayUnits.ShowLabel = true;
+        chart.Axes[i].TickMarks.Spacing = 1;
+        chart.Axes[i].TickMarks.Major = 0;
+        chart.Axes[i].TickMarks.Minor = AxisTickMark.Inside;
+        chart.Axes[i].Title.GetCharacterFormat().FontSize = 8;
+        chart.Axes[i].Title.GetCharacterFormat().TextColor = Color.Red;
+        chart.Axes[i].Title.GetCharacterFormat().Bold = true;
+    }
+}
+```
+
+---
+
+# spire.doc csharp chart data labels
+## append and configure chart data labels in word document
+```csharp
+// Loop through all sections in the document
+for (int i = 0; i < document.Sections.Count; i++)
+{
+    // Loop through all paragraphs in the current section
+    for (int j = 0; j < document.Sections[i].Paragraphs.Count; j++)
+    {
+        // Get the current paragraph
+        var paragraph = document.Sections[i].Paragraphs[j];
+
+        // Loop through all child objects in the paragraph
+        foreach (DocumentObject obj in paragraph.ChildObjects)
+        {
+            // Check if the object is a shape (e.g., chart, etc.)
+            if (obj is ShapeObject)
+            {
+                // Cast the object to a ShapeObject
+                var shape = obj as ShapeObject;
+
+                // Get the chart from the shape
+                Chart chart = shape.Chart;
+                ChartSeriesCollection series = chart.Series;
+                ChartDataLabelCollection dataLabels = series[0].DataLabels;
+                series[0].HasDataLabels = true;
+                AppendChartDataLabel(dataLabels);
+            }
+        }
+    }
+}
+
+public void AppendChartDataLabel(ChartDataLabelCollection dataLabels)
+{
+    // Display the value (e.g., percentage or numerical value) on the data labels
+    dataLabels.ShowValue = true;
+
+    // Display the category name (e.g., the label for each chart segment)
+    dataLabels.ShowCategoryName = true;
+
+    // Display the series name (useful when multiple series are present)
+    dataLabels.ShowSeriesName = true;
+
+    // Show leader lines connecting the data labels to the chart elements
+    dataLabels.ShowLeaderLines = true;
+
+    // Set the separator between different label components (e.g., value and category)
+    dataLabels.Separator = ";";
+
+    // Set the number format for the displayed values (thousands separator and zero decimals)
+    dataLabels.NumberFormat.FormatCode = "#,##0";
+
+    // Set the font size of the data labels
+    dataLabels.CharacterFormat.FontSize = 8;
+
+    // Make the text in the data labels bold
+    dataLabels.CharacterFormat.Bold = true;
+
+    // Set the text color of the data labels to blue
+    dataLabels.CharacterFormat.TextColor = Color.Blue;
+
+    // Set the border color of the characters in the data labels to blue
+    dataLabels.CharacterFormat.Border.Color = Color.Blue;
+
+    // Enable right-to-left (RTL) text direction for languages like Arabic or Hebrew
+    dataLabels.CharacterFormat.Bidi = true;
+
+    // Apply italic formatting to the text
+    dataLabels.CharacterFormat.Italic = true;
+
+    // Set the underline color to red
+    dataLabels.CharacterFormat.UnderlineColor = Color.Red;
+
+    // Set the underline style to double line
+    dataLabels.CharacterFormat.UnderlineStyle = UnderlineStyle.Double;
+
+    // Set the font family for the data labels
+    dataLabels.CharacterFormat.FontName = "Arial";
+
+    // Display all text in uppercase letters
+    dataLabels.CharacterFormat.AllCaps = true;
+
+    // Apply a shadow effect to the text
+    dataLabels.CharacterFormat.IsShadow = true;
+
+    // Set the opacity (transparency) of the text effect (e.g., shadow or glow)
+    dataLabels.CharacterFormat.TextEffectFormat.TextOpacity = 0.1;
+}
+```
+
+---
+
+# spire.doc csharp chart data table
+## append and configure chart data table in word document
+```csharp
+public void AppendChartDataTable(Spire.Doc.Fields.Shapes.Charts.Chart chart)
+{
+    // Enable the display of the data table in the chart
+    chart.DataTable.Show = true;
+
+    // Show legend keys (symbols) in the data table
+    chart.DataTable.ShowLegendKeys = true;
+
+    // Display horizontal borders between rows in the data table
+    chart.DataTable.ShowHorizontalBorder = true;
+
+    // Display vertical borders between columns in the data table
+    chart.DataTable.ShowVerticalBorder = true;
+
+    // Show an outline border around the entire data table
+    chart.DataTable.ShowOutlineBorder = true;
+}
+```
+
+---
+
+# spire.doc chart legend configuration
+## configure chart legend properties in Word document
+```csharp
+// Method to configure chart legend
+public void AppendChartLegend(Spire.Doc.Fields.Shapes.Charts.Chart chart)
+{
+    // Enable the legend display on the chart
+    chart.Legend.Show = true;
+
+    // Set the position of the legend to the left side of the chart
+    chart.Legend.Position = LegendPosition.Left;
+
+    // Disable overlay mode so the legend does not overlap with the chart plot area
+    chart.Legend.Overlay = false;
+
+    // Set the font size of the legend text to 9 points
+    chart.Legend.CharacterFormat.FontSize = 9;
+
+    // Set the text color of the legend labels to blue
+    chart.Legend.CharacterFormat.TextColor = Color.Blue;
+
+    // Apply italic style to the legend text
+    chart.Legend.CharacterFormat.Italic = true;
+}
+```
+
+---
+
+# spire.doc csharp chart title
+## append and format chart title in word document
+```csharp
+public void AppendChartTitle(Spire.Doc.Fields.Shapes.Charts.Chart chart)
+{
+    // Get the chart's title object
+    ChartTitle title = chart.Title;
+
+    // Enable the display of the title
+    title.Show = true;
+
+    // Disable overlay so the title does not overlap with the chart area
+    title.Overlay = false;
+
+    // Set the text of the title
+    title.Text = "My Chart";
+
+    // Set font size of the title
+    title.CharacterFormat.FontSize = 12;
+
+    // Set the title text to bold
+    title.CharacterFormat.Bold = true;
+
+    // Set the text color to blue
+    title.CharacterFormat.TextColor = Color.Blue;
+
+    // Enable right-to-left text formatting (if needed for language)
+    title.CharacterFormat.Bidi = true;
+
+    // Apply italic style to the title text
+    title.CharacterFormat.Italic = true;
+
+    // Set character spacing (tracking or kerning)
+    title.CharacterFormat.CharacterSpacing = 2;
+
+    // Set underline color to red
+    title.CharacterFormat.UnderlineColor = Color.Red;
+
+    // Set underline style to double line
+    title.CharacterFormat.UnderlineStyle = UnderlineStyle.Double;
+
+    // Set font name
+    title.CharacterFormat.FontName = "arial";
+
+    // Enable all caps formatting
+    title.CharacterFormat.AllCaps = true;
+
+    // Enable shadow effect on the text
+    title.CharacterFormat.IsShadow = true;
+
+    // Set the position of the text baseline relative to normal 
+    title.CharacterFormat.Position = 3;
+}
 ```
 
 ---
