@@ -32,8 +32,29 @@ namespace ConvertToImage
 			//Save the image to file
 			img.Save("sample.png", ImageFormat.Png);
 
-			//Dispose the document
-			document.Dispose();
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            SkiaSharp.SKImage images = document.SaveToImages(0, ImageType.Bitmap);
+            FileStream fileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
+            images.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).SaveTo(fileStream);
+            fileStream.Flush();
+            */
+
+            //////////////////Use the following code for WPF dlls/////////////////////////
+            /*
+            BitmapSource[] images = document.SaveToImages(Spire.Doc.Documents.ImageType.Bitmap);
+            PngBitmapEncoder pE = new PngBitmapEncoder();
+            pE.Frames.Add(BitmapFrame.Create(images[0]));
+            string outputfile = String.Format(outputFile, ImageFormat.Png);
+            using (Stream stream = File.Create(outputfile))
+            {
+                pE.Save(stream);
+            }
+            */
+
+
+            //Dispose the document
+            document.Dispose();
 
             //Launching the image file.
             WordDocViewer("sample.png");

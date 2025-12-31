@@ -54,6 +54,10 @@ namespace HideEmptyRegions
             if (!String.IsNullOrEmpty(filePath))
             {
                 field.Image = Image.FromFile(filePath);
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                 field.SetImage(filePath);
+                */
             }
         }
         private void FileViewer(string fileName)

@@ -43,9 +43,15 @@ namespace CreateImageHyperlink
 
 			// Load the image into the DocPicture object
 			picture.LoadImage(image);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture picture = new DocPicture(doc);
+            //Add an image hyperlink to the paragraph
+            picture.LoadImage(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+            */
 
-			// Append a hyperlink to the paragraph with the specified URL and the picture as the display element
-			paragraph.AppendHyperlink("https://www.e-iceblue.com/Introduce/word-for-net-introduce.html", picture, HyperlinkType.WebLink);
+            // Append a hyperlink to the paragraph with the specified URL and the picture as the display element
+            paragraph.AppendHyperlink("https://www.e-iceblue.com/Introduce/word-for-net-introduce.html", picture, HyperlinkType.WebLink);
 
 			// Specify the output file path for the generated document
 			string output = "CreateImageHyperlink.docx";

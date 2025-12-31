@@ -46,6 +46,13 @@ Namespace InsertImage
 
 			'Load the image
 			picture.LoadImage(p)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As New DocPicture(doc)
+			'picture.LoadImage("..\..\..\..\..\..\Data\Word.png")
+			' =============================================================================
+
 
 			'Set image's position
 			picture.HorizontalPosition = 50.0F

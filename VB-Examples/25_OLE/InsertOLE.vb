@@ -25,6 +25,11 @@ Namespace InsertOLE
 			Dim picture As New DocPicture(doc)
 			Dim image As Image = Image.FromFile("..\..\..\..\..\..\Data\excel.png")
 			picture.LoadImage(image)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'picture.LoadImage("..\..\..\..\..\..\Data\excel.png")
+			' =============================================================================
 
 			' Append an OLE object to the paragraph with the specified file, picture, and object type (Excel worksheet)
 			Dim obj As DocOleObject = par.AppendOleObject("..\..\..\..\..\..\Data\example.xlsx", picture, OleObjectType.ExcelWorksheet)

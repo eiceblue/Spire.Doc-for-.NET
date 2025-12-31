@@ -22,6 +22,11 @@ Namespace AddImageToEachPage
 
 			'Add a picture in footer
 			Dim picture As DocPicture = document.Sections(0).HeadersFooters.Footer.AddParagraph().AppendPicture(Image.FromFile(imgPath))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As DocPicture = document.Sections(0).HeadersFooters.Footer.AddParagraph().AppendPicture(imgPath)
+			' =============================================================================
 
 			'Set the picture's postion and style
 			picture.VerticalOrigin = VerticalOrigin.Page

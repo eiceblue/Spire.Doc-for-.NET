@@ -26,6 +26,11 @@ Namespace PictureCaptionCrossReference
 
 			' Append an image (picture) to the paragraph from the specified file path
 			Dim pic1 As DocPicture = par1.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Spire.Doc.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim pic1 As DocPicture = par1.AppendPicture("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
 			pic1.Height = 120
 			pic1.Width = 120
 
@@ -38,6 +43,11 @@ Namespace PictureCaptionCrossReference
 
 			' Append another image (picture) to the paragraph from the specified file path
 			Dim pic2 As DocPicture = par2.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Word.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim pic2 As DocPicture = par2.AppendPicture("..\..\..\..\..\..\Data\Word.png")
+			' =============================================================================
 			pic2.Height = 120
 			pic2.Width = 120
 

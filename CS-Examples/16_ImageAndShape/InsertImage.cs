@@ -53,8 +53,15 @@ namespace InsertImage
 
 			//Load the image
 			picture.LoadImage(p);
-			//set image's position
-			picture.HorizontalPosition = 50.0F;
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture picture = new DocPicture(doc);  
+            picture.LoadImage(TestUtil.DataPath + "Demo/Word.png");
+
+            */
+
+            //set image's position
+            picture.HorizontalPosition = 50.0F;
 			picture.VerticalPosition = 60.0F;
 
 			//set image's size

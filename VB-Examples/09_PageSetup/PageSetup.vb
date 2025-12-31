@@ -105,6 +105,12 @@ Namespace PageSetup
 			' Add a paragraph to the header and insert an image and text.
 			Dim headerParagraph As Paragraph = header.AddParagraph()
 			Dim headerPicture As DocPicture = headerParagraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Header.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerPicture As DocPicture = headerParagraph.AppendPicture("..\..\..\..\..\..\Data\Header.png")
+			' =============================================================================
+
 			Dim text As TextRange = headerParagraph.AppendText("Demo of Spire.Doc")
 			text.CharacterFormat.FontName = "Arial"
 			text.CharacterFormat.FontSize = 10

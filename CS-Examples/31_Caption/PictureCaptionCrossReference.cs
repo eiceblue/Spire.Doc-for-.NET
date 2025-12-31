@@ -32,6 +32,10 @@ namespace PictureCaptionCrossReference
 
             // Append an image (picture) to the paragraph from the specified file path
             DocPicture pic1 = par1.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            DocPicture pic1 = par1.AppendPicture(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+            */
             pic1.Height = 120;
             pic1.Width = 120;
 
@@ -44,6 +48,10 @@ namespace PictureCaptionCrossReference
 
             // Append another image (picture) to the paragraph from the specified file path
             DocPicture pic2 = par2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture pic2 = par2.AppendPicture(@"..\..\..\..\..\..\Data\Word.png");
+            */
             pic2.Height = 120;
             pic2.Width = 120;
 

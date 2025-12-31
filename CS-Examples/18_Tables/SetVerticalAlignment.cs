@@ -47,9 +47,13 @@ namespace SetVerticalAlignment
 			// Add a paragraph to the first cell of the first row, and append an image to it
 			Paragraph paraPic = table.Rows[0].Cells[0].AddParagraph();
 			DocPicture pic = paraPic.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture pic = paraPic.AppendPicture(@"..\..\..\..\..\..\Data\E-iceblue.png");
+            */
 
-			// Define data for the table cells
-			String[][] data = {
+            // Define data for the table cells
+            String[][] data = {
 				new string[] {"", "Spire.Office", "Spire.DataExport"},
 				new string[] {"", "Spire.Doc", "Spire.DocViewer"},
 				new string[] {"", "Spire.XLS", "Spire.PDF"}

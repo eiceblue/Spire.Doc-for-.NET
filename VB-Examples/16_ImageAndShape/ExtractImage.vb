@@ -23,6 +23,11 @@ Namespace ExtractImage
 
 			'Create a list to store images
 			Dim images As IList(Of Image) = New List(Of Image)()
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim images As IList(Of SkiaSharp.SKImage) = New List(Of SkiaSharp.SKImage)()
+			' =============================================================================
 
 			'Traverse through the composite objects in the document
 			Do While nodes.Count > 0
@@ -41,6 +46,12 @@ Namespace ExtractImage
 							'If the child is a picture, add its image to the list
 							Dim picture As DocPicture = TryCast(child, DocPicture)
 							images.Add(picture.Image)
+							' =============================================================================
+							' Use the following code for netstandard dlls
+							' =============================================================================
+							'Dim image As SkiaSharp.SKImage = SkiaSharp.SKImage.FromEncodedData(SkiaSharp.SKData.CreateCopy(picture.ImageBytes))
+							'images.Add(image)
+							' =============================================================================
 						End If
 					End If
 				Next child
@@ -51,7 +62,17 @@ Namespace ExtractImage
 				Dim fileName As String = String.Format("Image-{0}.png", i)
 				images(i).Save(fileName, ImageFormat.Png)
 			Next i
-
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'For i As Integer = 0 To images.Count - 1
+			'	Dim filename As String = String.Format(outputFile & "Image-{0}.png", i)
+			'	Using fileStream As New FileStream(filename, FileMode.Create, FileAccess.Write)
+			'		images(i).Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).SaveTo(fileStream)
+			'		fileStream.Flush()
+			'	End Using
+			'Next
+			' =============================================================================
 			'Dispose the document
 			document.Dispose()
 

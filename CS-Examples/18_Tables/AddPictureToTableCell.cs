@@ -28,9 +28,13 @@ namespace AddPictureToTableCell
 
 			//Add a picture to the specified table cell
 			DocPicture picture = table1.Rows[1].Cells[2].Paragraphs[0].AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            DocPicture picture = table1.Rows[1].Cells[2].Paragraphs[0].AppendPicture(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+            */
 
-			//Set picture width
-			picture.Width = 100;
+            //Set picture width
+            picture.Width = 100;
 
 			//Set picture height
 			picture.Height = 100;

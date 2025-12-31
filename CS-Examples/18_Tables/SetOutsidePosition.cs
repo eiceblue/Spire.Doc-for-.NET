@@ -32,9 +32,12 @@ namespace SetOutsidePosition
 
 			// Append an image to the paragraph in the header
 			DocPicture headerimage = paragraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Word.png"));
-
-			// Add a table to the header
-			Table table = header.AddTable();
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture headerimage = paragraph.AppendPicture(@"..\..\..\..\..\..\Data\Word.png");
+            */
+            // Add a table to the header
+            Table table = header.AddTable();
 			table.ResetCells(4, 2);
 
 			// Set table properties for text wrapping and positioning

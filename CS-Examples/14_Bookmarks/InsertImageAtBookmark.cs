@@ -44,9 +44,13 @@ namespace InsertImageAtBookmark
 
 			//Add a picture into the paragraph
 			DocPicture picture = paragraph.AppendPicture(image);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture picture = paragraph.AppendPicture(@"..\..\..\..\..\..\Data\Word.png");
+            */
 
-			//Add the paragraph at the position of bookmark
-			bn.InsertParagraph(paragraph);
+            //Add the paragraph at the position of bookmark
+            bn.InsertParagraph(paragraph);
 
 			//Remove the section0
 			doc.Sections.Remove(section0);

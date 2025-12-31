@@ -57,6 +57,11 @@ Namespace CreateFormField
 			' Add a paragraph to the header and insert a picture
 			Dim headerParagraph As Paragraph = section.HeadersFooters.Header.AddParagraph()
 			Dim headerPicture As DocPicture = headerParagraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Header.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerPicture As DocPicture = headerParagraph.AppendPicture("..\..\..\..\..\..\Data\Header.png")
+			' =============================================================================
 
 			' Add text to the header paragraph with specified font settings
 			Dim text As TextRange = headerParagraph.AppendText("Demo of Spire.Doc")
@@ -79,6 +84,11 @@ Namespace CreateFormField
 			' Add a paragraph to the footer and insert a picture
 			Dim footerParagraph As Paragraph = section.HeadersFooters.Footer.AddParagraph()
 			Dim footerPicture As DocPicture = footerParagraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Footer.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim footerPicture As DocPicture = footerParagraph.AppendPicture("..\..\..\..\..\..\Data\Footer.png")
+			' =============================================================================
 
 			' Set wrapping style and alignment for the footer picture
 			footerPicture.TextWrappingStyle = TextWrappingStyle.Behind

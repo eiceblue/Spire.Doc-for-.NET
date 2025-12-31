@@ -41,6 +41,11 @@ Namespace InsertingImage
 
 			'Append the image to the paragraph and set its width and height
 			Dim picture As DocPicture = paragraph.AppendPicture(ima)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As DocPicture = paragraph.AppendPicture("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
 			picture.Width = 100
 			picture.Height = 100
 

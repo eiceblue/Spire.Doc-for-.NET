@@ -33,7 +33,11 @@ namespace InsertOLE
 			// Create a DocPicture object and load an image from file
 			DocPicture picture = new DocPicture(doc);
 			Image image = Image.FromFile(@"..\..\..\..\..\..\Data\excel.png");
-			picture.LoadImage(image);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            picture.LoadImage(@"..\..\..\..\..\..\Data\excel.png");
+            */
+            picture.LoadImage(image);
 
 			// Append an OLE object to the paragraph with the specified file, picture, and object type (Excel worksheet)
 			DocOleObject obj = par.AppendOleObject(@"..\..\..\..\..\..\Data\example.xlsx", picture, OleObjectType.ExcelWorksheet);

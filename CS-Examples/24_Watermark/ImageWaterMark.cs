@@ -38,8 +38,12 @@ namespace ImageWaterMark
 			PictureWatermark picture = new PictureWatermark();
 			// Load the image for the watermark
 			picture.Picture = System.Drawing.Image.FromFile(@"..\..\..\..\..\..\Data\ImageWatermark.png");
-			// Set the scaling of the watermark
-			picture.Scaling = 250;
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             picture.SetPicture(@"..\..\..\..\..\..\Data\ImageWatermark.png");
+            */
+            // Set the scaling of the watermark
+            picture.Scaling = 250;
 			// Specify whether the watermark should be washed out
 			picture.IsWashout = false;
 			// Set the watermark for the document

@@ -19,6 +19,11 @@ Namespace SetImageBackground
 
 			' Set the picture for the document background from the specified image file
 			document.Background.Picture = Image.FromFile("..\..\..\..\..\..\Data\Background.png")
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'document.Background.Picture("..\..\..\..\..\..\Data\Background.png")
+			' =============================================================================
 
 			' Save the document to a file with the specified file format
 			document.SaveToFile("ImageBackground.docx", FileFormat.Docx)

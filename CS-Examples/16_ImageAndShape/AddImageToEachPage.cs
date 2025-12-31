@@ -28,9 +28,13 @@ namespace AddImageToEachPage
 
 			//Add a picture in footer 
 			DocPicture picture = document.Sections[0].HeadersFooters.Footer.AddParagraph().AppendPicture(Image.FromFile(imgPath));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+                 DocPicture picture = document.Sections[0].HeadersFooters.Footer.AddParagraph().AppendPicture(imgPath);
+            */
 
-			//Set the picture's postion and style
-			picture.VerticalOrigin = VerticalOrigin.Page;
+            //Set the picture's postion and style
+            picture.VerticalOrigin = VerticalOrigin.Page;
 			picture.HorizontalOrigin = HorizontalOrigin.Page;
 			picture.VerticalAlignment = ShapeVerticalAlignment.Bottom;
 			picture.TextWrappingStyle = TextWrappingStyle.None;

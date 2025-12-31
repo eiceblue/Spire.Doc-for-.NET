@@ -22,6 +22,11 @@ Namespace AddPictureToTableCell
 
 			'Add a picture to the specified table cell
 			Dim picture As DocPicture = table1.Rows(1).Cells(2).Paragraphs(0).AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Spire.Doc.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As DocPicture = table1.Rows(1).Cells(2).Paragraphs(0).AppendPicture("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
 
 			'Set picture width
 			picture.Width = 100

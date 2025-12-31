@@ -32,6 +32,11 @@ Namespace DifferentFirstPage
 
 			'Append a picture
 			Dim headerimage As DocPicture = paragraph1.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerimage As DocPicture = paragraph1.AppendPicture("..\..\..\..\..\..\Data\E-iceblue.png")
+			' =============================================================================
 
 			'Set the first page footer
 			Dim paragraph2 As Paragraph = section.HeadersFooters.FirstPageFooter.AddParagraph()

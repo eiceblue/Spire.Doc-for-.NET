@@ -1,15 +1,14 @@
 Imports System.ComponentModel
+Imports System.Net.Mime.MediaTypeNames
 Imports System.Text
 Imports Spire.Doc
 Imports Spire.Doc.Documents
-
 Namespace CopyParagraph
 	Partial Public Class Form1
 		Inherits Form
 		Public Sub New()
 			InitializeComponent()
 		End Sub
-
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
 			'Create a new Document object called document1
 			Dim document1 As New Document()
@@ -41,6 +40,11 @@ Namespace CopyParagraph
 
 			'Load an image from the specified file path and assign it to the Picture property of WM
 			WM.Picture = Image.FromFile("..\..\..\..\..\..\Data\Logo.jpg")
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'WM.Picture("..\..\..\..\..\..\Data\Logo.jpg")
+			' =============================================================================
 
 			'Set the watermark of document2 to WM
 			document2.Watermark = WM

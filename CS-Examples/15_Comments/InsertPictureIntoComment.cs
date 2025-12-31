@@ -38,9 +38,13 @@ namespace InsertPictureIntoComment
 
 			//Load a picture
 			docPicture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             docPicture.LoadImage(@"..\..\..\..\..\..\Data\E-iceblue.png");
+            */
 
-			//Insert the picture into the comment body
-			comment.Body.AddParagraph().ChildObjects.Add(docPicture);
+            //Insert the picture into the comment body
+            comment.Body.AddParagraph().ChildObjects.Add(docPicture);
 
 			//Save the document
 			string output = "InsertPictureIntoComment.docx";

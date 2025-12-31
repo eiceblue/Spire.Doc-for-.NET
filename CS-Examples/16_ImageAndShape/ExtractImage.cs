@@ -31,8 +31,13 @@ namespace ExtractImage
 			// Create a list to store images
 			IList<Image> images = new List<Image>();
 
-			// Traverse through the composite objects in the document
-			while (nodes.Count > 0)
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             IList<SkiaSharp.SKImage> images = new List<SkiaSharp.SKImage>();
+            */
+
+            // Traverse through the composite objects in the document
+            while (nodes.Count > 0)
 			{
 				// Dequeue the next node
 				ICompositeObject node = nodes.Dequeue();
@@ -50,8 +55,13 @@ namespace ExtractImage
 						{
 							DocPicture picture = child as DocPicture;
 							images.Add(picture.Image);
-						}
-					}
+                            //////////////////Use the following code for netstandard dlls/////////////////////////
+                            /*
+                                SkiaSharp.SKImage image = SkiaSharp.SKImage.FromEncodedData(SkiaSharp.SKData.CreateCopy(picture.ImageBytes));
+                            */
+
+                        }
+                    }
 				}
 			}
 
@@ -61,9 +71,19 @@ namespace ExtractImage
 				string fileName = string.Format("Image-{0}.png", i);
 				images[i].Save(fileName, ImageFormat.Png);
 			}
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*        
+            for (int i = 0; i < images.Count; i++)
+            {
+                string filename = String.Format(outputFile + "Image-{0}.png", i);
+                FileStream fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                images[i].Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).SaveTo(fileStream);
+                fileStream.Flush();
+            }   
+             */
 
-			// If there are images, open the first one
-			if (images.Count > 0)
+            // If there are images, open the first one
+            if (images.Count > 0)
 			{
 				// Open the first image using the default application
 				System.Diagnostics.Process.Start("Image-0.png");

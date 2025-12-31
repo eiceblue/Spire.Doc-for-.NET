@@ -35,9 +35,15 @@ namespace SetFont
 			CharacterFormat format = new CharacterFormat(doc);
 			//Set font
 			format.Font = new Font("Arial", 16);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            format.FontName = "Arial";
+            format.FontSize = 16;
+            */
 
-			//Loop through the childObjects of paragraph 
-			foreach (DocumentObject childObj in p.ChildObjects)
+
+            //Loop through the childObjects of paragraph 
+            foreach (DocumentObject childObj in p.ChildObjects)
 			{
 				if (childObj is TextRange)
 				{

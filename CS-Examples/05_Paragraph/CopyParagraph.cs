@@ -53,6 +53,10 @@ namespace CopyParagraph
 
             // Set the Picture property of WM to an image from the specified file path
             WM.Picture = Image.FromFile(@"..\..\..\..\..\..\Data\Logo.jpg");
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             WM.SetPicture(@"..\..\..\..\..\..\Data\Logo.jpg");
+            */
 
             // Set the Watermark property of document2 to WM
             document2.Watermark = WM;

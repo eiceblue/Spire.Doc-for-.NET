@@ -29,6 +29,11 @@ Namespace ImageHeaderAndFooter
 
 			'Append a picture in the paragraph
 			Dim headerimage As DocPicture = paragraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerimage As DocPicture = paragraph.AppendPicture("..\..\..\..\..\..\Data\E-iceblue.png")
+			' =============================================================================
 			headerimage.VerticalAlignment = ShapeVerticalAlignment.Bottom
 
 			'Get the footer of the first section
@@ -42,6 +47,11 @@ Namespace ImageHeaderAndFooter
 
 			'Append a picture in the paragraph
 			Dim footerimage As DocPicture = paragraph2.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\logo.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim footerimage As DocPicture = paragraph2.AppendPicture("..\..\..\..\..\..\Data\logo.png")
+			' =============================================================================
 
 			'Append text in the paragraph and set its character format
 			Dim TR As TextRange = paragraph2.AppendText("Copyright © 2013 e-iceblue. All Rights Reserved.")

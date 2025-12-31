@@ -28,8 +28,27 @@ namespace WordToEmf
 
 			//Convert the first page of document to image.
 			System.Drawing.Image image = document.SaveToImages(0, Spire.Doc.Documents.ImageType.Metafile);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            SkiaSharp.SKImage images = document.SaveToImages(0, ImageType.Bitmap);
+            FileStream fileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
+            images.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).SaveTo(fileStream);
+            fileStream.Flush();
+            */
 
-			string result = "Result-WordToEmf.emf";
+            //////////////////Use the following code for WPF dlls/////////////////////////
+            /*
+            BitmapSource[] images = document.SaveToImages(Spire.Doc.Documents.ImageType.Bitmap);
+            PngBitmapEncoder pE = new PngBitmapEncoder();
+            pE.Frames.Add(BitmapFrame.Create(images[0]));
+            string outputfile = String.Format(outputFile, ImageFormat.Png);
+            using (Stream stream = File.Create(outputfile))
+            {
+                pE.Save(stream);
+            }
+            */
+
+            string result = "Result-WordToEmf.emf";
 
 			//Save the file.
 			image.Save(result, ImageFormat.Emf);

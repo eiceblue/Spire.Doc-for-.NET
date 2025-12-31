@@ -27,6 +27,11 @@ namespace SetImageBackground
 
             // Set the background picture of the document by loading an image from a file path
             document.Background.Picture = Image.FromFile(@"..\..\..\..\..\..\Data\Background.png");
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             document.Background.SetPicture(inputFile_Img);
+            */
+
 
             // Save the modified document to a file with the specified format (Docx)
             document.SaveToFile("ImageBackground.docx", FileFormat.Docx);

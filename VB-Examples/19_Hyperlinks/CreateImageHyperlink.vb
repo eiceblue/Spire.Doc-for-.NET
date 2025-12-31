@@ -33,11 +33,18 @@ Namespace CreateImageHyperlink
 		   ' Create a new DocPicture object with the loaded image
 		   Dim picture As New DocPicture(doc)
 
-		   ' Load the image into the DocPicture object
-		   picture.LoadImage(image)
+			' Load the image into the DocPicture object
+			picture.LoadImage(image)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As New DocPicture(doc)
+			'picture.LoadImage("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
 
-		   ' Append a hyperlink to the paragraph with the specified URL and the picture as the display element
-		   paragraph.AppendHyperlink("https://www.e-iceblue.com/Introduce/word-for-net-introduce.html", picture, HyperlinkType.WebLink)
+
+			' Append a hyperlink to the paragraph with the specified URL and the picture as the display element
+			paragraph.AppendHyperlink("https://www.e-iceblue.com/Introduce/word-for-net-introduce.html", picture, HyperlinkType.WebLink)
 
 		   ' Specify the output file path for the generated document
 		   Dim output As String = "CreateImageHyperlink.docx"

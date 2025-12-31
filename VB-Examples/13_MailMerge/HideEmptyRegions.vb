@@ -42,6 +42,11 @@ Namespace HideEmptyRegions
 			Dim filePath As String = TryCast(field.FieldValue, String)
 			If Not String.IsNullOrEmpty(filePath) Then
 				field.Image = Image.FromFile(filePath)
+				' =============================================================================
+				' Use the following code for netstandard dlls
+				' =============================================================================
+				' field.SetImage(filePath);
+				' =============================================================================
 			End If
 		End Sub
 		Private Sub FileViewer(ByVal fileName As String)

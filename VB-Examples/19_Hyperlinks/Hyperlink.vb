@@ -94,6 +94,12 @@ Namespace Hyperlink
 			' Add an image to the paragraph and append a hyperlink to it with the specified URL and link type
 			paragraph = section.AddParagraph()
 			Dim picture As DocPicture = paragraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Spire.Doc.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As DocPicture = paragraph.AppendPicture("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
+
 			paragraph.AppendHyperlink("www.e-iceblue.com/Download/download-word-for-net-now.html", picture, HyperlinkType.WebLink)
 		End Sub
 

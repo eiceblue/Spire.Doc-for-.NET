@@ -40,9 +40,14 @@ Namespace SetVerticalAlignment
 			   ' Add a paragraph to the first cell of the first row, and append an image to it
 			   Dim paraPic As Paragraph = table.Rows(0).Cells(0).AddParagraph()
 			   Dim pic As DocPicture = paraPic.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim pic As DocPicture = paraPic.AppendPicture("..\..\..\..\..\..\Data\E-iceblue.png")
+			' =============================================================================
 
-			   ' Define data for the table cells
-			   Dim data()() As String = { New String() {"", "Spire.Office", "Spire.DataExport"}, New String() {"", "Spire.Doc", "Spire.DocViewer"}, New String() {"", "Spire.XLS", "Spire.PDF"} }
+			' Define data for the table cells
+			Dim data()() As String = { New String() {"", "Spire.Office", "Spire.DataExport"}, New String() {"", "Spire.Doc", "Spire.DocViewer"}, New String() {"", "Spire.XLS", "Spire.PDF"} }
 
 			   ' Fill the table with data and set cell widths
 			   For r As Integer = 0 To 2

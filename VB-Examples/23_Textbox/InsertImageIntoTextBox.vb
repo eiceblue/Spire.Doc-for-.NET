@@ -32,6 +32,11 @@ Namespace InsertImageIntoTextBox
 
 			' Set the picture for the background fill effect from a file
 			tb.Format.FillEfects.Picture = Image.FromFile("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'tb.Format.FillEfects.Picture = ("..\..\..\..\..\..\Data\Spire.Doc.png")
+			' =============================================================================
 
 			' Specify the output file name
 			Dim output As String = "InsertImageIntoTextBox.docx"

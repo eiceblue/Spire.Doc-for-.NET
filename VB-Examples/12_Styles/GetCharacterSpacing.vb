@@ -34,6 +34,11 @@ Namespace GetCharacterSpacing
 
 					'Get the font name
 					fontName = textRange.CharacterFormat.Font.Name
+					' =============================================================================
+					' Use the following code for netstandard dlls
+					' =============================================================================
+					' fontName = textRange.CharacterFormat.FontName
+					' =============================================================================
 
 					'Get the character spacing
 					fontSpacing = textRange.CharacterFormat.CharacterSpacing

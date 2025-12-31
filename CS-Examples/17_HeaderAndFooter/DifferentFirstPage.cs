@@ -38,9 +38,13 @@ namespace DifferentFirstPage
 
 			//Append a picture
 			DocPicture headerimage = paragraph1.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture headerimage = paragraph1.AppendPicture(TestUtil.DataPath + "Demo/E-iceblue.png");
+            */
 
-			//Set the first page footer
-			Paragraph paragraph2 = section.HeadersFooters.FirstPageFooter.AddParagraph();
+            //Set the first page footer
+            Paragraph paragraph2 = section.HeadersFooters.FirstPageFooter.AddParagraph();
 
 			//Set horizontal alignment for the paragraph
             paragraph2.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;

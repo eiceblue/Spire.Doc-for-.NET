@@ -66,9 +66,12 @@ namespace CreateFormField
 			// Add a paragraph to the header and insert a picture
 			Paragraph headerParagraph = section.HeadersFooters.Header.AddParagraph();
 			DocPicture headerPicture = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
-
-			// Add text to the header paragraph with specified font settings
-			TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture headerPicture = headerParagraph.AppendPicture(@"..\..\..\..\..\..\Data\Header.png");
+            */
+            // Add text to the header paragraph with specified font settings
+            TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
 			text.CharacterFormat.FontName = "Arial";
 			text.CharacterFormat.FontSize = 10;
 			text.CharacterFormat.Italic = true;
@@ -88,9 +91,12 @@ namespace CreateFormField
 			// Add a paragraph to the footer and insert a picture
 			Paragraph footerParagraph = section.HeadersFooters.Footer.AddParagraph();
 			DocPicture footerPicture = footerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Footer.png"));
-
-			// Set wrapping style and alignment for the footer picture
-			footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture footerPicture = footerParagraph.AppendPicture(@"..\..\..\..\..\..\Data\Footer.png");
+            */
+            // Set wrapping style and alignment for the footer picture
+            footerPicture.TextWrappingStyle = TextWrappingStyle.Behind;
 			footerPicture.HorizontalOrigin = HorizontalOrigin.Page;
 			footerPicture.HorizontalAlignment = ShapeHorizontalAlignment.Left;
 			footerPicture.VerticalOrigin = VerticalOrigin.Page;

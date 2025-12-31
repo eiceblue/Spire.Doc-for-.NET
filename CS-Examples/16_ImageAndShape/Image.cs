@@ -43,9 +43,14 @@ namespace InsertingImage
 			// Load an image from file
 			System.Drawing.Image ima = System.Drawing.Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png");
 
-			// Append the image to the paragraph and set its width and height
-			DocPicture picture = paragraph.AppendPicture(ima);
-			picture.Width = 100;
+            // Append the image to the paragraph and set its width and height
+            DocPicture picture = paragraph.AppendPicture(ima);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture picture = paragraph.AppendPicture(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+            */
+
+            picture.Width = 100;
 			picture.Height = 100;
 
 			// Add a new paragraph to the section

@@ -53,9 +53,13 @@ namespace UpdateImage
 
 			//Replace the first picture with a new image file
 			picture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              picture.LoadImage(TestUtil.DataPath + "Demo/E-iceblue.png");
+            */
 
-			//Save the document
-			string output = "ReplaceWithNewImage.docx";
+            //Save the document
+            string output = "ReplaceWithNewImage.docx";
 			doc.SaveToFile(output, FileFormat.Docx);
 
 			// Dispose the document

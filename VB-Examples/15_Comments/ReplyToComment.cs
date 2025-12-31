@@ -45,13 +45,9 @@ namespace ReplyToComment
 
 			//Load an image
 			docPicture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
-            //////////////////Use the following code for netstandard dlls/////////////////////////
-            /*
-             docPicture.LoadImage(@"..\..\..\..\..\..\Data\logo.png");
-            */
 
-            //insert a picture in the comment
-            replyComment1.Body.Paragraphs[0].ChildObjects.Add(docPicture);
+			//insert a picture in the comment
+			replyComment1.Body.Paragraphs[0].ChildObjects.Add(docPicture);
 
 			//Save the document.
 			doc.SaveToFile("ReplyToComment.docx", FileFormat.Docx);

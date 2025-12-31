@@ -139,7 +139,13 @@ namespace PageSetup
 			// Add a paragraph to the header and insert an image and text.
 			Paragraph headerParagraph = header.AddParagraph();
 			DocPicture headerPicture = headerParagraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\Header.png"));
-			TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture headerPicture = headerParagraph.AppendPicture("..\..\..\..\..\..\Data\Header.png");
+            */
+
+
+            TextRange text = headerParagraph.AppendText("Demo of Spire.Doc");
 			text.CharacterFormat.FontName = "Arial";
 			text.CharacterFormat.FontSize = 10;
 			text.CharacterFormat.Italic = true;

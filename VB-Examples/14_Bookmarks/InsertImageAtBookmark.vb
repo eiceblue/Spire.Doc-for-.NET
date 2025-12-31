@@ -37,6 +37,11 @@ Namespace InsertImageAtBookmark
 
 			'Add an image into the paragraph
 			Dim picture As DocPicture = paragraph.AppendPicture(image)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim picture As DocPicture = paragraph.AppendPicture("..\..\..\..\..\..\Data\Word.png")
+			' =============================================================================
 
 			'Add the paragraph at the position of bookmark
 			bn.InsertParagraph(paragraph)

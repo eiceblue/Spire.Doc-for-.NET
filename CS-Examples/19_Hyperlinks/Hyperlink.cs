@@ -100,7 +100,11 @@ namespace Hyperlink
 			// Add an image to the paragraph and append a hyperlink to it with the specified URL and link type
 			paragraph = section.AddParagraph();
 			DocPicture picture = paragraph.AppendPicture(System.Drawing.Image.FromFile(@"..\..\..\..\..\..\Data\Spire.Doc.png"));
-			paragraph.AppendHyperlink("www.e-iceblue.com/Download/download-word-for-net-now.html", picture, HyperlinkType.WebLink);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             DocPicture picture = paragraph.AppendPicture(@"..\..\..\..\..\..\Data\Spire.Doc.png");
+            */
+            paragraph.AppendHyperlink("www.e-iceblue.com/Download/download-word-for-net-now.html", picture, HyperlinkType.WebLink);
 		}
 
         private void WordDocViewer(string fileName)

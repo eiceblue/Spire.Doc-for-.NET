@@ -21,6 +21,11 @@ Namespace AddCoverImage
 
 			' Load the image from the specified file path and assign it to the DocPicture
 			picture.LoadImage(Image.FromFile("..\..\..\..\..\..\..\Data\Cover.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'picture.LoadImage("..\..\..\..\..\..\..\Data\Cover.png")
+			' =============================================================================
 
 			' Define the output file name for the EPUB file with the cover image added
 			Dim result As String = "AddCoverImage.epub"

@@ -29,6 +29,12 @@ Namespace SetFont
 			Dim format As New CharacterFormat(doc)
 			'Set font
 			format.Font = New Font("Arial", 16)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'format.FontName = "Arial";
+			'format.FontSize = 16;
+			' =============================================================================
 
 			'Loop through the childObjects of paragraph 
 			For Each childObj As DocumentObject In p.ChildObjects

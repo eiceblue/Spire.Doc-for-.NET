@@ -42,6 +42,11 @@ Namespace HeaderAndFooter
 			'Create a new paragraph for the header and add an image
 			Dim headerParagraph As Paragraph = header.AddParagraph()
 			Dim headerPicture As DocPicture = headerParagraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Header.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerPicture As DocPicture = headerParagraph.AppendPicture("..\..\..\..\..\..\Data\Header.png")
+			' =============================================================================
 
 			'Add text to the header paragraph and set its formatting properties
 			Dim text As TextRange = headerParagraph.AppendText("Demo of Spire.Doc")
@@ -65,6 +70,11 @@ Namespace HeaderAndFooter
 			'Create a new paragraph for the footer and add an image
 			Dim footerParagraph As Paragraph = footer.AddParagraph()
 			Dim footerPicture As DocPicture = footerParagraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Footer.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim footerPicture As DocPicture = footerParagraph.AppendPicture("..\..\..\..\..\..\Data\Footer.png")
+			' =============================================================================
 
 			'Set the text wrapping style and alignment properties for the footer picture
 			footerPicture.TextWrappingStyle = TextWrappingStyle.Behind

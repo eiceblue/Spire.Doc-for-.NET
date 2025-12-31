@@ -25,9 +25,13 @@ Namespace SetOutsidePosition
 
 		   ' Append an image to the paragraph in the header
 		   Dim headerimage As DocPicture = paragraph.AppendPicture(Image.FromFile("..\..\..\..\..\..\Data\Word.png"))
-
-		   ' Add a table to the header
-		   Dim table As Table = header.AddTable()
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim headerimage As DocPicture = paragraph.AppendPicture("..\..\..\..\..\..\Data\Word.png")
+			' =============================================================================
+			' Add a table to the header
+			Dim table As Table = header.AddTable()
 		   table.ResetCells(4, 2)
 
 		   ' Set table properties for text wrapping and positioning

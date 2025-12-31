@@ -36,7 +36,11 @@ namespace ImageHeaderAndFooter
 
 			//Append a picture in the paragraph
 			DocPicture headerimage = paragraph.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png"));
-			headerimage.VerticalAlignment = ShapeVerticalAlignment.Bottom;
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            DocPicture headerimage = paragraph.AppendPicture(@"..\..\..\..\..\..\Data\E-iceblue.png");
+            */
+            headerimage.VerticalAlignment = ShapeVerticalAlignment.Bottom;
 
 			//Get the footer of the first section
 			HeaderFooter footer = doc.Sections[0].HeadersFooters.Footer;
@@ -49,9 +53,13 @@ namespace ImageHeaderAndFooter
 
 			//Append a picture in the paragraph
 			paragraph2.AppendPicture(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             paragraph2.AppendPicture(@"..\..\..\..\..\..\Data\logo.png");
+            */
 
-			//Append text in the paragraph and set its character format
-			TextRange TR = paragraph2.AppendText("Copyright © 2013 e-iceblue. All Rights Reserved.");
+            //Append text in the paragraph and set its character format
+            TextRange TR = paragraph2.AppendText("Copyright © 2013 e-iceblue. All Rights Reserved.");
 			TR.CharacterFormat.FontName = "Arial";
 			TR.CharacterFormat.FontSize = 10;
 			TR.CharacterFormat.TextColor = Color.Black;

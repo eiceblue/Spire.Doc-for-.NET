@@ -33,6 +33,11 @@ Namespace InsertPictureIntoComment
 			'Load an Image
 			Dim img As Image = Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png")
 			docPicture.LoadImage(img)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'docPicture.LoadImage( "..\..\..\..\..\..\Data\E-iceblue.png")
+			' =============================================================================
 
 			'Insert the picture into the comment body
 			comment.Body.AddParagraph().ChildObjects.Add(docPicture)

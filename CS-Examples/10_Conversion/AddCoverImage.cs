@@ -29,9 +29,14 @@ namespace AddCoverImage
 
 			// Load an image from the specified file path and assign it to the picture.
 			picture.LoadImage(Image.FromFile(@"..\..\..\..\..\..\..\Data\Cover.png"));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             picture.LoadImage(@"..\..\..\..\..\..\..\Data\Cover.png");
+            */
 
-			// Specify the output file name for the EPUB file.
-			string result = "AddCoverImage.epub";
+
+            // Specify the output file name for the EPUB file.
+            string result = "AddCoverImage.epub";
 
 			// Save the document as an EPUB file, including the cover image.
 			doc.SaveToEpub(result, picture);

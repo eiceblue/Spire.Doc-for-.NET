@@ -45,6 +45,11 @@ Namespace UpdateImage
 
 			'Replace the first picture with a new image file
 			picture.LoadImage(Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'picture.LoadImage("..\..\..\..\..\..\Data\E-iceblue.png")
+			' =============================================================================
 
 			'Save the document
 			Dim output As String = "ReplaceWithNewImage.docx"

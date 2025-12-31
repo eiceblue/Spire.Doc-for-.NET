@@ -72,6 +72,11 @@ Namespace AddContentControls
 			pic.Width = 10
 			pic.Height = 10
 			pic.LoadImage(Image.FromFile("..\..\..\..\..\..\Data\logo.png"))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'pic.LoadImage("..\..\..\..\..\..\Data\logo.png")
+			' =============================================================================
 			sd.SDTContent.ChildObjects.Add(pic)
 
 			' Add an empty paragraph to the section

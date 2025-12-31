@@ -24,6 +24,28 @@ namespace ReplaceWithImage
 
             // Load the content of the document from the defined input path
             doc.LoadFromFile(input);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            //Find the string "E-iceblue" in the document
+            TextSelection[] selections = doc.FindAllString("E-iceblue", true, true);
+            int index = 0;
+            TextRange range = null;
+
+            //Remove the text and replace it with Image
+            foreach (TextSelection selection in selections)
+            {
+                DocPicture pic = new DocPicture(doc);
+                pic.LoadImage(inputFile_2);
+
+                range = selection.GetAsOneRange();
+                index = range.OwnerParagraph.ChildObjects.IndexOf(range);
+                range.OwnerParagraph.ChildObjects.Insert(index, pic);
+                range.OwnerParagraph.ChildObjects.Remove(range);
+            } 
+            */
+
+
+
 
             // Define an Image object from a file located at "..\..\..\..\..\..\Data\E-iceblue.png"
             Image image = Image.FromFile(@"..\..\..\..\..\..\Data\E-iceblue.png");

@@ -1,9 +1,8 @@
+using System;
+using System.Windows.Forms;
 using Spire.Doc;
 using Spire.Doc.Documents;
-using Spire.Doc.Interface;
-using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace Styles
 {
@@ -16,28 +15,33 @@ namespace Styles
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Initialize a document
+            //Initialize a document
 			Document document = new Document();
 
-			// Add a section
+			//Add a section
 			Section sec = document.AddSection();
 
-			// Add default title style to document and modify
+			//Add default title style to document and modify
 			Style titleStyle = document.AddStyle(BuiltinStyle.Title);
+
+			//Set the font and font size
+			titleStyle.CharacterFormat.Font = new System.Drawing.Font("cambria", 28);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            titleStyle.CharacterFormat.FontName= "cambria";
+            titleStyle.CharacterFormat.FontSize = 28;
+            */
+
+            //Set the text color
+            titleStyle.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
 
 			//judge if it is Paragraph Style and then set paragraph format
 			if (titleStyle is ParagraphStyle)
 			{
 				ParagraphStyle ps = titleStyle as ParagraphStyle;
 
-                //Set the font and font size
-                ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 28);
-
-                //Set the text color
-                ps.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
-
-                //Set the BorderType
-                ps.ParagraphFormat.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+				//Set the BorderType
+				ps.ParagraphFormat.Borders.Bottom.BorderType = Spire.Doc.Documents.BorderStyle.Single;
 
 				//Set the color
 				ps.ParagraphFormat.Borders.Bottom.Color = Color.FromArgb(42, 123, 136);
@@ -47,50 +51,55 @@ namespace Styles
 
 				//Set the horizontal alignment style
 				ps.ParagraphFormat.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Left;
-            }
+			}
 
-            // Add the normal text style
-            Style normalStyle = document.AddStyle(BuiltinStyle.Normal);
+			//Add default normal style and modify
+			Style normalStyle = document.AddStyle(BuiltinStyle.Normal);
+			normalStyle.CharacterFormat.Font = new System.Drawing.Font("cambria", 11);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            normalStyle.CharacterFormat.FontName = "cambria";
+            normalStyle.CharacterFormat.FontSize = 11;
+            */
 
-            if (normalStyle is ParagraphStyle)
-            {
-                ParagraphStyle ps = normalStyle as ParagraphStyle;
-                ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 11);
-            }
-
-
-            // Add default heading1 style
+            //Add default heading1 style
             Style heading1Style = document.AddStyle(BuiltinStyle.Heading1);
-            if (heading1Style is ParagraphStyle)
-            {
-                ParagraphStyle ps = heading1Style as ParagraphStyle;
-                ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 14);
-                ps.CharacterFormat.Bold = true;
-                ps.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
+			heading1Style.CharacterFormat.Font = new System.Drawing.Font("cambria", 14);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            heading1Style.CharacterFormat.FontName = "cambria";
+            heading1Style.CharacterFormat.FontSize = 14;
+            */
+            heading1Style.CharacterFormat.Bold = true;
+			heading1Style.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
 
-            }
+			//Add default heading2 style
+			Style heading2Style = document.AddStyle(BuiltinStyle.Heading2);
+			heading2Style.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            heading2Style.CharacterFormat.FontName = "cambria";
+            heading2Style.CharacterFormat.FontSize = 12;
+            */
+            heading2Style.CharacterFormat.Bold = true;
 
-            // Add default heading2 style
-            Style heading2Style = document.AddStyle(BuiltinStyle.Heading2);
+			//Create a bulletList
+			ListStyle bulletList = new ListStyle(document, ListType.Bulleted);
+			bulletList.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            bulletList.CharacterFormat.FontName = "cambria";
+            bulletList.CharacterFormat.FontSize = 12;
+            */
 
-            if (heading2Style is ParagraphStyle)
-            {
-                ParagraphStyle ps = heading2Style as ParagraphStyle;
-                ps.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
-                ps.CharacterFormat.Bold = true;
-            }
+            //Set the bulletList name
+            bulletList.Name = "bulletList";
 
-            // Create a bulleted list style for itemized content
-            ListStyle bulletList = document.Styles.Add(ListType.Bulleted, "bulletList");
+			//Add the style
+			document.ListStyles.Add(bulletList);
 
-            if (bulletList != null && bulletList is ICharacterStyle)
-            {
-                ICharacterStyle style = bulletList as ICharacterStyle;
-                style.CharacterFormat.Font = new System.Drawing.Font("cambria", 12);
 
-            }
-
-			// Apply styles
+			//Apply the Title style
 			Paragraph paragraph = sec.AddParagraph();
 			paragraph.AppendText("Your Name");
 			paragraph.ApplyStyle(BuiltinStyle.Title);
@@ -117,13 +126,13 @@ namespace Styles
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Major:Text");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Minor:Text");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Related coursework:Text");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Skills & Abilities");
@@ -135,7 +144,7 @@ namespace Styles
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Think a document that looks this good has to be difficult to format? Think again! To easily apply any text formatting you see in this document with just a click, on the Home tab of the ribbon, check out Styles.");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("COMMUNICATION");
@@ -143,7 +152,7 @@ namespace Styles
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("You delivered that big presentation to rave reviews. Don¡¯t be shy about it now! This is the place to show how well you work and play with others.");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("LEADERSHIP");
@@ -151,7 +160,7 @@ namespace Styles
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Are you president of your fraternity, head of the condo board, or a team lead for your favorite charity? You¡¯re a natural leader¡ªtell it like it is!");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("Experience");
@@ -163,15 +172,17 @@ namespace Styles
 
 			paragraph = sec.AddParagraph();
 			paragraph.AppendText("This is the place for a brief summary of your key responsibilities and most stellar accomplishments.");
-			paragraph.ListFormat.ApplyStyle(bulletList);
+			paragraph.ListFormat.ApplyStyle("bulletList");
 
-            // Save the document to a DOCX file
-            string filePath = "style.docx";
+			//Save to docx file.
+			string filePath = "Sample.docx";
 			document.SaveToFile(filePath, FileFormat.Docx);
 
-            // Dispose of the document object and open the created document in MS Word
-            document.Dispose();
-			WordDocViewer(filePath);
+			//Dispose the document
+			document.Dispose();
+			
+            //Launching the MS Word file.
+            WordDocViewer(filePath);
         }
         private void WordDocViewer(string fileName)
         {

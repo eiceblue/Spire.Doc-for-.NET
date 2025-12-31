@@ -18,6 +18,24 @@ Namespace ReplaceWithImage
 
 			' Load the Word document from the specified input file.
 			doc.LoadFromFile(input)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim selections() As TextSelection = doc.FindAllString("E-iceblue", True, True)
+			'Dim index As Integer = 0
+			'Dim range As TextRange = Nothing
+
+			'For Each selection As TextSelection In selections
+			'	Dim pic As New DocPicture(doc)
+			'	pic.LoadImage(inputFile_2)
+
+			'	range = selection.GetAsOneRange()
+			'	index = range.OwnerParagraph.ChildObjects.IndexOf(range)
+			'	range.OwnerParagraph.ChildObjects.Insert(index, pic)
+			'	range.OwnerParagraph.ChildObjects.Remove(range)
+			'Next
+			' =============================================================================
+
 
 			' Create an Image object from the image file.
 			Dim image As Image = Image.FromFile("..\..\..\..\..\..\Data\E-iceblue.png")
