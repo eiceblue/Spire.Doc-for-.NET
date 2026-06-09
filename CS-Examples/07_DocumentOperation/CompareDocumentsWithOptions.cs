@@ -26,12 +26,18 @@ namespace CompareDocumentsWithOptions
 			// Load the second document from the specified file path
 			doc2.LoadFromFile(@"..\..\..\..\..\..\Data\SupportDocumentCompare2.docx");
 
-			// Create CompareOptions object and set IgnoreFormatting property to true
-			CompareOptions compareOptions = new CompareOptions();
-			compareOptions.IgnoreFormatting = true;
+            // Create CompareOptions object and set IgnoreFormatting property to true
+            CompareOptions options = new CompareOptions();
+            options.CompareMoves = false;
+            options.IgnoreCaseChanges = false;
+            options.IgnoreComments = true;
+            options.IgnoreFields = true;
+            options.IgnoreFootnotes = true;
+            options.IgnoreTables = true;
+            options.IgnoreTextboxes = true;
 
-			// Compare the contents of the two documents with specified options and mark differences using "E-iceblue" as the author name and current date and time
-			doc1.Compare(doc2, "E-iceblue", System.DateTime.Now, compareOptions);
+            // Compare the contents of the two documents with specified options and mark differences using "E-iceblue" as the author name and current date and time
+            doc1.Compare(doc2, "E-iceblue", System.DateTime.Now, options);
 
 			// Specify the output file name for the compared result
 			string result = "CompareDocumentsWithOptions_result.docx";

@@ -13574,3 +13574,798 @@ public void AppendChartTitle(Spire.Doc.Fields.Shapes.Charts.Chart chart)
 ---
 
 
+# 05_Paragraph - AdjustRightIndent
+## Demonstrates how to enable or disable the adjustment of right indent for paragraphs.
+```csharp
+Document doc = new Document();
+Section section = doc.AddSection();
+
+Paragraph paragraph = section.Body.AddParagraph();
+paragraph.Text = "Hello World!";
+paragraph.Format.AdjustRightIndent = true;
+
+paragraph = section.Body.AddParagraph();
+paragraph.Text = "Thank you for using the Spire.Doc product.";
+paragraph.Format.AdjustRightIndent = false;
+```
+
+---
+
+# 05_Paragraph - SetParagraphTextDirection
+## Sets the text direction of a paragraph to vertical using FarEastLayout.
+```csharp
+Document doc = new Document();
+Section section = doc.AddSection();
+Paragraph paragraph = section.AddParagraph();
+TextRange farEastLayout = paragraph.AppendText("Welcome to China.");
+FarEastLayout style = new FarEastLayout();
+style.Vertical = true;
+farEastLayout.CharacterFormat.FarEastLayout = style;
+```
+
+---
+
+# 07_DocumentOperation - AddVBAMacro
+## Create a Word document and add VBA macro modules using Spire.Doc library. This includes creating a VBA project, naming it, and adding two standard modules with macro source code.
+```csharp
+Document doc = new Document();
+doc.AddSection().AddParagraph().AppendText("Add VBA macro");
+
+VbaProject vbaProject = new VbaProject();
+vbaProject.Name = "SampleVBAMacro";
+doc.VbaProject = vbaProject;
+
+VbaModule vbaModule1 = doc.VbaProject.Modules.Add("SampleModule1", VbaModuleType.StdModule);
+vbaModule1.SourceCode = @"
+    Sub DocumnetInfo()
+        MsgBox ""create time: "" &Now()
+        MsgBox ""Pages:"" & ActiveDocument.Range.ComputeStatistics(wdStatisticPages)
+    End Sub
+
+    Sub WriteHello()
+        Selection.TypeText Text:=""Hello World!""
+    End Sub";
+
+VbaModule vbaModule2 = doc.VbaProject.Modules.Add("SampleModule2", VbaModuleType.StdModule);
+vbaModule2.SourceCode = @"
+    Sub InsertCurrentDate()
+        Selection.TypeText Text:=Format(Now(),""yyyy-mm-dd hh:mm:ss"")
+    End Sub
+
+    Sub IndentParagraph()
+        Selection.ParagraphFormat.LeftIndent = InchesToPoints(0.5)
+    End Sub";
+```
+
+---
+
+# 07_DocumentOperation - CompareDocumentsWithOptions
+## Compare two Word documents with custom comparison options (e.g., ignore formatting, comments, fields, etc.)
+```csharp
+Document doc1 = new Document();
+Document doc2 = new Document();
+// Assume doc1 and doc2 are already loaded with the documents to compare
+
+CompareOptions options = new CompareOptions();
+options.CompareMoves = false;
+options.IgnoreCaseChanges = false;
+options.IgnoreComments = true;
+options.IgnoreFields = true;
+options.IgnoreFootnotes = true;
+options.IgnoreTables = true;
+options.IgnoreTextboxes = true;
+
+doc1.Compare(doc2, "E-iceblue", DateTime.Now, options);
+```
+
+---
+
+# 07_DocumentOperation - CompatibilityOptions
+## Demonstrates how to set compatibility options (e.g., trailing space underline, adjust line height in table, space for UL) in a Word document and optimize for Word 2016.
+```csharp
+Document doc = new Document();
+Section section = doc.AddSection();
+
+// Enable compatibility options
+doc.CompatibilityOptions.UlTrailSpace = true;
+doc.CompatibilityOptions.AdjustLineHeightInTable = true;
+doc.CompatibilityOptions.SpaceForUL = true;
+doc.CompatibilityOptions.ApplyBreakingRules = true;
+doc.CompatibilityOptions.DoNotExpandShiftReturn = false;
+doc.CompatibilityOptions.OverrideTableStyleFontSizeAndJustification = false;
+doc.CompatibilityOptions.DoNotAutofitConstrainedTables = true;
+
+// Optimize for Word 2016
+doc.CompatibilityOptions.OptimizeForWordVersion(WordVersion.Word2016);
+
+// Save the document
+doc.SaveToFile("CompatibilityOptions.docx", FileFormat.Docx2019);
+doc.Close();
+doc.Dispose();
+```
+
+---
+
+# 07_DocumentOperation - RetrieveStyleChangeRevisions
+## Retrieves formatting change revisions (style changes) from a Word document and compares original vs final properties
+
+```csharp
+Document doc = new Document();
+doc.LoadFromFile(@"..\..\..\..\..\..\..\Data\GetRevisions.docx");
+
+RevisionInfoCollection revisionInfoCollection = doc.GetRevisionInfos();
+StringBuilder stringBuilder = new StringBuilder();
+
+foreach (RevisionInfo revisionInfo in revisionInfoCollection)
+{
+    // Filter only formatting changes
+    if (revisionInfo.RevisionType == RevisionType.FormatChange)
+    {
+        // Ensure the affected object is a TextRange (text segment)
+        if (revisionInfo.OwnerObject is TextRange)
+        {
+            TextRange range = (TextRange)revisionInfo.OwnerObject;
+
+            // Append the text content of the modified range
+            stringBuilder.AppendLine("TextRange:" + range.Text + "rn");
+
+            // Switch to "Original" view to read pre-change formatting
+            doc.RevisionsView = RevisionsView.Original;
+            stringBuilder.AppendLine("Original style：" + "isBold：" + range.CharacterFormat.Bold + ";" + "TextColor：" + range.CharacterFormat.TextColor + "；HighlightColor：" + range.CharacterFormat.HighlightColor + "；FontName：" + range.CharacterFormat.FontName + "；UnderlineStyle：" + range.CharacterFormat.UnderlineStyle + "rn");
+
+            // Switch to "Final" view to read post-change formatting
+            doc.RevisionsView = RevisionsView.Final;
+            stringBuilder.AppendLine("Final style：" + "isBold：" + range.CharacterFormat.Bold + ";" + "TextColor：" + range.CharacterFormat.TextColor + "；HighlightColor：" + range.CharacterFormat.HighlightColor + "；FontName：" + range.CharacterFormat.FontName + "；UnderlineStyle：" + range.CharacterFormat.UnderlineStyle + "rn");
+        }
+    }
+}
+
+File.WriteAllText("RetrieveStyleChangeRevisions.txt", stringBuilder.ToString());
+doc.Close();
+```
+
+---
+
+# 10_Conversion - MarkdownToDocxUsingTemplateStyles
+## Convert Markdown to DOCX by applying styles from a template
+```csharp
+Document doc = new Document(@"..\..\..\..\..\..\Data\sample.md");
+doc.CopyStylesFromTemplate(@"..\..\..\..\..\..\Data\template.docx");
+string outputFile = "MarkdownToDocxUsingTemplateStyles.docx";
+doc.SaveToFile(outputFile, FileFormat.Docx2016);
+doc.Close();
+```
+
+---
+
+# 10_Conversion - ToPdfWithGeneratorName
+## Convert Word to PDF with custom generator name using ToPdfParameterList
+
+```csharp
+using Spire.Doc;
+
+// Create a new Document instance
+Document document = new Document();
+
+// Load the Word document from the specified file path
+document.LoadFromFile(@"..\..\..\..\..\..\..\Data\ConvertedTemplate.docx");
+
+// Create a ToPdfParameterList instance to configure PDF conversion options
+ToPdfParameterList toPdf = new ToPdfParameterList();
+
+// Define the generator name
+toPdf.GeneratorName = "Spire.Doc for .NET Product";
+
+// Save the document as PDF with the specified options
+document.SaveToFile("ToPdfWithGeneratorName.pdf", toPdf);
+
+// Close and dispose the document
+document.Close();
+document.Dispose();
+```
+
+---
+
+# 10_Conversion - ToXLSX
+## Convert a Word document to XLSX format
+```csharp
+// Create a new instance of the Document class
+Document document = new Document();
+// Load an existing Word document
+document.LoadFromFile("input.docx");
+// Convert the Word document to XLSX file
+document.SaveToFile("output.xlsx", FileFormat.XLSX);
+// Close the document to release resources
+document.Close();
+// Dispose of the document object to free up memory
+document.Dispose();
+```
+
+---
+
+# 10_Conversion - WordToHtmlRetainMathML
+## Convert a Word document to HTML while preserving MathML equations.
+```csharp
+Document document = new Document();
+document.LoadFromFile(@"..\..\..\..\..\..\Data\GetMathEquation.docx");
+
+HtmlExportOptions htmlExportOptions = document.HtmlExportOptions;
+htmlExportOptions.OfficeMathOutputMode = HtmlOfficeMathOutputMode.MathML;
+htmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
+
+String outputFile = "WordToHtmlRetainMathML.html";
+document.SaveToFile(outputFile, FileFormat.Html);
+document.Close();
+document.Dispose();
+```
+
+---
+
+# 11_Font - AdjustKerning
+## Demonstrates how to adjust character spacing (kerning) for text in a Word document.
+
+```csharp
+Document doc = new Document();
+Section section = doc.AddSection();
+Paragraph paragraph = section.AddParagraph();
+TextRange textRange = paragraph.AppendText("Sample text");
+textRange.CharacterFormat.Kerning = 2.5f; // set kerning value
+```
+
+---
+
+# 12_Styles - AddListTemplate
+## Demonstrates adding bullet and numbered list templates to a Word document, applying list formatting at different levels.
+
+```csharp
+Document document = new Document();
+Section section = document.AddSection();
+
+// Define and register a bullet list template
+ListTemplate template = ListTemplate.BulletDefault;
+ListDefinitionReference listRef = document.ListReferences.Add(template);
+
+// Define and register a numbered list template
+ListTemplate template1 = ListTemplate.NumberDefault;
+ListDefinitionReference listRef1 = document.ListReferences.Add(template1);
+
+// Bullet list items with nesting levels
+Paragraph paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 1");
+paragraph.ListFormat.ApplyListRef(listRef, 0);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 2");
+paragraph.ListFormat.ApplyListRef(listRef, 1);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 3");
+paragraph.ListFormat.ApplyListRef(listRef, 2);
+
+// Numbered list items with nesting levels
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 6");
+paragraph.ListFormat.ApplyListRef(listRef1, 0);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 7");
+paragraph.ListFormat.ApplyListRef(listRef1, 1);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 8");
+paragraph.ListFormat.ApplyListRef(listRef1, 2);
+```
+
+---
+
+# 12_Styles - AddSingleLevelList
+## Demonstrates how to create a single-level numbered list in a Word document using Spire.Doc.
+
+```csharp
+Document document = new Document();
+Section section = document.AddSection();
+
+ListTemplate template = ListTemplate.NumberArabicDot;
+ListDefinitionReference listRef = document.ListReferences.AddSingleLevelList(template);
+
+Paragraph paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 1");
+paragraph.ListFormat.ApplyListRef(listRef, 0);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 2");
+paragraph.ListFormat.ApplyListRef(listRef, 0);
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("List Item 3");
+paragraph.ListFormat.ApplyListRef(listRef, 0);
+```
+
+---
+
+# 16_ImageAndShape - AddSmartArt
+## Demonstrates how to create various SmartArt graphics (e.g., VerticalChevronList, SquareAccentList) in a Word document, set node text and font size, and customize shape fill color.
+```csharp
+public partial class Form1 : Form
+{
+    private const int SmartArtDefaultWidth = 432;
+    private const int SmartArtDefaultHeight = 252;
+    private const float TitleFontSize = 28f;
+    private const float DefaultNodeFontSize = 15f;
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        Document document = new Document();
+        Section section = document.AddSection();
+
+        List<SmartArtType> smartArtTypes = new List<SmartArtType>
+        {
+            SmartArtType.VerticalChevronList,
+            SmartArtType.SquareAccentList,
+            SmartArtType.AlternatingHexagons,
+            SmartArtType.HorizontalBulletList,
+            SmartArtType.SegmentedProcess,
+            SmartArtType.VerticalBendingProcess,
+            SmartArtType.StepDownProcess,
+            SmartArtType.CircleAccentTimeLine,
+            SmartArtType.BlockCycle,
+            SmartArtType.SegmentedCycle
+        };
+
+        foreach (SmartArtType smartArtType in smartArtTypes)
+        {
+            CreateTitleParagraph(section, smartArtType.ToString());
+            var paragraph = section.AddParagraph();
+            var smartArt = CreateSmartArt(paragraph, smartArtType);
+
+            SmartArtShapeProperties shapeSmartArt = smartArt.Nodes[0].ShapeProperties[0];
+            shapeSmartArt.Fill.FillType = FillType.Solid;
+            shapeSmartArt.Fill.Color = Color.FromArgb(255, 255, 165, 0);
+
+            SetSmartArtNodeText(smartArt.Nodes[0], "TextTest_1", 15f);
+            AddSmartArtChildNode(smartArt.Nodes[0], 15f, "ChildNodeTest_1.");
+
+            SetSmartArtNodeText(smartArt.Nodes[1], "TextTest_2", 25f);
+            AddSmartArtChildNode(smartArt.Nodes[1], 15f, "ChildNodeTest_2.");
+        }
+    }
+
+    private Paragraph CreateTitleParagraph(Section section, string titleText, float fontSize = TitleFontSize)
+    {
+        var paragraph = section.AddParagraph();
+        paragraph.Format.HorizontalAlignment = HorizontalAlignment.Center;
+        var textRange = paragraph.AppendText(titleText);
+        textRange.CharacterFormat.FontSize = fontSize;
+        textRange.CharacterFormat.FontName = "Times New Roman";
+        section.AddParagraph();
+        section.AddParagraph();
+        return paragraph;
+    }
+
+    private SmartArt CreateSmartArt(Paragraph paragraph, SmartArtType smartArtType, int width = SmartArtDefaultWidth, int height = SmartArtDefaultHeight)
+    {
+        paragraph.Format.HorizontalAlignment = HorizontalAlignment.Center;
+        Shape shape = paragraph.AppendSmartArt(smartArtType, width, height);
+        return shape.SmartArt;
+    }
+
+    private void SetSmartArtNodeText(SmartArtNode node, string text, float fontSize = DefaultNodeFontSize)
+    {
+        if (node == null || string.IsNullOrEmpty(text)) return;
+        node.Text = text;
+        if (node.Paragraphs.Count > 0 && node.Paragraphs[0].ChildObjects.Count > 0)
+        {
+            ((TextRange)node.Paragraphs[0].ChildObjects[0]).CharacterFormat.FontSize = fontSize;
+        }
+    }
+
+    private void AddSmartArtChildNode(SmartArtNode parentNode, float fontSize, params string[] childTexts)
+    {
+        if (parentNode == null || childTexts == null || childTexts.Length == 0) return;
+        while (parentNode.ChildNodes.Count < childTexts.Length)
+        {
+            parentNode.ChildNodes.Add();
+        }
+        for (int i = 0; i < childTexts.Length && i < parentNode.ChildNodes.Count; i++)
+        {
+            SetSmartArtNodeText(parentNode.ChildNodes[i], childTexts[i], fontSize);
+        }
+    }
+}
+```
+
+---
+
+# 16_ImageAndShape - GetSmartArtInfo
+## Extracts SmartArt information from a Word document: type, background fill, node hierarchy, shape properties, and font details.
+
+```csharp
+using System;
+using System.Drawing;
+using System.Text;
+using Spire.Doc;
+using Spire.Doc.Documents;
+using Spire.Doc.Fields.Shapes.SmartArts;
+
+public static class SmartArtInfoExtractor
+{
+    public static string GetSmartArtInfo(string filePath)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        using (Document document = new Document(filePath))
+        {
+            foreach (Section section in document.Sections)
+            {
+                if (section?.Paragraphs == null) continue;
+
+                foreach (Paragraph paragraph in section.Paragraphs)
+                {
+                    foreach (var childObj in paragraph.ChildObjects)
+                    {
+                        if (childObj is Spire.Doc.Fields.Shapes.Shape shape && shape.HasSmartArt)
+                        {
+                            SmartArt smartArt = shape.SmartArt;
+                            if (smartArt == null) continue;
+
+                            builder.AppendLine($"SmartArtType：{smartArt.SmartArtType}");
+                            ExtractSmartArtBackgroundInfo(smartArt, builder);
+                            TraverseSmartArtNodes(smartArt.Nodes, builder, 0);
+                            builder.AppendLine("----------------------------------------rn");
+                        }
+                    }
+                }
+            }
+        }
+
+        return builder.ToString();
+    }
+
+    public static void ExtractSmartArtBackgroundInfo(SmartArt smartArt, StringBuilder builder)
+    {
+        if (smartArt?.BackgroundFill.FillType == FillType.NoFill)
+        {
+            return;
+        }
+
+        string bgFillType = smartArt.BackgroundFill.FillType.ToString();
+        string bgColor = smartArt.BackgroundFill.Color == Color.Empty
+            ? "No color"
+            : smartArt.BackgroundFill.Color.ToString();
+
+        builder.AppendLine($"BackgroundFill_filltype：{bgFillType}\nBackgroundFill_color：{bgColor}");
+    }
+
+    public static void TraverseSmartArtNodes(SmartArtNodeCollection nodes, StringBuilder builder, int level)
+    {
+        if (nodes == null || nodes.Count == 0) return;
+
+        for (int nodeIdx = 0; nodeIdx < nodes.Count; nodeIdx++)
+        {
+            SmartArtNode node = nodes[nodeIdx];
+            if (node == null) continue;
+
+            string nodeText = node.Text != null ? node.Text.Trim() : "Empty Text";
+            if (nodeText == "\r" || string.IsNullOrEmpty(nodeText)) continue;
+
+            string nodePrefix = level switch
+            {
+                0 => "smartArt.Nodes",
+                1 => "smartArt.Nodes.ChildNodes",
+                2 => "smartArt.Nodes.ChildNodes.ChildNodes",
+                _ => $"smartArt.Nodes.Level{level}"
+            };
+
+            builder.AppendLine($"{nodePrefix}_{nodeIdx}：{nodeText}");
+            ExtractSmartArtNodeProperties(node, builder);
+            TraverseSmartArtNodes(node.ChildNodes, builder, level + 1);
+        }
+    }
+
+    public static void ExtractSmartArtNodeProperties(SmartArtNode node, StringBuilder builder)
+    {
+        ExtractFontProperties(node, builder);
+
+        if (node.ShapeProperties == null || node.ShapeProperties.Count == 0)
+        {
+            return;
+        }
+
+        SmartArtShapeProperties shapeProps = node.ShapeProperties[0];
+
+        if (shapeProps?.Fill.FillType != FillType.NoFill)
+        {
+            string nodeFillType = shapeProps.Fill.FillType.ToString();
+            string nodeColor = nodeFillType == "Picture"
+                ? "(Picture type, without color acquisition)"
+                : shapeProps.Fill.Color.ToString();
+
+            builder.AppendLine($"\tfilltype：{nodeFillType}\n\tcolor：{nodeColor}");
+        }
+
+        if (shapeProps.LineFormat?.Fill.FillType != FillType.NoFill && shapeProps.LineFormat.Fill.Color != Color.Empty)
+        {
+            string lineFillType = shapeProps.LineFormat.Fill.FillType.ToString();
+            string lineColor = shapeProps.LineFormat.Fill.Color.ToString();
+            builder.AppendLine($"\tline_filltype：{lineFillType}\n\tline_color：{lineColor}");
+        }
+    }
+
+    private static void ExtractFontProperties(SmartArtNode node, StringBuilder builder)
+    {
+        if (node?.Paragraphs == null || node.Paragraphs.Count == 0)
+            return;
+
+        var paragraph = node.Paragraphs[0];
+        if (paragraph?.ChildObjects == null || paragraph.ChildObjects.Count == 0)
+            return;
+
+        var textRange = paragraph.ChildObjects[0] as Spire.Doc.Fields.TextRange;
+        if (textRange == null)
+            return;
+
+        var charFormat = textRange.CharacterFormat;
+        string fontName = charFormat.FontName;
+        float fontSize = charFormat.FontSize;
+        Color fontColor = charFormat.TextColor;
+        var fontstyle = charFormat.FontStyle;
+
+        bool hasValidFontInfo = false;
+        StringBuilder fontInfoBuilder = new StringBuilder();
+
+        if (!string.IsNullOrEmpty(fontName))
+        {
+            fontInfoBuilder.Append($"\tfont_name：{fontName}");
+            hasValidFontInfo = true;
+        }
+
+        if (fontSize > 0)
+        {
+            if (hasValidFontInfo)
+                fontInfoBuilder.Append($"\tfont_size：{fontSize}pt");
+            hasValidFontInfo = true;
+        }
+
+        if (fontColor != Color.Empty)
+        {
+            if (hasValidFontInfo)
+                fontInfoBuilder.Append($"\tfont_color：{fontColor}");
+            hasValidFontInfo = true;
+        }
+
+        fontInfoBuilder.Append($"\tfont_style：{fontstyle}");
+
+        if (hasValidFontInfo)
+        {
+            builder.AppendLine(fontInfoBuilder.ToString());
+        }
+    }
+}
+```
+
+---
+
+# 16_ImageAndShape - ModifySmartArt
+## Modify a SmartArt graphic by changing background fill, node text, shape fill and line colors.
+```csharp
+// Assume 'document' is already loaded and contains SmartArt
+Section section = document.Sections[0];
+Paragraph paragraph = section.Paragraphs[0];
+Spire.Doc.Fields.Shapes.Shape shape1 = paragraph.ChildObjects[0] as Spire.Doc.Fields.Shapes.Shape;
+SmartArt smartArt = shape1.SmartArt;
+
+// Modify background fill
+smartArt.BackgroundFill.FillType = FillType.Solid;
+smartArt.BackgroundFill.Color = Color.FromArgb(255, 242, 169, 132);
+
+// Modify first node
+SmartArtNode node = smartArt.Nodes[0];
+node.Text = "Goals";
+SmartArtShapeProperties shape = node.ShapeProperties[0];
+shape.Fill.FillType = FillType.Solid;
+shape.Fill.Color = Color.FromArgb(255, 160, 43, 147);
+shape.LineFormat.Fill.FillType = FillType.Solid;
+shape.LineFormat.Fill.Color = Color.FromArgb(255, 160, 43, 147);
+
+// Modify child node of first node
+SmartArtNode childNode = node.ChildNodes[0];
+childNode.Text = "Set clear goals to the team.";
+childNode.ShapeProperties[0].LineFormat.Fill.FillType = FillType.Solid;
+childNode.ShapeProperties[0].LineFormat.Fill.Color = Color.FromArgb(255, 160, 43, 147);
+
+// Modify second node
+node = smartArt.Nodes[1];
+node.Text = "Progress";
+
+// Modify third node
+node = smartArt.Nodes[2];
+node.Text = "Result";
+shape = node.ShapeProperties[0];
+shape.Fill.FillType = FillType.Solid;
+shape.Fill.Color = Color.FromArgb(255, 78, 167, 46);
+shape.Fill.FillType = FillType.Solid;
+shape.LineFormat.Fill.Color = Color.FromArgb(255, 78, 167, 46);
+
+// Modify child node of third node
+node.ChildNodes[0].ShapeProperties[0].LineFormat.Fill.FillType = FillType.Solid;
+node.ChildNodes[0].ShapeProperties[0].LineFormat.Fill.Color = Color.FromArgb(255, 78, 167, 46);
+```
+
+---
+
+# 16_ImageAndShape - RemoveSmartArt
+## Removes SmartArt graphics from a Word document by iterating through paragraphs and removing shapes that contain SmartArt.
+
+```csharp
+// Iterate through each paragraph in the first section of the document
+for (int j = 0; j < document.Sections[0].Paragraphs.Count; j++)
+{
+    Paragraph paragraph = document.Sections[0].Paragraphs[j];
+    for (int i = 0; i < paragraph.ChildObjects.Count; i++)
+    {
+        if (paragraph.ChildObjects[i] is Spire.Doc.Fields.Shapes.Shape)
+        {
+            Spire.Doc.Fields.Shapes.Shape shape = paragraph.ChildObjects[i] as Spire.Doc.Fields.Shapes.Shape;
+            if (shape.HasSmartArt)
+            {
+                paragraph.Items.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+}
+```
+
+---
+
+# 18_Tables - HiddenRow
+## Hides a specific row in a Word table by setting its Hidden property.
+```csharp
+TableRow row = table.Rows[0];
+row.Hidden = true;
+```
+
+---
+
+# 32_Page - DeletePages
+## Removes blank pages and specific pages from a Word document
+```csharp
+Document document = new Document();
+document.RemoveBlankPages();
+document.RemovePages(new System.Collections.Generic.List<int> { 2, 4 });
+```
+
+---
+
+# 33_Chart - CombinedChart
+## Creates a combined chart (column and line) in a Word document using Spire.Doc.
+```csharp
+// Initialize a new Document object
+Document doc = new Document();
+
+// Add a new section to the document and create a paragraph within that section
+Paragraph paragraph = doc.AddSection().AddParagraph();
+
+// Append a column chart (450x300 pixels) to the paragraph and retrieve the Chart object
+Chart chart = paragraph.AppendChart(ChartType.Column, 450, 300).Chart;
+
+// Change the chart type of the series named "Series 3" to a Line chart and enable secondary axis if applicable
+chart.ChangeSeriesType("Series 3", ChartSeriesType.Line, true);
+```
+
+---
+
+# 33_Chart - ExtractAxisDataValues
+## Extracts X-axis and Y-axis data values from charts contained in a Word document.
+
+```csharp
+public string ExtractAxisDataValues(Document doc)
+{
+    StringBuilder stringBuilder = new StringBuilder();
+    foreach (Section sec in doc.Sections)
+    {
+        foreach (Paragraph paragraph in sec.Paragraphs)
+        {
+            for (int i = 0; i < paragraph.ChildObjects.Count; i++)
+            {
+                DocumentObject obj = paragraph.ChildObjects[i];
+                if (obj is ShapeObject)
+                {
+                    ShapeObject shape = obj as ShapeObject;
+                    Chart chart = shape.Chart;
+                    stringBuilder.AppendLine("Obtain X-axis data values:");
+                    for (int x = 0; x < chart.XValues.Count; x++)
+                    {
+                        ChartValue xVal = chart.XValues[x];
+                        stringBuilder.Append(xVal.StringValue + " ");
+                    }
+                    ChartSeries series = chart.Series[0];
+                    stringBuilder.AppendLine("rnObtain Y-axis data values:");
+                    foreach (ChartValue yVal in series.YValues)
+                    {
+                        stringBuilder.Append(yVal.Value + " ");
+                    }
+                }
+            }
+        }
+    }
+    return stringBuilder.ToString();
+}
+```
+
+---
+
+# 33_Chart - SaveChartToTemplate
+## Creates a Word document with a column chart and saves the chart as a template (.crtx) file.
+```csharp
+Document doc = new Document();
+Section section = doc.AddSection();
+Paragraph paragraph = section.AddParagraph();
+Chart chart = ((Shape)paragraph.AppendChart(ChartType.Column, 400, 300)).Chart;
+chart.SaveAsTemplate("SaveChartToTemplate.crtx");
+doc.Close();
+doc.Dispose();
+```
+
+---
+
+# 33_Chart - SetDataLabelPosition
+## Demos how to create Word charts with data labels positioned at center (Pie) and left (Bubble)
+
+```csharp
+// Create a new Word document instance
+Document doc = new Document();
+
+// Add a new section to the document
+Section section = doc.AddSection();
+
+// Add a paragraph with the text "Center" as a title/label
+section.AddParagraph().AppendText("Center");
+
+// Add a new paragraph to hold the first chart
+Spire.Doc.Documents.Paragraph newPara = section.AddParagraph();
+
+// Append a Pie chart to the paragraph and set its size (width: 500, height: 300)
+ShapeObject shape = newPara.AppendChart(ChartType.Pie, 500, 300);
+
+// Get the Chart object from the created shape
+Chart chart = shape.Chart;
+
+// Enable data labels for the first data series in the pie chart
+chart.Series[0].HasDataLabels = true;
+
+// Configure the data labels to display the category name
+chart.Series[0].DataLabels.ShowCategoryName = true;
+
+// Configure the data labels to display the numeric value
+chart.Series[0].DataLabels.ShowValue = true;
+
+// Set the position of the data labels to the center of the pie slices
+chart.Series[0].DataLabels.Position = ChartDataLabelPosition.Center;
+
+// Add another paragraph with the text "Left" as a title/label
+section.AddParagraph().AppendText("Left");
+
+newPara = section.AddParagraph();
+
+// Append a Bubble chart to the same paragraph and set its size (width: 500, height: 300)
+ShapeObject shape2 = newPara.AppendChart(ChartType.Bubble, 500, 300);
+
+// Get the Chart object from the second shape
+Chart chart2 = shape2.Chart;
+
+// Enable data labels for the first data series in the bubble chart
+chart2.Series[0].HasDataLabels = true;
+
+// Configure the data labels to display the category name
+chart2.Series[0].DataLabels.ShowCategoryName = true;
+
+// Configure the data labels to display the numeric value
+chart2.Series[0].DataLabels.ShowValue = true;
+
+// Set the position of the data labels to the left side
+chart2.Series[0].DataLabels.Position = ChartDataLabelPosition.Left;
+```
+
+---
+
