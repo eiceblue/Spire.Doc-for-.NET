@@ -14368,4 +14368,142 @@ chart2.Series[0].DataLabels.Position = ChartDataLabelPosition.Left;
 ```
 
 ---
+# 30_Macros - CopyMacro
+## Copies a VBA macro project from one Word document to another by cloning it.
+
+```csharp
+// Get the VBA project from the source document
+Spire.Doc.Vba.VbaProject clonedProject = sourceDocument.VbaProject;
+
+// Clone the VBA project and assign it to the target document
+targetDocument.VbaProject = clonedProject.Clone();
+```
+
+---
+
+# 30_Macros - CreateMacro
+## Creates a Word document with VBA macros and saves it as a macro-enabled .docm file.
+```csharp
+// Create a new Word document instance
+Spire.Doc.Document document = new Spire.Doc.Document();
+
+// Create a new VBA project to hold macros
+Spire.Doc.Vba.VbaProject vbaProject = new Spire.Doc.Vba.VbaProject();
+
+// Set the name of the VBA project
+vbaProject.Name = "SampleVBAMacro";
+
+// Assign the VBA project to the document
+document.VbaProject = vbaProject;
+
+// Add a standard VBA module named "SampleModule1" to the project
+Spire.Doc.Vba.VbaModule vbaModule1 = document.VbaProject.Modules.Add("SampleModule1", Spire.Doc.Vba.VbaModuleType.StdModule);
+
+// Define the VBA source code for the first module (displays document info and writes "Hello World!")
+vbaModule1.SourceCode = @"
+ Sub DocumnetInfo()
+     MsgBox ""create time: "" &Now()
+     MsgBox ""Pages:"" & ActiveDocument.Range.ComputeStatistics(wdStatisticPages)
+ End Sub
+
+ Sub WriteHello()
+     Selection.TypeText Text:=""Hello World!""
+ End Sub";
+
+// Add a second standard VBA module named "SampleModule2" to the project
+Spire.Doc.Vba.VbaModule vbaModule2 = document.VbaProject.Modules.Add("SampleModule2", Spire.Doc.Vba.VbaModuleType.StdModule);
+
+// Define the VBA source code for the second module (inserts current date and indents a paragraph)
+vbaModule2.SourceCode = @"
+ Sub InsertCurrentDate()
+     Selection.TypeText Text:=Format(Now(),""yyyy-mm-dd hh:mm:ss"")
+ End Sub
+
+ Sub IndentParagraph()
+     Selection.ParagraphFormat.LeftIndent = InchesToPoints(0.5)
+ End Sub";
+
+// Save the document as a macro-enabled Word file (.docm)
+document.SaveToFile("CreateMacro.docm", Spire.Doc.FileFormat.Docm);
+
+// Close the document and release resources
+document.Close();
+
+// Dispose of the document object and release any associated resources
+document.Dispose();
+```
+
+---
+
+# 30_Macros - ModifyMacro
+## Modifies the source code of a VBA module in a Word document.
+```csharp
+// Create a Document object
+Document doc = new Document();
+
+// Retrieve the VBA module named "SampleModule2" from the document's VBA project
+VbaModule vbaModule = doc.VbaProject.Modules["SampleModule2"];
+
+// Replace the VBA module source code with a macro that indents a paragraph
+vbaModule.SourceCode = @"
+Sub IndentParagraph()
+    Selection.ParagraphFormat.LeftIndent = InchesToPoints(2.5)
+End Sub";
+
+// Close and dispose the document
+doc.Close();
+doc.Dispose();
+```
+
+---
+
+# 30_Macros - ReadMacro
+## Read VBA macro project details and module source code from a Word document.
+```csharp
+// Get the VBA project associated with the document
+VbaProject vbaProject = doc.VbaProject;
+
+// Get VBA project metadata
+string name = vbaProject.Name;
+int codePage = vbaProject.CodePage;
+bool isProtected = vbaProject.IsProtected;
+bool isSigned = vbaProject.IsSigned;
+int moduleCount = vbaProject.Modules.Count;
+
+// Collect module information
+StringBuilder stringBuilder = new StringBuilder();
+
+// Loop through each VBA module in the project
+for (int i = 0; i < moduleCount; i++)
+{
+    // Get the current VBA module
+    VbaModule vbaModule = vbaProject.Modules[i];
+
+    string moduleName = vbaModule.Name;
+    string sourceCode = vbaModule.SourceCode;
+    Spire.Doc.Vba.VbaModuleType moduleType = vbaModule.Type;
+
+    stringBuilder.AppendLine("moduleName: " + moduleName);
+    stringBuilder.AppendLine("sourceCode: " + sourceCode);
+    stringBuilder.AppendLine("moduleType: " + moduleType.ToString());
+}
+```
+
+---
+
+# 30_Macros - RemoveMacro
+## Remove all macros (or a specific VBA module) from a Word document.
+```csharp
+// Create a new Document instance
+Document doc = new Document();
+
+// Clear all macros from the document
+doc.ClearMacros();
+
+// (Optional) Remove a specific VBA module named "SampleModule1"
+// doc.VbaProject.Modules.Remove("SampleModule1");
+```
+
+---
+
 
