@@ -23,7 +23,7 @@ namespace ReadTableFromTextBox
 			doc.LoadFromFile(input);
 
 			// Get the first textbox in the document
-			Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+			Spire.Doc.Fields.TextBox textbox = (Spire.Doc.Fields.TextBox)doc.TextBoxes[0];
 
 			// Get the first table from the textbox
 			Table table = textbox.Body.Tables[0] as Table;

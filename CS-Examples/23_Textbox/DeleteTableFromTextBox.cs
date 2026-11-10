@@ -29,7 +29,7 @@ namespace DeleteTableFromTextBox
 			doc.LoadFromFile(input);
 
 			// Access the first text box in the document
-			Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+			Spire.Doc.Fields.TextBox textbox = (Spire.Doc.Fields.TextBox)doc.TextBoxes[0];
 
 			// Remove the table inside the text box
 			textbox.Body.Tables.RemoveAt(0);

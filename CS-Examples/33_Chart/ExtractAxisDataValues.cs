@@ -65,7 +65,7 @@ namespace ExtractAxisDataValues
                             ChartSeries series = chart.Series[0];
 
                             // Add a new line and a header for Y-axis data extraction
-                            stringBuilder.AppendLine("rnObtain Y-axis data values:");
+                            stringBuilder.AppendLine("\r\n Obtain Y-axis data values:");
 
                             // Iterate through all the Y-values in the selected data series
                             foreach (ChartValue yVal in series.YValues)

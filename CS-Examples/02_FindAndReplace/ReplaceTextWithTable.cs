@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -35,7 +35,7 @@ namespace ReplaceTextWithTable
             // Get the Paragraph object that contains the TextRange object
             Paragraph paragraph = range.OwnerParagraph;
             // Get the text body that contains the paragraph
-            Body body = paragraph.OwnerTextBody;
+            Body body = (Body)paragraph.OwnerTextBody;
             // Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
             int index = body.ChildObjects.IndexOf(paragraph);
 

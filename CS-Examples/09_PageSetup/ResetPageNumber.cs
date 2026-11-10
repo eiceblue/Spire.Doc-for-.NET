@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -51,8 +51,8 @@ namespace ResetPageNumber
 				{
 					if (obj.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
 					{
-						DocumentObject para = obj.ChildObjects[0];
-						foreach (DocumentObject item in para.ChildObjects)
+						DocumentObject para = ((CompositeDocumentObject)obj).ChildObjects[0];
+						foreach (DocumentObject item in ((CompositeDocumentObject)para).ChildObjects)
 						{
 							if (item.DocumentObjectType == DocumentObjectType.Field)
 							{

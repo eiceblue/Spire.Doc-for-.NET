@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -47,7 +47,7 @@ namespace AddContentControls
             sd.SDTProperties.ControlProperties = cb;
             TextRange rt = new TextRange(document);
             rt.Text = cb.ListItems[0].DisplayText;
-            sd.SDTContent.ChildObjects.Add(rt);
+            sd.ChildObjects.Add(rt);
 
             // Add an empty paragraph to the section
             section.AddParagraph();
@@ -64,7 +64,7 @@ namespace AddContentControls
             sd.SDTProperties.ControlProperties = text;
             rt = new TextRange(document);
             rt.Text = "Text";
-            sd.SDTContent.ChildObjects.Add(rt);
+            sd.ChildObjects.Add(rt);
 
             // Add an empty paragraph to the section
             section.AddParagraph();
@@ -84,7 +84,7 @@ namespace AddContentControls
             /*
              pic.LoadImage(@"..\..\..\..\..\..\Data\logo.png");
             */
-            sd.SDTContent.ChildObjects.Add(pic);
+            sd.ChildObjects.Add(pic);
 
             // Add an empty paragraph to the section
             section.AddParagraph();
@@ -103,7 +103,7 @@ namespace AddContentControls
             sd.SDTProperties.ControlProperties = date;
             rt = new TextRange(document);
             rt.Text = "1990.02.08";
-            sd.SDTContent.ChildObjects.Add(rt);
+            sd.ChildObjects.Add(rt);
 
             // Add an empty paragraph to the section
             section.AddParagraph();
@@ -121,7 +121,7 @@ namespace AddContentControls
             sd.SDTProperties.ControlProperties = sddl;
             rt = new TextRange(document);
             rt.Text = sddl.ListItems[0].DisplayText;
-            sd.SDTContent.ChildObjects.Add(rt);
+            sd.ChildObjects.Add(rt);
 
             // Specify the output file name
             string resultfile = "Output.docx";

@@ -52,7 +52,7 @@ namespace LockContentControlContent
 				if (obj.DocumentObjectType == DocumentObjectType.Table)
 				{
 					// Clone and add the table to the StructureDocumentTag's content
-					sdt.SDTContent.ChildObjects.Add(obj.Clone());
+					sdt.ChildObjects.Add(obj.Clone());
 				}
 			}
 

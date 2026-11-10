@@ -26,7 +26,7 @@ namespace CompareDocumentsIgnoreTable
             CompareOptions compareoptions = new CompareOptions();
 
             // Set the option to ignore differences in tables during comparison
-            compareoptions.IgnoreTable = true;
+            compareoptions.IgnoreTables = true;
 
             // Compare the two documents using the specified options, with "E-iceblue" as the author name for tracked changes
             document1.Compare(document2, "E-iceblue", compareoptions);

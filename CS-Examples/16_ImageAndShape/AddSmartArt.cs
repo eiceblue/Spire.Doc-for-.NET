@@ -92,6 +92,8 @@ namespace AddSmartArt
 
                 // Add a child node to the second node with specified font size and text
                 AddSmartArtChildNode(smartArt.Nodes[1], 15f, "ChildNodeTest_2.");
+
+                smartArt.UpdateSmartArt();
             }
 
             // Define the file path and name for saving the generated Word document

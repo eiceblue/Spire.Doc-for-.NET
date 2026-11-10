@@ -37,7 +37,7 @@ namespace RemoveFootnote
 				// Find the index of the first footnote within the paragraph's child objects
 				for (int i = 0, cnt = para.ChildObjects.Count; i < cnt; i++)
 				{
-					ParagraphBase pBase = para.ChildObjects[i] as ParagraphBase;
+					DocumentObject pBase = para.ChildObjects[i] as DocumentObject;
 					
 					if (pBase is Footnote)
 					{

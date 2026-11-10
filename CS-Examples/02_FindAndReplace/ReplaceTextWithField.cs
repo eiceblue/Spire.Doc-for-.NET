@@ -36,30 +36,18 @@ namespace ReplaceTextWithField
             // Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
             int rangeIndex = ownParagraph.ChildObjects.IndexOf(textRange);
 
-            // Remove the TextRange object from the ChildObjects collection of the Paragraph object at its index
-            ownParagraph.ChildObjects.RemoveAt(rangeIndex);
+            //Add the date field
+            Field eqField = new Field(document);
+            eqField.Type = FieldType.FieldDate;
+            eqField.Code = @"DATE  \@" + "\"yyyyMMdd \"";
+            ownParagraph.ChildObjects.Insert(rangeIndex, eqField);
+            FieldMark mark = new FieldMark(document, FieldMarkType.FieldSeparator);
+            ownParagraph.ChildObjects.Insert(rangeIndex+1, mark);  
+            FieldMark end = new FieldMark(document, FieldMarkType.FieldEnd);
+            ownParagraph.ChildObjects.Insert(rangeIndex  + 2, end);
 
-            // Create a new list to store cloned objects
-            List<DocumentObject> tempList = new List<DocumentObject>();
-
-            // Loop through the ChildObjects collection of the Paragraph object, starting from the index after the removed TextRange object
-            for (int i = rangeIndex; i < ownParagraph.ChildObjects.Count; i++)
-            {
-                // Clone the current object in the ChildObjects collection and add it to the tempList
-                tempList.Add(ownParagraph.ChildObjects[rangeIndex].Clone());
-                // Remove the current object from the ChildObjects collection at its index
-                ownParagraph.ChildObjects.RemoveAt(rangeIndex);
-            }
-
-            // Append a field called "MyFieldName" to the end of the Paragraph, with a field type of MergeField
-            ownParagraph.AppendField("MyFieldName", FieldType.FieldMergeField);
-
-            // Loop through each object in the tempList
-            foreach (DocumentObject obj in tempList)
-            {
-                // Add each object from the tempList back into the ChildObjects collection of the Paragraph
-                ownParagraph.ChildObjects.Add(obj);
-            }
+            // Remove the selected text from the paragraph
+            ownParagraph.ChildObjects.Remove(textRange);
 
             // Define the output file path and filename
             string output = "ReplaceTextWithField_output.docx";

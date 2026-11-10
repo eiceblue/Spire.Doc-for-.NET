@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Spire.Doc;
+using Spire.Doc.Exporting;
 
 namespace WordToHtmlRetainMathML
 {
@@ -20,7 +21,7 @@ namespace WordToHtmlRetainMathML
             document.LoadFromFile(@"..\..\..\..\..\..\Data\GetMathEquation.docx");
 
             // Retrieve the HTML export options configuration object for the document
-            HtmlExportOptions htmlExportOptions = document.HtmlExportOptions;
+            Spire.Doc.Exporting.HtmlExportOptions htmlExportOptions = document.HtmlExportOptions;
 
             // Configure the export to render Office math equations using MathML format
             htmlExportOptions.OfficeMathOutputMode = HtmlOfficeMathOutputMode.MathML;

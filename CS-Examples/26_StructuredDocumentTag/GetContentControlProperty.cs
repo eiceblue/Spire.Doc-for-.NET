@@ -196,17 +196,27 @@ namespace GetContentControlProperty
                     }
                     else if (obj.DocumentObjectType == DocumentObjectType.Table)
                     {
-                        foreach (TableRow row in (obj as Table).Rows)
+                        foreach (DocumentObject rowObj in (obj as Table).ChildObjects)
                         {
-                            if (row is StructureDocumentTagRow)
+                            if (rowObj.DocumentObjectType == DocumentObjectType.StructureDocumentTagRow)
                             {
-                                structureTags.rowTags.Add(row as StructureDocumentTagRow);
+                                structureTags.rowTags.Add(rowObj as StructureDocumentTagRow);
                             }
-                            foreach (TableCell cell in row.Cells)
+                            TableRow row = rowObj as TableRow;
+                            if (row == null)
                             {
-                                if (cell is StructureDocumentTagCell)
+                                continue;
+                            }
+                            foreach (DocumentObject cellObj in row.ChildObjects)
+                            {
+                                if (cellObj.DocumentObjectType == DocumentObjectType.StructureDocumentTagCell)
                                 {
-                                    structureTags.cellTags.Add(cell as StructureDocumentTagCell);
+                                    structureTags.cellTags.Add(cellObj as StructureDocumentTagCell);
+                                }
+                                TableCell cell = cellObj as TableCell;
+                                if (cell == null)
+                                {
+                                    continue;
                                 }
                                 foreach (DocumentObject cellChild in cell.ChildObjects)
                                 {

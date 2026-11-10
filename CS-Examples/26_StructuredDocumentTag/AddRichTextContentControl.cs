@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using Spire.Doc;
 using Spire.Doc.Documents;
@@ -51,13 +51,13 @@ namespace AddRichTextContentControl
             TextRange rt = new TextRange(document);
             rt.Text = "Welcome to use ";
             rt.CharacterFormat.TextColor = Color.Green;
-            sdt.SDTContent.ChildObjects.Add(rt);
+            sdt.ChildObjects.Add(rt);
 
             // Create another TextRange object and set its text and text color, then add it to the SDT's content
             rt = new TextRange(document);
             rt.Text = "Spire.Doc";
             rt.CharacterFormat.TextColor = Color.OrangeRed;
-            sdt.SDTContent.ChildObjects.Add(rt);
+            sdt.ChildObjects.Add(rt);
 
             // Save the document to a file in Docx format
             document.SaveToFile("Output.docx", FileFormat.Docx);

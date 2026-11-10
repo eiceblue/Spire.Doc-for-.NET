@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -29,9 +29,9 @@ namespace SetEditableRange
 			document.Protect(ProtectionType.AllowOnlyReading, "password");
 
 			// Create a PermissionStart object to mark the start of an editable range with a specific ID
-			PermissionStart start = new PermissionStart(document, "testID");
+			PermissionStart start = new PermissionStart(document, 1);
 			// Create a PermissionEnd object to mark the end of the editable range with the same ID
-			PermissionEnd end = new PermissionEnd(document, "testID");
+			PermissionEnd end = new PermissionEnd(document, 1);
 
 			// Insert the PermissionStart object at the beginning of the first paragraph in the first section
 			document.Sections[0].Paragraphs[0].ChildObjects.Insert(0, start);

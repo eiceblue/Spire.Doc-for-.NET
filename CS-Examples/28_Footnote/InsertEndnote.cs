@@ -37,7 +37,7 @@ namespace InsertEndnote
             Footnote endnote = p.AppendFootnote(FootnoteType.Endnote);
 
             // Add a paragraph to the endnote's text body and append the reference text
-            TextRange text = endnote.TextBody.AddParagraph().AppendText("Reference: Wikipedia");
+            TextRange text = endnote.Body.AddParagraph().AppendText("Reference: Wikipedia");
 
             // Set the font name, size, and text color of the reference text
             text.CharacterFormat.FontName = "Impact";

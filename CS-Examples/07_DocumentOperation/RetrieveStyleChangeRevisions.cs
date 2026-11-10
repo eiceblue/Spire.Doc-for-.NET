@@ -47,7 +47,7 @@ namespace RetrieveStyleChangeRevisions
                         doc.RevisionsView = RevisionsView.Original;
 
                         // Append the original formatting details (Bold, Color, Highlight, Font, Underline) to the report.
-                        stringBuilder.AppendLine("Original style£º" + "isBold£º" + range.CharacterFormat.Bold + ";" + "TextColor£º" + range.CharacterFormat.TextColor + "£»HighlightColor£º" + range.CharacterFormat.HighlightColor + "£»FontName£º" + range.CharacterFormat.FontName + "£»UnderlineStyle£º" + range.CharacterFormat.UnderlineStyle + "rn");
+                        stringBuilder.AppendLine("Original style£º" + "isBold£º" + range.CharacterFormat.Bold + ";" + "TextColor£º" + range.CharacterFormat.TextColor + "£»HighlightColor£º" + range.CharacterFormat.HighlightColor + "£»FontName£º" + range.CharacterFormat.FontName + "£»UnderlineStyle£º" + range.CharacterFormat.UnderlineStyle + "\r\n");
 
                         // Switch the document view to the "Final" state to read post-change formatting properties.
                         doc.RevisionsView = RevisionsView.Final;

@@ -89,7 +89,7 @@ namespace ReplaceWithHtml
             Paragraph paragraph = location.Owner;
 
             //get owner text body
-            Body sectionBody = paragraph.OwnerTextBody;
+            Body sectionBody = (Body)paragraph.OwnerTextBody;
 
             //get the index of paragraph in section
             int paragraphIndex = sectionBody.ChildObjects.IndexOf(paragraph);

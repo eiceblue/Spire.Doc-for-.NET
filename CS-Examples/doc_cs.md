@@ -82,74 +82,60 @@ doc.Replace(regex, "Spire.Doc");
 
 ---
 
-# Spire.Doc C# Text Replacement
-## Replace text with a field in a Word document
+# 02_FindAndReplace - ReplaceTextWithField
+## Replaces a found text range in a Word document with a DATE field.
 ```csharp
-// Find the first occurrence of the string "summary" in the document, and return its TextSelection object
-TextSelection selection = document.FindString("summary", false, true);
-
-// Convert the TextSelection object to a TextRange object
-TextRange textRange = selection.GetAsOneRange();
-
-// Get the Paragraph object that contains the TextRange object
-Paragraph ownParagraph = textRange.OwnerParagraph;
-
-// Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
-int rangeIndex = ownParagraph.ChildObjects.IndexOf(textRange);
-
-// Remove the TextRange object from the ChildObjects collection of the Paragraph object at its index
-ownParagraph.ChildObjects.RemoveAt(rangeIndex);
-
-// Create a new list to store cloned objects
-List<DocumentObject> tempList = new List<DocumentObject>();
-
-// Loop through the ChildObjects collection of the Paragraph object, starting from the index after the removed TextRange object
-for (int i = rangeIndex; i < ownParagraph.ChildObjects.Count; i++)
+private void ReplaceTextWithDateField(Document document)
 {
-    // Clone the current object in the ChildObjects collection and add it to the tempList
-    tempList.Add(ownParagraph.ChildObjects[rangeIndex].Clone());
-    // Remove the current object from the ChildObjects collection at its index
-    ownParagraph.ChildObjects.RemoveAt(rangeIndex);
-}
+    // Find the first occurrence of "summary"
+    TextSelection selection = document.FindString("summary", false, true);
 
-// Append a field called "MyFieldName" to the end of the Paragraph, with a field type of MergeField
-ownParagraph.AppendField("MyFieldName", FieldType.FieldMergeField);
+    // Convert the selection to a text range
+    TextRange textRange = selection.GetAsOneRange();
 
-// Loop through each object in the tempList
-foreach (DocumentObject obj in tempList)
-{
-    // Add each object from the tempList back into the ChildObjects collection of the Paragraph
-    ownParagraph.ChildObjects.Add(obj);
+    // Get the containing paragraph and the text range index
+    Paragraph ownParagraph = textRange.OwnerParagraph;
+    int rangeIndex = ownParagraph.ChildObjects.IndexOf(textRange);
+
+    // Add a DATE field
+    Field dateField = new Field(document);
+    dateField.Type = FieldType.FieldDate;
+    dateField.Code = @"DATE  \@" + "\"yyyyMMdd \"";
+    ownParagraph.ChildObjects.Insert(rangeIndex, dateField);
+
+    // Add field separator and end marks
+    FieldMark separator = new FieldMark(document, FieldMarkType.FieldSeparator);
+    ownParagraph.ChildObjects.Insert(rangeIndex + 1, separator);
+
+    FieldMark end = new FieldMark(document, FieldMarkType.FieldEnd);
+    ownParagraph.ChildObjects.Insert(rangeIndex + 2, end);
+
+    // Remove the original selected text
+    ownParagraph.ChildObjects.Remove(textRange);
 }
 ```
 
 ---
 
-# Spire.Doc CSharp Text Replacement
-## Replace text with table in Word document
+# 02_FindAndReplace - ReplaceTextWithTable
+## Replaces a specified text string with a table in a Word document.
 ```csharp
-// Find the first occurrence of the string "Christmas Day, December 25" in the document, and return its TextSelection object
-Section section = document.Sections[0];
-TextSelection selection = document.FindString("Christmas Day, December 25", true, true);
+private void ReplaceTextWithTable(Document document)
+{
+    Section section = document.Sections[0];
+    TextSelection selection = document.FindString("Christmas Day, December 25", true, true);
 
-// Convert the TextSelection object to a TextRange object
-TextRange range = selection.GetAsOneRange();
-// Get the Paragraph object that contains the TextRange object
-Paragraph paragraph = range.OwnerParagraph;
-// Get the text body that contains the paragraph
-Body body = paragraph.OwnerTextBody;
-// Find the index of the TextRange object in the ChildObjects collection of the Paragraph object
-int index = body.ChildObjects.IndexOf(paragraph);
+    TextRange range = selection.GetAsOneRange();
+    Paragraph paragraph = range.OwnerParagraph;
+    Body body = (Body)paragraph.OwnerTextBody;
+    int index = body.ChildObjects.IndexOf(paragraph);
 
-// Add a new table and reset the number of rows and columns to 3
-Table table = section.AddTable(true);
-table.ResetCells(3, 3);
+    Table table = section.AddTable(true);
+    table.ResetCells(3, 3);
 
-// Remove the TextRange object from the ChildObjects collection of the Paragraph object
-body.ChildObjects.Remove(paragraph);
-
-// Insert the table into the ChildObjects collection at the position of the previous TextRange object
-body.ChildObjects.Insert(index, table);
+    body.ChildObjects.Remove(paragraph);
+    body.ChildObjects.Insert(index, table);
+}
 ```
 
 ---
@@ -175,51 +161,48 @@ doc.Dispose();
 
 ---
 
-# Spire.Doc C# Find and Replace
-## Replace text with HTML content in Word documents
+# 02_FindAndReplace - ReplaceWithHtml
+## Replaces placeholder text in a Word document with HTML content.
 ```csharp
-// Create a temporary section and add HTML content
-Section tempSection = document.AddSection();
-Paragraph par = tempSection.AddParagraph();
-par.AppendHTML(HTML);
-
-// Store HTML content as replacement objects
-List<DocumentObject> replacement = new List<DocumentObject>();
-foreach (DocumentObject obj in tempSection.Body.ChildObjects)
+public void ReplaceHtmlContent(Document document, string html)
 {
-    DocumentObject docObj = obj as DocumentObject;
-    replacement.Add(docObj);
+    List<DocumentObject> replacement = new List<DocumentObject>();
+
+    Section tempSection = document.AddSection();
+    Paragraph par = tempSection.AddParagraph();
+    par.AppendHTML(html);
+
+    foreach (DocumentObject obj in tempSection.Body.ChildObjects)
+    {
+        replacement.Add(obj as DocumentObject);
+    }
+
+    TextSelection[] selections = document.FindAllString("[#placeholder]", false, true);
+
+    List<TextRangeLocation> locations = new List<TextRangeLocation>();
+    foreach (TextSelection selection in selections)
+    {
+        locations.Add(new TextRangeLocation(selection.GetAsOneRange()));
+    }
+    locations.Sort();
+
+    foreach (TextRangeLocation location in locations)
+    {
+        ReplaceWithHTML(location, replacement);
+    }
+
+    document.Sections.Remove(tempSection);
 }
-
-// Find all placeholder text occurrences
-TextSelection[] selections = document.FindAllString("[#placeholder]", false, true);
-
-// Create and sort location objects for each selection
-List<TextRangeLocation> locations = new List<TextRangeLocation>();
-foreach (TextSelection selection in selections)
-{
-    locations.Add(new TextRangeLocation(selection.GetAsOneRange()));
-}
-locations.Sort();
-
-// Replace each placeholder with HTML content
-foreach (TextRangeLocation location in locations)
-{
-    ReplaceWithHTML(location, replacement);
-}
-
-// Remove temporary section
-document.Sections.Remove(tempSection);
 
 private static void ReplaceWithHTML(TextRangeLocation location, List<DocumentObject> replacement)
 {
-    TextRange textRange = location.Text;
     int index = location.Index;
     Paragraph paragraph = location.Owner;
-    Body sectionBody = paragraph.OwnerTextBody;
+    Body sectionBody = (Body)paragraph.OwnerTextBody;
     int paragraphIndex = sectionBody.ChildObjects.IndexOf(paragraph);
 
     int replacementIndex = -1;
+
     if (index == 0)
     {
         paragraph.ChildObjects.RemoveAt(0);
@@ -233,17 +216,21 @@ private static void ReplaceWithHTML(TextRangeLocation location, List<DocumentObj
     else
     {
         Paragraph paragraph1 = (Paragraph)paragraph.Clone();
+
         while (paragraph.ChildObjects.Count > index)
         {
             paragraph.ChildObjects.RemoveAt(index);
         }
+
         int i = 0;
         int count = index + 1;
+
         while (i < count)
         {
             paragraph1.ChildObjects.RemoveAt(0);
             i += 1;
         }
+
         sectionBody.ChildObjects.Insert(paragraphIndex + 1, paragraph1);
         replacementIndex = paragraphIndex + 1;
     }
@@ -268,6 +255,7 @@ public class TextRangeLocation : IComparable<TextRangeLocation>
     }
 
     private TextRange m_Text;
+
     public Paragraph Owner
     {
         get { return this.Text.OwnerParagraph; }
@@ -3119,9 +3107,15 @@ for (int j = 0; j < document.Sections[0].Paragraphs.Count; j++)
 
 ---
 
-# spire.doc csharp page numbering
-## reset page numbers in word document sections
+# 09_PageSetup - ResetPageNumber
+## Merges sections from multiple documents and resets page numbering for specific sections.
+
 ```csharp
+// Create the target document and merge sections from source documents.
+Document document1 = new Document();
+Document document2 = new Document();
+Document document3 = new Document();
+
 // Copy sections from document2 to document1.
 foreach (Section sec in document2.Sections)
 {
@@ -3134,15 +3128,15 @@ foreach (Section sec in document3.Sections)
     document1.Sections.Add(sec.Clone());
 }
 
-// Modify field types in footer sections of document1.
+// Modify footer fields in document1.
 foreach (Section sec in document1.Sections)
 {
     foreach (DocumentObject obj in sec.HeadersFooters.Footer.ChildObjects)
     {
         if (obj.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
         {
-            DocumentObject para = obj.ChildObjects[0];
-            foreach (DocumentObject item in para.ChildObjects)
+            DocumentObject para = ((CompositeDocumentObject)obj).ChildObjects[0];
+            foreach (DocumentObject item in ((CompositeDocumentObject)para).ChildObjects)
             {
                 if (item.DocumentObjectType == DocumentObjectType.Field)
                 {
@@ -5028,29 +5022,20 @@ tr.CharacterFormat.CharacterSpacing = 2;
 
 ---
 
-# spire.doc csharp style management
-## copy styles from one document to another
+# 12_Styles - CopyDocumentStyles
+## Copies all styles from a source Word document to a destination Word document.
 ```csharp
-//Create a Word document
-Document srcDoc = new Document();
-
-//Load the file from disk
-srcDoc.LoadFromFile("source_document.docx");
-
-//Create another Word document
-Document destDoc = new Document();
-
-//Load destination document from disk
-destDoc.LoadFromFile("destination_document.docx");
-
-//Get the style collections of source document
-Spire.Doc.Collections.StyleCollection styles = srcDoc.Styles;
-
-//Loop through the styles of source document
-foreach (Style style in styles)
+public void CopyDocumentStyles(Document srcDoc, Document destDoc)
 {
-    //Add the style to destination document
-    destDoc.Styles.Add(style);
+    // Get the style collection of the source document
+    Spire.Doc.Collections.StyleCollection styles = srcDoc.Styles;
+
+    // Iterate through each style in the source document
+    foreach (Style style in styles)
+    {
+        // Add the style to the destination document
+        destDoc.Styles.Add(style);
+    }
 }
 ```
 
@@ -9176,138 +9161,165 @@ hyperlinks[0].FieldText = "Spire.Doc component";
 
 ---
 
-# spire.doc csharp hyperlink removal
-## Remove hyperlinks from Word document while preserving text
-```csharp
-// Method to find all hyperlinks in the document and return them as a list
-private List<Field> FindAllHyperlinks(Document document)
-{
-    List<Field> hyperlinks = new List<Field>();
+# 19_Hyperlinks - RemoveHyperlinks
+## Removes hyperlinks from a Word document while preserving the displayed hyperlink text and formatting.
 
-    foreach (Section section in document.Sections)
+```csharp
+public partial class Form1 : Form
+{
+    private void RemoveHyperlinks(Document doc)
     {
-        foreach (DocumentObject sec in section.Body.ChildObjects)
+        List<Field> hyperlinks = FindAllHyperlinks(doc);
+
+        // Flatten each hyperlink from the end to avoid index changes
+        for (int i = hyperlinks.Count - 1; i >= 0; i--)
         {
-            if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
+            FlattenHyperlinks(hyperlinks[i]);
+        }
+    }
+
+    // Find all hyperlinks in the document and return them as a list
+    private List<Field> FindAllHyperlinks(Document document)
+    {
+        List<Field> hyperlinks = new List<Field>();
+
+        foreach (Section section in document.Sections)
+        {
+            foreach (DocumentObject sec in section.Body.ChildObjects)
             {
-                foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
+                if (sec.DocumentObjectType == DocumentObjectType.Paragraph)
                 {
-                    if (para.DocumentObjectType == DocumentObjectType.Field)
+                    foreach (DocumentObject para in (sec as Paragraph).ChildObjects)
                     {
-                        Field field = para as Field;
-                        if (field.Type == FieldType.FieldHyperlink)
+                        if (para.DocumentObjectType == DocumentObjectType.Field)
                         {
-                            hyperlinks.Add(field);
+                            Field field = para as Field;
+                            if (field.Type == FieldType.FieldHyperlink)
+                            {
+                                hyperlinks.Add(field);
+                            }
                         }
                     }
                 }
             }
         }
+
+        return hyperlinks;
     }
-    return hyperlinks;
-}
 
-// Method to flatten a hyperlink, removing the hyperlink functionality but keeping the text
-private void FlattenHyperlinks(Field field)
-{
-    // Store the indices of relevant objects for later removal
-    int ownerParaIndex = field.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.OwnerParagraph);
-    int fieldIndex = field.OwnerParagraph.ChildObjects.IndexOf(field);
-    Paragraph sepOwnerPara = field.Separator.OwnerParagraph;
-    int sepOwnerParaIndex = field.Separator.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.Separator.OwnerParagraph);
-    int sepIndex = field.Separator.OwnerParagraph.ChildObjects.IndexOf(field.Separator);
-    int endIndex = field.End.OwnerParagraph.ChildObjects.IndexOf(field.End);
-    int endOwnerParaIndex = field.End.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.End.OwnerParagraph);
-
-    // Format the text between the separator and the end of the field result
-    FormatFieldResultText(field.Separator.OwnerParagraph.OwnerTextBody, sepOwnerParaIndex, endOwnerParaIndex, sepIndex, endIndex);
-
-    // Remove the end field marker
-    field.End.OwnerParagraph.ChildObjects.RemoveAt(endIndex);
-
-    // Remove the field and its associated objects in reverse order
-    for (int i = sepOwnerParaIndex; i >= ownerParaIndex; i--)
+    // Flatten a hyperlink, removing the hyperlink functionality but keeping the text
+    private void FlattenHyperlinks(Field field)
     {
-        if (i == sepOwnerParaIndex && i == ownerParaIndex)
+        // Store indices of relevant objects for later removal
+        int ownerParaIndex = field.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.OwnerParagraph);
+        int fieldIndex = field.OwnerParagraph.ChildObjects.IndexOf(field);
+
+        Paragraph sepOwnerPara = field.Separator.OwnerParagraph;
+        int sepOwnerParaIndex = field.Separator.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.Separator.OwnerParagraph);
+        int sepIndex = field.Separator.OwnerParagraph.ChildObjects.IndexOf(field.Separator);
+
+        int endIndex = field.End.OwnerParagraph.ChildObjects.IndexOf(field.End);
+        int endOwnerParaIndex = field.End.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.End.OwnerParagraph);
+
+        // Format the text between the separator and the end of the field result
+        FormatFieldResultText(
+            (Body)field.Separator.OwnerParagraph.OwnerTextBody,
+            sepOwnerParaIndex,
+            endOwnerParaIndex,
+            sepIndex,
+            endIndex);
+
+        // Remove the end field marker
+        field.End.OwnerParagraph.ChildObjects.RemoveAt(endIndex);
+
+        // Remove the field and its associated objects in reverse order
+        for (int i = sepOwnerParaIndex; i >= ownerParaIndex; i--)
         {
-            // Remove objects from the same paragraph as the field
-            for (int j = sepIndex; j >= fieldIndex; j--)
+            if (i == sepOwnerParaIndex && i == ownerParaIndex)
             {
-                field.OwnerParagraph.ChildObjects.RemoveAt(j);
+                // Remove objects from the same paragraph as the field
+                for (int j = sepIndex; j >= fieldIndex; j--)
+                {
+                    field.OwnerParagraph.ChildObjects.RemoveAt(j);
+                }
             }
-        }
-        else if (i == ownerParaIndex)
-        {
-            // Remove objects from the field's paragraph but after the field
-            for (int j = field.OwnerParagraph.ChildObjects.Count - 1; j >= fieldIndex; j--)
+            else if (i == ownerParaIndex)
             {
-                field.OwnerParagraph.ChildObjects.RemoveAt(j);
+                // Remove objects from the field's paragraph after the field
+                for (int j = field.OwnerParagraph.ChildObjects.Count - 1; j >= fieldIndex; j--)
+                {
+                    field.OwnerParagraph.ChildObjects.RemoveAt(j);
+                }
             }
-        }
-        else if (i == sepOwnerParaIndex)
-        {
-            // Remove objects from the separator's paragraph
-            for (int j = sepIndex; j >= 0; j--)
+            else if (i == sepOwnerParaIndex)
             {
-                sepOwnerPara.ChildObjects.RemoveAt(j);
+                // Remove objects from the separator's paragraph
+                for (int j = sepIndex; j >= 0; j--)
+                {
+                    sepOwnerPara.ChildObjects.RemoveAt(j);
+                }
             }
-        }
-        else
-        {
-            // Remove objects from other paragraphs
-            field.OwnerParagraph.OwnerTextBody.ChildObjects.RemoveAt(i);
+            else
+            {
+                // Remove objects from other paragraphs
+                field.OwnerParagraph.OwnerTextBody.ChildObjects.RemoveAt(i);
+            }
         }
     }
-}
 
-// Method to format the text between the separator and the end of a field result in the document body
-private void FormatFieldResultText(Body ownerBody, int sepOwnerParaIndex, int endOwnerParaIndex, int sepIndex, int endIndex)
-{
-    for (int i = sepOwnerParaIndex; i <= endOwnerParaIndex; i++)
+    // Format the text between the separator and the end of a field result
+    private void FormatFieldResultText(
+        Body ownerBody,
+        int sepOwnerParaIndex,
+        int endOwnerParaIndex,
+        int sepIndex,
+        int endIndex)
     {
-        // Get the paragraph at the current index
-        Paragraph para = ownerBody.ChildObjects[i] as Paragraph;
-        
-        if (i == sepOwnerParaIndex && i == endOwnerParaIndex)
+        for (int i = sepOwnerParaIndex; i <= endOwnerParaIndex; i++)
         {
-            // Format objects within the same paragraph as the separator and the end of the field
-            for (int j = sepIndex + 1; j < endIndex; j++)
+            Paragraph para = ownerBody.ChildObjects[i] as Paragraph;
+
+            if (i == sepOwnerParaIndex && i == endOwnerParaIndex)
             {
-                FormatText(para.ChildObjects[j] as TextRange);
+                // Format objects within the same paragraph as the separator and field end
+                for (int j = sepIndex + 1; j < endIndex; j++)
+                {
+                    FormatText(para.ChildObjects[j] as TextRange);
+                }
             }
-        }
-        else if (i == sepOwnerParaIndex)
-        {
-            // Format objects after the separator in the separator's paragraph
-            for (int j = sepIndex + 1; j < para.ChildObjects.Count; j++)
+            else if (i == sepOwnerParaIndex)
             {
-                FormatText(para.ChildObjects[j] as TextRange);
+                // Format objects after the separator in the separator's paragraph
+                for (int j = sepIndex + 1; j < para.ChildObjects.Count; j++)
+                {
+                    FormatText(para.ChildObjects[j] as TextRange);
+                }
             }
-        }
-        else if (i == endOwnerParaIndex)
-        {
-            // Format objects before the end of the field in the end paragraph
-            for (int j = 0; j < endIndex; j++)
+            else if (i == endOwnerParaIndex)
             {
-                FormatText(para.ChildObjects[j] as TextRange);
+                // Format objects before the field end in the end paragraph
+                for (int j = 0; j < endIndex; j++)
+                {
+                    FormatText(para.ChildObjects[j] as TextRange);
+                }
             }
-        }
-        else
-        {
-            // Format all objects in other paragraphs
-            for (int j = 0; j < para.ChildObjects.Count; j++)
+            else
             {
-                FormatText(para.ChildObjects[j] as TextRange);
+                // Format all objects in other paragraphs
+                for (int j = 0; j < para.ChildObjects.Count; j++)
+                {
+                    FormatText(para.ChildObjects[j] as TextRange);
+                }
             }
         }
     }
-}
 
-// Method to format the text range by setting its color to black and removing underline style
-private void FormatText(TextRange tr)
-{
-    tr.CharacterFormat.TextColor = Color.Black;
-    tr.CharacterFormat.UnderlineStyle = UnderlineStyle.None;
+    // Format the text range by setting its color to black and removing underline style
+    private void FormatText(TextRange tr)
+    {
+        tr.CharacterFormat.TextColor = Color.Black;
+        tr.CharacterFormat.UnderlineStyle = UnderlineStyle.None;
+    }
 }
 ```
 
@@ -9527,9 +9539,11 @@ document.Dispose();
 
 ---
 
-# Spire.Doc Document Protection
-## Set document protection type with password
+# 20_Security - SpecifiedProtectionType
+## Sets the document protection type to allow only reading with a specified password.
 ```csharp
+Document document = new Document();
+
 // Set the document protection to allow only reading with the specified password
 document.Protect(ProtectionType.AllowOnlyReading, "123456");
 ```
@@ -10639,17 +10653,11 @@ for (int i = 0; i < body.Paragraphs.Count; i++)
 
 ---
 
-# spire.doc csharp textbox
-## delete table from textbox in word document
+# 23_Textbox - DeleteTableFromTextBox
+## Removes the first table from a text box in a Word document.
 ```csharp
-// Create a new Document object
-Document doc = new Document();
-
-// Load a Word document from the specified input file
-doc.LoadFromFile(input);
-
 // Access the first text box in the document
-Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+Spire.Doc.Fields.TextBox textbox = (Spire.Doc.Fields.TextBox)document.TextBoxes[0];
 
 // Remove the table inside the text box
 textbox.Body.Tables.RemoveAt(0);
@@ -10840,32 +10848,25 @@ textBox1.AspectRatioLocked = true;
 
 ---
 
-# Spire.Doc C# TextBox Table Extraction
-## Extract table data from a textbox in a Word document
+# 23_Textbox - ReadTableFromTextBox
+## Reads a table from a text box and extracts its cell text.
 ```csharp
-// Get the first textbox in the document
-Spire.Doc.Fields.TextBox textbox = doc.TextBoxes[0];
+// Assume the document has already been loaded
+Spire.Doc.Fields.TextBox textbox = (Spire.Doc.Fields.TextBox)doc.TextBoxes[0];
 
-// Get the first table from the textbox
 Table table = textbox.Body.Tables[0] as Table;
 
-// Initialize an empty string to store the table data
 string str = null;
 
-// Iterate through each row in the table
 foreach (TableRow row in table.Rows)
 {
-    // Iterate through each cell in the row
     foreach (TableCell cell in row.Cells)
     {
-        // Iterate through each paragraph in the cell
         foreach (Paragraph paragraph in cell.Paragraphs)
         {
-            // Append the text of each paragraph to the string, separated by a tab
             str += paragraph.Text + "\t";
         }
     }
-    // Add a new line after processing each row
     str += "\r\n";
 }
 ```
@@ -11200,112 +11201,136 @@ paragraph.ChildObjects.Add(sdt);
 
 ---
 
-# spire.doc csharp content controls
-## add various content controls to a Word document
+# 26_StructuredDocumentTag - AddContentControls
+## Adds ComboBox, Text, Picture, DatePicker, and DropDownList content controls to a Word document.
 ```csharp
-// Add Combo Box Content Control
-Paragraph paragraph = section.AddParagraph();
-TextRange txtRange = paragraph.AppendText("Add Combo Box Content Control:  ");
-txtRange.CharacterFormat.Italic = true;
-StructureDocumentTagInline sd = new StructureDocumentTagInline(document);
-paragraph.ChildObjects.Add(sd);
-sd.SDTProperties.SDTType = SdtType.ComboBox;
-SdtComboBox cb = new SdtComboBox();
-cb.ListItems.Add(new SdtListItem("Spire.Doc"));
-cb.ListItems.Add(new SdtListItem("Spire.XLS"));
-cb.ListItems.Add(new SdtListItem("Spire.PDF"));
-sd.SDTProperties.ControlProperties = cb;
-TextRange rt = new TextRange(document);
-rt.Text = cb.ListItems[0].DisplayText;
-sd.SDTContent.ChildObjects.Add(rt);
+// Core code
+private void button1_Click(object sender, EventArgs e)
+{
+    Document document = new Document();
+    Section section = document.AddSection();
 
-// Add Text Content Control
-paragraph = section.AddParagraph();
-txtRange = paragraph.AppendText("Add Text Content Control:  ");
-txtRange.CharacterFormat.Italic = true;
-sd = new StructureDocumentTagInline(document);
-paragraph.ChildObjects.Add(sd);
-sd.SDTProperties.SDTType = SdtType.Text;
-SdtText text = new SdtText(true);
-text.IsMultiline = true;
-sd.SDTProperties.ControlProperties = text;
-rt = new TextRange(document);
-rt.Text = "Text";
-sd.SDTContent.ChildObjects.Add(rt);
+    Paragraph paragraph;
+    TextRange txtRange;
+    StructureDocumentTagInline sd;
+    TextRange rt;
 
-// Add Picture Content Control
-paragraph = section.AddParagraph();
-txtRange = paragraph.AppendText("Add Picture Content Control:  ");
-txtRange.CharacterFormat.Italic = true;
-sd = new StructureDocumentTagInline(document);
-paragraph.ChildObjects.Add(sd);
-sd.SDTProperties.SDTType = SdtType.Picture;
-DocPicture pic = new DocPicture(document);
-pic.Width = 10;
-pic.Height = 10;
-pic.LoadImage(Image.FromFile(@"..\..\..\..\..\..\Data\logo.png"));
-sd.SDTContent.ChildObjects.Add(pic);
+    // Add ComboBox content control
+    paragraph = section.AddParagraph();
+    txtRange = paragraph.AppendText("Add Combo Box Content Control:  ");
+    txtRange.CharacterFormat.Italic = true;
+    sd = new StructureDocumentTagInline(document);
+    paragraph.ChildObjects.Add(sd);
+    sd.SDTProperties.SDTType = SdtType.ComboBox;
+    SdtComboBox cb = new SdtComboBox();
+    cb.ListItems.Add(new SdtListItem("Spire.Doc"));
+    cb.ListItems.Add(new SdtListItem("Spire.XLS"));
+    cb.ListItems.Add(new SdtListItem("Spire.PDF"));
+    sd.SDTProperties.ControlProperties = cb;
+    rt = new TextRange(document);
+    rt.Text = cb.ListItems[0].DisplayText;
+    sd.ChildObjects.Add(rt);
 
-// Add Date Picker Content Control
-paragraph = section.AddParagraph();
-txtRange = paragraph.AppendText("Add Date Picker Content Control:  ");
-txtRange.CharacterFormat.Italic = true;
-sd = new StructureDocumentTagInline(document);
-paragraph.ChildObjects.Add(sd);
-sd.SDTProperties.SDTType = SdtType.DatePicker;
-SdtDate date = new SdtDate();
-date.CalendarType = CalendarType.Default;
-date.DateFormat = "yyyy.MM.dd";
-date.FullDate = DateTime.Now;
-sd.SDTProperties.ControlProperties = date;
-rt = new TextRange(document);
-rt.Text = "1990.02.08";
-sd.SDTContent.ChildObjects.Add(rt);
+    // Add Text content control
+    paragraph = section.AddParagraph();
+    txtRange = paragraph.AppendText("Add Text Content Control:  ");
+    txtRange.CharacterFormat.Italic = true;
+    sd = new StructureDocumentTagInline(document);
+    paragraph.ChildObjects.Add(sd);
+    sd.SDTProperties.SDTType = SdtType.Text;
+    SdtText text = new SdtText(true);
+    text.IsMultiline = true;
+    sd.SDTProperties.ControlProperties = text;
+    rt = new TextRange(document);
+    rt.Text = "Text";
+    sd.ChildObjects.Add(rt);
 
-// Add Drop-Down List Content Control
-paragraph = section.AddParagraph();
-txtRange = paragraph.AppendText("Add Drop-Down List Content Control:  ");
-txtRange.CharacterFormat.Italic = true;
-sd = new StructureDocumentTagInline(document);
-paragraph.ChildObjects.Add(sd);
-sd.SDTProperties.SDTType = SdtType.DropDownList;
-SdtDropDownList sddl = new SdtDropDownList();
-sddl.ListItems.Add(new SdtListItem("Harry"));
-sddl.ListItems.Add(new SdtListItem("Jerry"));
-sd.SDTProperties.ControlProperties = sddl;
-rt = new TextRange(document);
-rt.Text = sddl.ListItems[0].DisplayText;
-sd.SDTContent.ChildObjects.Add(rt);
+    // Add Picture content control
+    paragraph = section.AddParagraph();
+    txtRange = paragraph.AppendText("Add Picture Content Control:  ");
+    txtRange.CharacterFormat.Italic = true;
+    sd = new StructureDocumentTagInline(document);
+    paragraph.ChildObjects.Add(sd);
+    sd.SDTProperties.SDTType = SdtType.Picture;
+    DocPicture pic = new DocPicture(document);
+    pic.Width = 10;
+    pic.Height = 10;
+    sd.ChildObjects.Add(pic);
+
+    // Add Date Picker content control
+    paragraph = section.AddParagraph();
+    txtRange = paragraph.AppendText("Add Date Picker Content Control:  ");
+    txtRange.CharacterFormat.Italic = true;
+    sd = new StructureDocumentTagInline(document);
+    paragraph.ChildObjects.Add(sd);
+    sd.SDTProperties.SDTType = SdtType.DatePicker;
+    SdtDate date = new SdtDate();
+    date.CalendarType = CalendarType.Default;
+    date.DateFormat = "yyyy.MM.dd";
+    date.FullDate = DateTime.Now;
+    sd.SDTProperties.ControlProperties = date;
+    rt = new TextRange(document);
+    rt.Text = "1990.02.08";
+    sd.ChildObjects.Add(rt);
+
+    // Add Drop-Down List content control
+    paragraph = section.AddParagraph();
+    txtRange = paragraph.AppendText("Add Drop-Down List Content Control:  ");
+    txtRange.CharacterFormat.Italic = true;
+    sd = new StructureDocumentTagInline(document);
+    paragraph.ChildObjects.Add(sd);
+    sd.SDTProperties.SDTType = SdtType.DropDownList;
+    SdtDropDownList sddl = new SdtDropDownList();
+    sddl.ListItems.Add(new SdtListItem("Harry"));
+    sddl.ListItems.Add(new SdtListItem("Jerry"));
+    sd.SDTProperties.ControlProperties = sddl;
+    rt = new TextRange(document);
+    rt.Text = sddl.ListItems[0].DisplayText;
+    sd.ChildObjects.Add(rt);
+}
 ```
 
 ---
 
-# spire.doc c# richtext content control
-## Add a Rich Text Content Control to a Word document with formatted text
+# 26_StructuredDocumentTag - AddRichTextContentControl
+## Add a RichText structured document tag (content control) with formatted text ranges to a Word document.
+
 ```csharp
-// Create an inline structure document tag (SDT) and add it to the paragraph's child objects
+// Create a new document object
+Document document = new Document();
+
+// Add a section and a paragraph (minimal document structure needed for the SDT)
+Section section = document.AddSection();
+Paragraph paragraph = section.AddParagraph();
+
+// Append explanatory text
+TextRange txtRange = paragraph.AppendText("The following example shows how to add RichText content control in a Word document. \n");
+txtRange = paragraph.AppendText("Add RichText Content Control:  ");
+txtRange.CharacterFormat.Italic = true;
+
+// Create an inline structure document tag (SDT) and add it to the paragraph
 StructureDocumentTagInline sdt = new StructureDocumentTagInline(document);
 paragraph.ChildObjects.Add(sdt);
 
 // Set the SDT type to RichText
 sdt.SDTProperties.SDTType = SdtType.RichText;
 
-// Create an instance of SdtText, set its multiline property, and assign it as the control properties for the SDT
+// Configure the SDT control properties as multiline text
 SdtText text = new SdtText(true);
 text.IsMultiline = true;
 sdt.SDTProperties.ControlProperties = text;
 
-// Create a TextRange object and set its text and text color, then add it to the SDT's content
+// Add a green text range to the SDT content
 TextRange rt = new TextRange(document);
 rt.Text = "Welcome to use ";
 rt.CharacterFormat.TextColor = Color.Green;
-sdt.SDTContent.ChildObjects.Add(rt);
+sdt.ChildObjects.Add(rt);
 
-// Create another TextRange object and set its text and text color, then add it to the SDT's content
+// Add an orange-red text range to the SDT content
 rt = new TextRange(document);
 rt.Text = "Spire.Doc";
 rt.CharacterFormat.TextColor = Color.OrangeRed;
-sdt.SDTContent.ChildObjects.Add(rt);
+sdt.ChildObjects.Add(rt);
 ```
 
 ---
@@ -11351,182 +11376,191 @@ foreach (Section section in doc.Sections)
 
 ---
 
-# spire.doc csharp content control properties
-## Extract properties from structured document tags in a Word document
+# 26_StructuredDocumentTag - GetContentControlProperty
+## Extracts alias, ID, tag, SDT type, and content from structured document tags, inlines, rows, and cells.
 ```csharp
-// Get all the structure tags in the document
-StructureTags structureTags = GetAllTags(doc);
-
-// Initialize variables for storing tag properties
-string alias = null;
-decimal id = 0;
-string tag = null;
-string property = "Alias of contentControl" + "\t" + "ID          " + "\t" + "Tag             " + "\t" + "STDType        " + "\r" + "Content        " + "\r\n";
-string sdtType = null;
-Paragraph paragraph = null;
-SdtType sdt = SdtType.RichText;
-string content = "";
-TextRange textRange = null;
-
-// Retrieve structure document tags and process their properties and content
-List<StructureDocumentTag> tags = structureTags.tags;
-for (int i = 0; i < tags.Count; i++)
+public class ContentControlPropertyExtractor
 {
-    alias = tags[i].SDTProperties.Alias;
-    id = tags[i].SDTProperties.Id;
-    tag = tags[i].SDTProperties.Tag;
-    sdt = tags[i].SDTProperties.SDTType;
-    sdtType = sdt.ToString();
-    if (sdt == SdtType.RichText || sdt == SdtType.Text)
+    public string GetContentControlProperty(Document document)
     {
-        if (tags[i].ChildObjects.Count > 0)
+        StructureTags structureTags = GetAllTags(document);
+
+        string alias = null;
+        decimal id = 0;
+        string tag = null;
+        string property = "Alias of contentControl" + "\t" + "ID          " + "\t" + "Tag             " + "\t" + "STDType        " + "\r" + "Content        " + "\r\n";
+        string sdtType = null;
+        Paragraph paragraph = null;
+        SdtType sdt = SdtType.RichText;
+        string content = "";
+        TextRange textRange = null;
+
+        List<StructureDocumentTag> tags = structureTags.tags;
+        for (int i = 0; i < tags.Count; i++)
         {
-            foreach (DocumentObject obj in tags[i].ChildObjects)
+            alias = tags[i].SDTProperties.Alias;
+            id = tags[i].SDTProperties.Id;
+            tag = tags[i].SDTProperties.Tag;
+            sdt = tags[i].SDTProperties.SDTType;
+            sdtType = sdt.ToString();
+            if (sdt == SdtType.RichText || sdt == SdtType.Text)
             {
-                if (obj is Paragraph)
+                if (tags[i].ChildObjects.Count > 0)
                 {
-                    paragraph = obj as Paragraph;
-                    content += paragraph.Text;
-                }
-            }
-        }
-    }
-    property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
-    content = "";
-}
-
-// Retrieve structure document tag inlines and process their properties and content
-List<StructureDocumentTagInline> tagInlines = structureTags.tagInlines;
-for (int i = 0; i < tagInlines.Count; i++)
-{
-    alias = tagInlines[i].SDTProperties.Alias;
-    id = tagInlines[i].SDTProperties.Id;
-    tag = tagInlines[i].SDTProperties.Tag;
-    sdt = tagInlines[i].SDTProperties.SDTType;
-    sdtType = sdt.ToString();
-    if (sdt == SdtType.RichText || sdt == SdtType.Text)
-    {
-        if (tagInlines[i].ChildObjects.Count > 0)
-        {
-            foreach (DocumentObject obj in tagInlines[i].ChildObjects)
-            {
-                if (obj is TextRange)
-                {
-                    textRange = obj as TextRange;
-                    content += textRange.Text;
-                }
-            }
-        }
-    }
-    property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
-    content = "";
-}
-
-// Retrieve structure document tag rows and process their properties and content
-List<StructureDocumentTagRow> rowTags = structureTags.rowTags;
-for (int i = 0; i < rowTags.Count; i++)
-{
-    alias = rowTags[i].SDTProperties.Alias;
-    id = rowTags[i].SDTProperties.Id;
-    tag = rowTags[i].SDTProperties.Tag;
-    sdt = rowTags[i].SDTProperties.SDTType;
-    sdtType = sdt.ToString();
-    if (sdt == SdtType.RichText || sdt == SdtType.Text)
-    {
-        if (rowTags[i].ChildObjects.Count > 0)
-        {
-            foreach (DocumentObject obj in rowTags[i].ChildObjects)
-            {
-                if (obj is Paragraph)
-                {
-                    paragraph = obj as Paragraph;
-                    content += paragraph.Text;
-                }
-            }
-        }
-    }
-    property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
-    content = "";
-}
-
-// Retrieve structure document tag cells and process their properties and content
-List<StructureDocumentTagCell> cellTags = structureTags.cellTags;
-for (int i = 0; i < cellTags.Count; i++)
-{
-    alias = cellTags[i].SDTProperties.Alias;
-    id = cellTags[i].SDTProperties.Id;
-    tag = cellTags[i].SDTProperties.Tag;
-    sdt = cellTags[i].SDTProperties.SDTType;
-    sdtType = sdt.ToString();
-    if (sdt == SdtType.RichText || sdt == SdtType.Text)
-    {
-        if (cellTags[i].ChildObjects.Count > 0)
-        {
-            foreach (DocumentObject obj in cellTags[i].ChildObjects)
-            {
-                if (obj is Paragraph)
-                {
-                    paragraph = obj as Paragraph;
-                    content += paragraph.Text;
-                }
-            }
-        }
-    }
-    property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
-    content = "";
-}
-
-//Get all StructureTags of the Word document
-private static StructureTags GetAllTags(Document document)
-{
-    StructureTags structureTags = new StructureTags();
-    foreach (Section section in document.Sections)
-    {
-        foreach (DocumentObject obj in section.Body.ChildObjects)
-        {
-            if (obj.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
-            {
-                structureTags.tags.Add(obj as StructureDocumentTag);
-
-            }
-
-            else if (obj.DocumentObjectType == DocumentObjectType.Paragraph)
-            {
-                foreach (DocumentObject pobj in (obj as Paragraph).ChildObjects)
-                {
-                    if (pobj.DocumentObjectType == DocumentObjectType.StructureDocumentTagInline)
+                    foreach (DocumentObject obj in tags[i].ChildObjects)
                     {
-                        structureTags.tagInlines.Add(pobj as StructureDocumentTagInline);
-                    }
-                }
-            }
-            else if (obj.DocumentObjectType == DocumentObjectType.Table)
-            {
-                foreach (TableRow row in (obj as Table).Rows)
-                {
-                    if (row is StructureDocumentTagRow)
-                    {
-                        structureTags.rowTags.Add(row as StructureDocumentTagRow);
-                    }
-                    foreach (TableCell cell in row.Cells)
-                    {
-                        if (cell is StructureDocumentTagCell)
+                        if (obj is Paragraph)
                         {
-                            structureTags.cellTags.Add(cell as StructureDocumentTagCell);
+                            paragraph = obj as Paragraph;
+                            content += paragraph.Text;
                         }
-                        foreach (DocumentObject cellChild in cell.ChildObjects)
+                    }
+                }
+            }
+            property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
+            content = "";
+        }
+
+        List<StructureDocumentTagInline> tagInlines = structureTags.tagInlines;
+        for (int i = 0; i < tagInlines.Count; i++)
+        {
+            alias = tagInlines[i].SDTProperties.Alias;
+            id = tagInlines[i].SDTProperties.Id;
+            tag = tagInlines[i].SDTProperties.Tag;
+            sdt = tagInlines[i].SDTProperties.SDTType;
+            sdtType = sdt.ToString();
+            if (sdt == SdtType.RichText || sdt == SdtType.Text)
+            {
+                if (tagInlines[i].ChildObjects.Count > 0)
+                {
+                    foreach (DocumentObject obj in tagInlines[i].ChildObjects)
+                    {
+                        if (obj is TextRange)
                         {
-                            if (cellChild.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
+                            textRange = obj as TextRange;
+                            content += textRange.Text;
+                        }
+                    }
+                }
+            }
+            property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
+            content = "";
+        }
+
+        List<StructureDocumentTagRow> rowTags = structureTags.rowTags;
+        for (int i = 0; i < rowTags.Count; i++)
+        {
+            alias = rowTags[i].SDTProperties.Alias;
+            id = rowTags[i].SDTProperties.Id;
+            tag = rowTags[i].SDTProperties.Tag;
+            sdt = rowTags[i].SDTProperties.SDTType;
+            sdtType = sdt.ToString();
+            if (sdt == SdtType.RichText || sdt == SdtType.Text)
+            {
+                if (rowTags[i].ChildObjects.Count > 0)
+                {
+                    foreach (DocumentObject obj in rowTags[i].ChildObjects)
+                    {
+                        if (obj is Paragraph)
+                        {
+                            paragraph = obj as Paragraph;
+                            content += paragraph.Text;
+                        }
+                    }
+                }
+            }
+            property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
+            content = "";
+        }
+
+        List<StructureDocumentTagCell> cellTags = structureTags.cellTags;
+        for (int i = 0; i < cellTags.Count; i++)
+        {
+            alias = cellTags[i].SDTProperties.Alias;
+            id = cellTags[i].SDTProperties.Id;
+            tag = cellTags[i].SDTProperties.Tag;
+            sdt = cellTags[i].SDTProperties.SDTType;
+            sdtType = sdt.ToString();
+            if (sdt == SdtType.RichText || sdt == SdtType.Text)
+            {
+                if (cellTags[i].ChildObjects.Count > 0)
+                {
+                    foreach (DocumentObject obj in cellTags[i].ChildObjects)
+                    {
+                        if (obj is Paragraph)
+                        {
+                            paragraph = obj as Paragraph;
+                            content += paragraph.Text;
+                        }
+                    }
+                }
+            }
+            property += alias + ",\t" + id + ",\t" + tag + ",\t" + sdtType + ",\t" + content + "\r\n";
+            content = "";
+        }
+
+        return property;
+    }
+
+    private static StructureTags GetAllTags(Document document)
+    {
+        StructureTags structureTags = new StructureTags();
+        foreach (Section section in document.Sections)
+        {
+            foreach (DocumentObject obj in section.Body.ChildObjects)
+            {
+                if (obj.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
+                {
+                    structureTags.tags.Add(obj as StructureDocumentTag);
+                }
+                else if (obj.DocumentObjectType == DocumentObjectType.Paragraph)
+                {
+                    foreach (DocumentObject pobj in (obj as Paragraph).ChildObjects)
+                    {
+                        if (pobj.DocumentObjectType == DocumentObjectType.StructureDocumentTagInline)
+                        {
+                            structureTags.tagInlines.Add(pobj as StructureDocumentTagInline);
+                        }
+                    }
+                }
+                else if (obj.DocumentObjectType == DocumentObjectType.Table)
+                {
+                    foreach (DocumentObject rowObj in (obj as Table).ChildObjects)
+                    {
+                        if (rowObj.DocumentObjectType == DocumentObjectType.StructureDocumentTagRow)
+                        {
+                            structureTags.rowTags.Add(rowObj as StructureDocumentTagRow);
+                        }
+                        TableRow row = rowObj as TableRow;
+                        if (row == null)
+                        {
+                            continue;
+                        }
+                        foreach (DocumentObject cellObj in row.ChildObjects)
+                        {
+                            if (cellObj.DocumentObjectType == DocumentObjectType.StructureDocumentTagCell)
                             {
-                                structureTags.tags.Add(cellChild as StructureDocumentTag);
+                                structureTags.cellTags.Add(cellObj as StructureDocumentTagCell);
                             }
-                            else if (cellChild.DocumentObjectType == DocumentObjectType.Paragraph)
+                            TableCell cell = cellObj as TableCell;
+                            if (cell == null)
                             {
-                                foreach (DocumentObject pobj in (cellChild as Paragraph).ChildObjects)
+                                continue;
+                            }
+                            foreach (DocumentObject cellChild in cell.ChildObjects)
+                            {
+                                if (cellChild.DocumentObjectType == DocumentObjectType.StructureDocumentTag)
                                 {
-                                    if (pobj.DocumentObjectType == DocumentObjectType.StructureDocumentTagInline)
+                                    structureTags.tags.Add(cellChild as StructureDocumentTag);
+                                }
+                                else if (cellChild.DocumentObjectType == DocumentObjectType.Paragraph)
+                                {
+                                    foreach (DocumentObject pobj in (cellChild as Paragraph).ChildObjects)
                                     {
-                                        structureTags.tagInlines.Add(pobj as StructureDocumentTagInline);
+                                        if (pobj.DocumentObjectType == DocumentObjectType.StructureDocumentTagInline)
+                                        {
+                                            structureTags.tagInlines.Add(pobj as StructureDocumentTagInline);
+                                        }
                                     }
                                 }
                             }
@@ -11535,66 +11569,69 @@ private static StructureTags GetAllTags(Document document)
                 }
             }
         }
+        return structureTags;
     }
-    return structureTags;
-}
 
-public class StructureTags
-{
-    List<StructureDocumentTagInline> m_tagInlines;
-    public List<StructureDocumentTagInline> tagInlines
+    public class StructureTags
     {
-        get
+        List<StructureDocumentTagInline> m_tagInlines;
+        public List<StructureDocumentTagInline> tagInlines
         {
-            if (m_tagInlines == null)
-                m_tagInlines = new List<StructureDocumentTagInline>();
-            return m_tagInlines;
+            get
+            {
+                if (m_tagInlines == null)
+                    m_tagInlines = new List<StructureDocumentTagInline>();
+                return m_tagInlines;
+            }
+            set
+            {
+                m_tagInlines = value;
+            }
         }
-        set
+
+        List<StructureDocumentTag> m_tags;
+        public List<StructureDocumentTag> tags
         {
-            m_tagInlines = value;
+            get
+            {
+                if (m_tags == null)
+                    m_tags = new List<StructureDocumentTag>();
+                return m_tags;
+            }
+            set
+            {
+                m_tags = value;
+            }
         }
-    }
-    List<StructureDocumentTag> m_tags;
-    public List<StructureDocumentTag> tags
-    {
-        get
+
+        List<StructureDocumentTagCell> m_celltags;
+        public List<StructureDocumentTagCell> cellTags
         {
-            if (m_tags == null)
-                m_tags = new List<StructureDocumentTag>();
-            return m_tags;
+            get
+            {
+                if (m_celltags == null)
+                    m_celltags = new List<StructureDocumentTagCell>();
+                return m_celltags;
+            }
+            set
+            {
+                m_celltags = value;
+            }
         }
-        set
+
+        List<StructureDocumentTagRow> m_rowTags;
+        public List<StructureDocumentTagRow> rowTags
         {
-            m_tags = value;
-        }
-    }
-    List<StructureDocumentTagCell> m_celltags;
-    public List<StructureDocumentTagCell> cellTags
-    {
-        get
-        {
-            if (m_celltags == null)
-                m_celltags = new List<StructureDocumentTagCell>();
-            return m_celltags;
-        }
-        set
-        {
-            m_celltags = value;
-        }
-    }
-    List<StructureDocumentTagRow> m_rowTags;
-    public List<StructureDocumentTagRow> rowTags
-    {
-        get
-        {
-            if (m_rowTags == null)
-                m_rowTags = new List<StructureDocumentTagRow>();
-            return m_rowTags;
-        }
-        set
-        {
-            m_rowTags = value;
+            get
+            {
+                if (m_rowTags == null)
+                    m_rowTags = new List<StructureDocumentTagRow>();
+                return m_rowTags;
+            }
+            set
+            {
+                m_rowTags = value;
+            }
         }
     }
 }
@@ -11602,46 +11639,26 @@ public class StructureTags
 
 ---
 
-# spire.doc csharp structured document tag
-## lock content control content in a document
+# 26_StructuredDocumentTag - LockContentControlContent
+## Locks the content of a structured document tag to prevent editing.
 ```csharp
 // Create a new document
 Document doc = new Document();
 
-// Add a section to the document
-Section section = doc.AddSection();
-
-// Add a paragraph to the section
-Paragraph paragraph = section.AddParagraph();
-
 // Create a StructureDocumentTag
 StructureDocumentTag sdt = new StructureDocumentTag(doc);
 
-// Add a new section to the document
-Section section2 = doc.AddSection();
+// Add a section to the document
+Section section = doc.AddSection();
 
-// Add the StructureDocumentTag to the section's body
-section2.Body.ChildObjects.Add(sdt);
+// Add the StructureDocumentTag to the section body
+section.Body.ChildObjects.Add(sdt);
 
 // Set the type of the StructureDocumentTag to RichText
 sdt.SDTProperties.SDTType = SdtType.RichText;
 
-// Iterate through the child objects in the first section's body
-foreach (DocumentObject obj in section.Body.ChildObjects)
-{
-    // Check if the object is a table
-    if (obj.DocumentObjectType == DocumentObjectType.Table)
-    {
-        // Clone and add the table to the StructureDocumentTag's content
-        sdt.SDTContent.ChildObjects.Add(obj.Clone());
-    }
-}
-
 // Lock the content editing settings of the StructureDocumentTag
 sdt.SDTProperties.LockSettings = LockSettingsType.ContentLocked;
-
-// Remove the first section from the document
-doc.Sections.Remove(section);
 ```
 
 ---
@@ -11964,27 +11981,21 @@ foreach (Section section in doc.Sections)
 
 ---
 
-# spire.doc csharp endnote
-## insert and format endnote in word document
+# 28_Footnote - InsertEndnote
+## Inserts an endnote into a document paragraph and formats the endnote text and marker.
 ```csharp
-// Get the first section in the document
+Document doc = new Document();
 Section s = doc.Sections[0];
-
-// Get the second paragraph in the section (index 1)
 Paragraph p = s.Paragraphs[1];
 
-// Append an endnote to the paragraph
 Footnote endnote = p.AppendFootnote(FootnoteType.Endnote);
 
-// Add a paragraph to the endnote's text body and append the reference text
-TextRange text = endnote.TextBody.AddParagraph().AppendText("Reference: Wikipedia");
+TextRange text = endnote.Body.AddParagraph().AppendText("Reference: Wikipedia");
 
-// Set the font name, size, and text color of the reference text
 text.CharacterFormat.FontName = "Impact";
 text.CharacterFormat.FontSize = 14;
 text.CharacterFormat.TextColor = Color.DarkOrange;
 
-// Set the font name, size, and text color of the endnote marker
 endnote.MarkerCharacterFormat.FontName = "Calibri";
 endnote.MarkerCharacterFormat.FontSize = 25;
 endnote.MarkerCharacterFormat.TextColor = Color.DarkBlue;
@@ -11992,73 +12003,75 @@ endnote.MarkerCharacterFormat.TextColor = Color.DarkBlue;
 
 ---
 
-# Spire.Doc C# Footnote
-## Insert footnote into Word document
+# 28_Footnote - InsertFootnote
+## Insert a footnote after a selected text range and format the footnote content and marker.
+
 ```csharp
-// Create a new instance of Document
-Document document = new Document();
+private void InsertFootnote(Document document)
+{
+    // Find the specified string in the document
+    TextSelection selection = document.FindString("Spire.Doc", false, true);
 
-// Find the specified string in the document
-TextSelection selection = document.FindString("Spire.Doc", false, true);
+    // Get the selected text as a single range
+    TextRange textRange = selection.GetAsOneRange();
 
-// Get the selected text as a single range
-TextRange textRange = selection.GetAsOneRange();
+    // Get the paragraph that contains the selected text
+    Paragraph paragraph = textRange.OwnerParagraph;
 
-// Get the paragraph that contains the selected text
-Paragraph paragraph = textRange.OwnerParagraph;
+    // Get the index of the selected text within the paragraph's child objects
+    int index = paragraph.ChildObjects.IndexOf(textRange);
 
-// Get the index of the selected text within the paragraph's child objects
-int index = paragraph.ChildObjects.IndexOf(textRange);
+    // Append a footnote to the paragraph
+    Footnote footnote = paragraph.AppendFootnote(FootnoteType.Footnote);
 
-// Append a footnote to the paragraph
-Footnote footnote = paragraph.AppendFootnote(FootnoteType.Footnote);
+    // Insert the footnote into the paragraph's child objects at the specified index
+    paragraph.ChildObjects.Insert(index + 1, footnote);
 
-// Insert the footnote into the paragraph's child objects at the specified index
-paragraph.ChildObjects.Insert(index + 1, footnote);
+    // Add a paragraph to the footnote body and append text
+    textRange = footnote.Body.AddParagraph().AppendText("Welcome to evaluate Spire.Doc");
 
-// Add a paragraph to the footnote's text body and append text to it
-textRange = footnote.TextBody.AddParagraph().AppendText("Welcome to evaluate Spire.Doc");
+    // Set the font name, size, and color for the appended text
+    textRange.CharacterFormat.FontName = "Arial Black";
+    textRange.CharacterFormat.FontSize = 10;
+    textRange.CharacterFormat.TextColor = Color.DarkGray;
 
-// Set the font name, size, and color for the appended text
-textRange.CharacterFormat.FontName = "Arial Black";
-textRange.CharacterFormat.FontSize = 10;
-textRange.CharacterFormat.TextColor = Color.DarkGray;
-
-// Set the font name, size, style, and color for the footnote marker
-footnote.MarkerCharacterFormat.FontName = "Calibri";
-footnote.MarkerCharacterFormat.FontSize = 12;
-footnote.MarkerCharacterFormat.Bold = true;
-footnote.MarkerCharacterFormat.TextColor = Color.DarkGreen;
+    // Set the font name, size, style, and color for the footnote marker
+    footnote.MarkerCharacterFormat.FontName = "Calibri";
+    footnote.MarkerCharacterFormat.FontSize = 12;
+    footnote.MarkerCharacterFormat.Bold = true;
+    footnote.MarkerCharacterFormat.TextColor = Color.DarkGreen;
+}
 ```
 
 ---
 
-# spire.doc csharp footnote
-## remove footnotes from document
+# 28_Footnote - RemoveFootnote
+## Removes the first footnote found in each paragraph of the first document section.
 ```csharp
-// Get the first section of the document
-Section section = document.Sections[0];
-
-// Iterate through each paragraph in the section
-foreach (Paragraph para in section.Paragraphs)
+private void RemoveFootnotes(Document document)
 {
-    int index = -1;
-    
-    // Find the index of the first footnote within the paragraph's child objects
-    for (int i = 0, cnt = para.ChildObjects.Count; i < cnt; i++)
-    {
-        ParagraphBase pBase = para.ChildObjects[i] as ParagraphBase;
-        
-        if (pBase is Footnote)
-        {
-            index = i;
-            break;
-        }
-    }
+    Section section = document.Sections[0];
 
-    // If a footnote is found, remove it from the paragraph's child objects
-    if (index > -1)
-        para.ChildObjects.RemoveAt(index);
+    foreach (Paragraph para in section.Paragraphs)
+    {
+        int index = -1;
+
+        // Find the index of the first footnote in the paragraph's child objects
+        for (int i = 0, cnt = para.ChildObjects.Count; i < cnt; i++)
+        {
+            DocumentObject pBase = para.ChildObjects[i] as DocumentObject;
+
+            if (pBase is Footnote)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        // Remove the footnote if found
+        if (index > -1)
+            para.ChildObjects.RemoveAt(index);
+    }
 }
 ```
 
@@ -12864,17 +12877,13 @@ foreach (TextSelection selection in textSelections)
 
 ---
 
-# Spire.Doc Document Comparison
-## Compare documents while ignoring table differences
+# 07_DocumentOperation - CompareDocumentsIgnoreTable
+## Compare two Word documents while ignoring table differences
 ```csharp
-// Create a new CompareOptions object to specify comparison settings
-CompareOptions compareoptions = new CompareOptions();
+CompareOptions compareOptions = new CompareOptions();
+compareOptions.IgnoreTables = true;
 
-// Set the option to ignore differences in tables during comparison
-compareoptions.IgnoreTable = true;
-
-// Compare the two documents using the specified options, with "E-iceblue" as the author name for tracked changes
-document1.Compare(document2, "E-iceblue", compareoptions);
+document1.Compare(document2, "E-iceblue", compareOptions);
 ```
 
 ---
@@ -13687,40 +13696,51 @@ doc.Dispose();
 ---
 
 # 07_DocumentOperation - RetrieveStyleChangeRevisions
-## Retrieves formatting change revisions (style changes) from a Word document and compares original vs final properties
-
+## Retrieves style-change revisions from a document by filtering format-change revisions and comparing the original and final character formatting of affected text ranges.
 ```csharp
+// Initialize a new, empty Document object.
 Document doc = new Document();
+
+// Load the existing Word document containing revision history from the specified file path.
 doc.LoadFromFile(@"..\..\..\..\..\..\..\Data\GetRevisions.docx");
 
+// Retrieve the collection of all revision information from the document.
 RevisionInfoCollection revisionInfoCollection = doc.GetRevisionInfos();
+
+// Initialize a StringBuilder to construct the output text report.
 StringBuilder stringBuilder = new StringBuilder();
 
+// Iterate through each revision item in the collected revision information.
 foreach (RevisionInfo revisionInfo in revisionInfoCollection)
 {
-    // Filter only formatting changes
+    // Check if the current revision is specifically a formatting change (e.g., bold, color, font).
     if (revisionInfo.RevisionType == RevisionType.FormatChange)
     {
-        // Ensure the affected object is a TextRange (text segment)
-        if (revisionInfo.OwnerObject is TextRange)
+        // Verify if the object affected by this revision is a TextRange (a segment of text).
+        if (revisionInfo.OwnerObject is Spire.Doc.Fields.TextRange)
         {
+            // Cast the owner object to a TextRange to access its specific properties.
             TextRange range = (TextRange)revisionInfo.OwnerObject;
 
-            // Append the text content of the modified range
-            stringBuilder.AppendLine("TextRange:" + range.Text + "rn");
+            // Append the actual text content of the modified range to the report.
+            stringBuilder.AppendLine("TextRange:" + range.Text + "\r\n");
 
-            // Switch to "Original" view to read pre-change formatting
+            // Switch the document view to the "Original" state to read pre-change formatting properties.
             doc.RevisionsView = RevisionsView.Original;
-            stringBuilder.AppendLine("Original style：" + "isBold：" + range.CharacterFormat.Bold + ";" + "TextColor：" + range.CharacterFormat.TextColor + "；HighlightColor：" + range.CharacterFormat.HighlightColor + "；FontName：" + range.CharacterFormat.FontName + "；UnderlineStyle：" + range.CharacterFormat.UnderlineStyle + "rn");
 
-            // Switch to "Final" view to read post-change formatting
+            // Append the original formatting details (Bold, Color, Highlight, Font, Underline).
+            stringBuilder.AppendLine("Original style: " + "isBold: " + range.CharacterFormat.Bold + "; " + "TextColor: " + range.CharacterFormat.TextColor + "; HighlightColor: " + range.CharacterFormat.HighlightColor + "; FontName: " + range.CharacterFormat.FontName + "; UnderlineStyle: " + range.CharacterFormat.UnderlineStyle + "\r\n");
+
+            // Switch the document view to the "Final" state to read post-change formatting properties.
             doc.RevisionsView = RevisionsView.Final;
-            stringBuilder.AppendLine("Final style：" + "isBold：" + range.CharacterFormat.Bold + ";" + "TextColor：" + range.CharacterFormat.TextColor + "；HighlightColor：" + range.CharacterFormat.HighlightColor + "；FontName：" + range.CharacterFormat.FontName + "；UnderlineStyle：" + range.CharacterFormat.UnderlineStyle + "rn");
+
+            // Append the final formatting details to compare against the original state.
+            stringBuilder.AppendLine("Final style: " + "isBold: " + range.CharacterFormat.Bold + "; " + "TextColor: " + range.CharacterFormat.TextColor + "; HighlightColor: " + range.CharacterFormat.HighlightColor + "; FontName: " + range.CharacterFormat.FontName + "; UnderlineStyle: " + range.CharacterFormat.UnderlineStyle + "\r\n");
         }
     }
 }
 
-File.WriteAllText("RetrieveStyleChangeRevisions.txt", stringBuilder.ToString());
+// Close the document to release file resources and memory.
 doc.Close();
 ```
 
@@ -13784,19 +13804,17 @@ document.Dispose();
 ---
 
 # 10_Conversion - WordToHtmlRetainMathML
-## Convert a Word document to HTML while preserving MathML equations.
+## Configures Word-to-HTML export to retain Office math equations as MathML.
+
 ```csharp
 Document document = new Document();
 document.LoadFromFile(@"..\..\..\..\..\..\Data\GetMathEquation.docx");
 
-HtmlExportOptions htmlExportOptions = document.HtmlExportOptions;
+Spire.Doc.Exporting.HtmlExportOptions htmlExportOptions = document.HtmlExportOptions;
 htmlExportOptions.OfficeMathOutputMode = HtmlOfficeMathOutputMode.MathML;
 htmlExportOptions.CssStyleSheetType = CssStyleSheetType.Internal;
 
-String outputFile = "WordToHtmlRetainMathML.html";
-document.SaveToFile(outputFile, FileFormat.Html);
-document.Close();
-document.Dispose();
+document.SaveToFile("WordToHtmlRetainMathML.html", FileFormat.Html);
 ```
 
 ---
@@ -13884,92 +13902,84 @@ paragraph.ListFormat.ApplyListRef(listRef, 0);
 ---
 
 # 16_ImageAndShape - AddSmartArt
-## Demonstrates how to create various SmartArt graphics (e.g., VerticalChevronList, SquareAccentList) in a Word document, set node text and font size, and customize shape fill color.
+## Creates and configures SmartArt graphics in a Word document, including node text, child nodes, and shape fill styling.
+
 ```csharp
-public partial class Form1 : Form
+private const int SmartArtDefaultWidth = 432;
+private const int SmartArtDefaultHeight = 252;
+private const float DefaultNodeFontSize = 15f;
+
+private void AddSmartArt()
 {
-    private const int SmartArtDefaultWidth = 432;
-    private const int SmartArtDefaultHeight = 252;
-    private const float TitleFontSize = 28f;
-    private const float DefaultNodeFontSize = 15f;
+    Document document = new Document();
+    Section section = document.AddSection();
 
-    private void button1_Click(object sender, EventArgs e)
+    AddSmartArtToSection(section, SmartArtType.VerticalChevronList);
+}
+
+private void AddSmartArtToSection(Section section, SmartArtType smartArtType)
+{
+    // Add a paragraph to contain the SmartArt graphic
+    var paragraph = section.AddParagraph();
+
+    // Create and insert the SmartArt graphic
+    var smartArt = CreateSmartArt(paragraph, smartArtType);
+
+    // Configure the fill style of the first node's first shape
+    SmartArtShapeProperties shapeSmartArt = smartArt.Nodes[0].ShapeProperties[0];
+    shapeSmartArt.Fill.FillType = FillType.Solid;
+    shapeSmartArt.Fill.Color = Color.FromArgb(255, 255, 165, 0);
+
+    // Set text and font size for the first node
+    SetSmartArtNodeText(smartArt.Nodes[0], "TextTest_1", 15f);
+    AddSmartArtChildNode(smartArt.Nodes[0], 15f, "ChildNodeTest_1.");
+
+    // Set text and font size for the second node
+    SetSmartArtNodeText(smartArt.Nodes[1], "TextTest_2", 25f);
+    AddSmartArtChildNode(smartArt.Nodes[1], 15f, "ChildNodeTest_2.");
+
+    smartArt.UpdateSmartArt();
+}
+
+private SmartArt CreateSmartArt(Spire.Doc.Documents.Paragraph paragraph, SmartArtType smartArtType, int width = SmartArtDefaultWidth, int height = SmartArtDefaultHeight)
+{
+    // Center-align the paragraph containing the SmartArt
+    paragraph.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+    // Append a SmartArt shape with the specified type and dimensions
+    Spire.Doc.Fields.Shapes.Shape shape = paragraph.AppendSmartArt(smartArtType, width, height);
+
+    return shape.SmartArt;
+}
+
+private void SetSmartArtNodeText(SmartArtNode node, string text, float fontSize = DefaultNodeFontSize)
+{
+    if (node == null || string.IsNullOrEmpty(text)) return;
+
+    // Set the node text
+    node.Text = text;
+
+    // Set the font size of the node text
+    if (node.Paragraphs.Count > 0 && node.Paragraphs[0].ChildObjects.Count > 0)
     {
-        Document document = new Document();
-        Section section = document.AddSection();
+        ((Spire.Doc.Fields.TextRange)node.Paragraphs[0].ChildObjects[0]).CharacterFormat.FontSize = fontSize;
+    }
+}
 
-        List<SmartArtType> smartArtTypes = new List<SmartArtType>
-        {
-            SmartArtType.VerticalChevronList,
-            SmartArtType.SquareAccentList,
-            SmartArtType.AlternatingHexagons,
-            SmartArtType.HorizontalBulletList,
-            SmartArtType.SegmentedProcess,
-            SmartArtType.VerticalBendingProcess,
-            SmartArtType.StepDownProcess,
-            SmartArtType.CircleAccentTimeLine,
-            SmartArtType.BlockCycle,
-            SmartArtType.SegmentedCycle
-        };
+private void AddSmartArtChildNode(SmartArtNode parentNode, float fontSize, params string[] childTexts)
+{
+    if (parentNode == null || childTexts == null || childTexts.Length == 0) return;
 
-        foreach (SmartArtType smartArtType in smartArtTypes)
-        {
-            CreateTitleParagraph(section, smartArtType.ToString());
-            var paragraph = section.AddParagraph();
-            var smartArt = CreateSmartArt(paragraph, smartArtType);
-
-            SmartArtShapeProperties shapeSmartArt = smartArt.Nodes[0].ShapeProperties[0];
-            shapeSmartArt.Fill.FillType = FillType.Solid;
-            shapeSmartArt.Fill.Color = Color.FromArgb(255, 255, 165, 0);
-
-            SetSmartArtNodeText(smartArt.Nodes[0], "TextTest_1", 15f);
-            AddSmartArtChildNode(smartArt.Nodes[0], 15f, "ChildNodeTest_1.");
-
-            SetSmartArtNodeText(smartArt.Nodes[1], "TextTest_2", 25f);
-            AddSmartArtChildNode(smartArt.Nodes[1], 15f, "ChildNodeTest_2.");
-        }
+    // Ensure enough child nodes exist
+    while (parentNode.ChildNodes.Count < childTexts.Length)
+    {
+        parentNode.ChildNodes.Add();
     }
 
-    private Paragraph CreateTitleParagraph(Section section, string titleText, float fontSize = TitleFontSize)
+    // Set text and font size for each child node
+    for (int i = 0; i < childTexts.Length && i < parentNode.ChildNodes.Count; i++)
     {
-        var paragraph = section.AddParagraph();
-        paragraph.Format.HorizontalAlignment = HorizontalAlignment.Center;
-        var textRange = paragraph.AppendText(titleText);
-        textRange.CharacterFormat.FontSize = fontSize;
-        textRange.CharacterFormat.FontName = "Times New Roman";
-        section.AddParagraph();
-        section.AddParagraph();
-        return paragraph;
-    }
-
-    private SmartArt CreateSmartArt(Paragraph paragraph, SmartArtType smartArtType, int width = SmartArtDefaultWidth, int height = SmartArtDefaultHeight)
-    {
-        paragraph.Format.HorizontalAlignment = HorizontalAlignment.Center;
-        Shape shape = paragraph.AppendSmartArt(smartArtType, width, height);
-        return shape.SmartArt;
-    }
-
-    private void SetSmartArtNodeText(SmartArtNode node, string text, float fontSize = DefaultNodeFontSize)
-    {
-        if (node == null || string.IsNullOrEmpty(text)) return;
-        node.Text = text;
-        if (node.Paragraphs.Count > 0 && node.Paragraphs[0].ChildObjects.Count > 0)
-        {
-            ((TextRange)node.Paragraphs[0].ChildObjects[0]).CharacterFormat.FontSize = fontSize;
-        }
-    }
-
-    private void AddSmartArtChildNode(SmartArtNode parentNode, float fontSize, params string[] childTexts)
-    {
-        if (parentNode == null || childTexts == null || childTexts.Length == 0) return;
-        while (parentNode.ChildNodes.Count < childTexts.Length)
-        {
-            parentNode.ChildNodes.Add();
-        }
-        for (int i = 0; i < childTexts.Length && i < parentNode.ChildNodes.Count; i++)
-        {
-            SetSmartArtNodeText(parentNode.ChildNodes[i], childTexts[i], fontSize);
-        }
+        SetSmartArtNodeText(parentNode.ChildNodes[i], childTexts[i], fontSize);
     }
 }
 ```
@@ -14256,12 +14266,12 @@ chart.ChangeSeriesType("Series 3", ChartSeriesType.Line, true);
 ---
 
 # 33_Chart - ExtractAxisDataValues
-## Extracts X-axis and Y-axis data values from charts contained in a Word document.
-
+## Extracts X-axis and Y-axis data values from chart shapes in a Word document.
 ```csharp
 public string ExtractAxisDataValues(Document doc)
 {
     StringBuilder stringBuilder = new StringBuilder();
+
     foreach (Section sec in doc.Sections)
     {
         foreach (Paragraph paragraph in sec.Paragraphs)
@@ -14269,18 +14279,24 @@ public string ExtractAxisDataValues(Document doc)
             for (int i = 0; i < paragraph.ChildObjects.Count; i++)
             {
                 DocumentObject obj = paragraph.ChildObjects[i];
+
                 if (obj is ShapeObject)
                 {
                     ShapeObject shape = obj as ShapeObject;
                     Chart chart = shape.Chart;
+
                     stringBuilder.AppendLine("Obtain X-axis data values:");
+
                     for (int x = 0; x < chart.XValues.Count; x++)
                     {
                         ChartValue xVal = chart.XValues[x];
                         stringBuilder.Append(xVal.StringValue + " ");
                     }
+
                     ChartSeries series = chart.Series[0];
-                    stringBuilder.AppendLine("rnObtain Y-axis data values:");
+
+                    stringBuilder.AppendLine("\r\n Obtain Y-axis data values:");
+
                     foreach (ChartValue yVal in series.YValues)
                     {
                         stringBuilder.Append(yVal.Value + " ");
@@ -14289,6 +14305,7 @@ public string ExtractAxisDataValues(Document doc)
             }
         }
     }
+
     return stringBuilder.ToString();
 }
 ```
@@ -14506,4 +14523,929 @@ doc.ClearMacros();
 
 ---
 
+
+# 02_FindAndReplace - ReplaceTextIgnoreOfficeMath
+## Replace text while ignoring Office Math objects using search options
+```csharp
+// Initialize a new Document object to work with Word documents.
+Document document = new Document();
+
+// Create a new SearchOptions instance to customize search behavior during text replacement.
+SearchOptions searchOptions = new SearchOptions();
+
+// Configure the search to skip Office Math objects (e.g., equations) during replacement.
+searchOptions.IgnoreOfficeMath = true;
+
+// Ensure that only whole words matching the search term are replaced (not partial matches).
+searchOptions.FindWholeWordsOnly = true;
+
+// Replace all occurrences of the word "a" with "an" in the document, using the defined search options.
+document.Replace("a", "an", searchOptions);
+```
+
+---
+
+# 10_Conversion - SetPageLayout
+## Sets the PDF page layout (two-page left spread) when converting a Word document to PDF
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new Document instance to represent a Word document in memory.
+    Document document = new Document();
+
+    // Instantiate a ToPdfParameterList to customize PDF export options.
+    ToPdfParameterList toPdfParameter = new ToPdfParameterList();
+
+    // Configure the output PDF page layout to display two pages per spread, starting with the left page.
+    toPdfParameter.PageLayout = PdfPageLayout.TwoPageLeft;
+
+    // Export the document as a PDF file using the defined page layout settings.
+    document.SaveToFile("SetPageLayout.pdf", toPdfParameter);
+
+    // Close and dispose the document to release resources.
+    document.Close();
+    document.Dispose();
+}
+```
+
+---
+
+# 10_Conversion - ToMarkdownWithOptions
+## Configure Markdown export options for converting a Word document to Markdown.
+```csharp
+Document document = new Document();
+
+// Set the folder for extracted images.
+document.MarkdownExportOptions.ImagesFolder = "D:\\Markdown\\Images";
+
+// Render lists as plain text.
+document.MarkdownExportOptions.ListOutputMode = MarkdownListOutputMode.PlainText;
+
+// Preserve underline formatting.
+document.MarkdownExportOptions.SaveUnderlineFormatting = true;
+
+// Use reference-style hyperlinks.
+document.MarkdownExportOptions.LinkOutputMode = MarkdownLinkOutputMode.Reference;
+
+// Output Office Math equations as MathML.
+document.MarkdownExportOptions.OfficeMathOutputMode = MarkdownOfficeMathOutputMode.MathML;
+
+// Save tables as HTML.
+document.MarkdownExportOptions.SaveAsHtml = MarkdownSaveAsHtml.Tables;
+```
+
+---
+
+# 10_Conversion - ToPdfWithDigitalSignature
+## Convert a Word document to PDF with a digital signature and timestamp.
+```csharp
+private void ConvertToPdfWithDigitalSignature()
+{
+    // Create a new Document object to represent a Word document.
+    Document document = new Document();
+
+    // Create a parameter list object to configure PDF conversion settings.
+    ToPdfParameterList toPdfParameter = new ToPdfParameterList();
+
+    // Configure digital signature information using a PFX certificate file, password, reason, and location.
+    toPdfParameter.DigitalSignatureInfo = new PdfDigitalSignatureInfo(
+        @"..\..\..\..\..\..\..\Data\gary.pfx",
+        "e-iceblue",
+        "signing",
+        "Spire Doc");
+
+    // Set the hash algorithm used for the digital signature to RIPEMD-160.
+    toPdfParameter.DigitalSignatureInfo.HashAlgorithm = PdfDigitalSignatureHashAlgorithm.RipeMD160;
+
+    // Set the signature timestamp to the current date and time.
+    toPdfParameter.DigitalSignatureInfo.SignatureDate = DateTime.Now;
+
+    // Configure the timestamp server (TSA) settings for the digital signature.
+    toPdfParameter.DigitalSignatureInfo.TimestampConfiguration =
+        new PdfDigitalSignatureTimestampConfiguration(
+            "https://freetsa.org/tsr",
+            "Gary",
+            "Password");
+
+    // Save the document as a PDF file with the specified digital signature settings.
+    document.SaveToFile("ToPdfWithDigitalSignature.pdf", toPdfParameter);
+
+    // Close the document to release internal resources.
+    document.Close();
+
+    // Explicitly dispose of the document object to free memory immediately.
+    document.Dispose();
+}
+```
+
+---
+
+# 12_Styles - AddCustomStyles
+## Adds custom character, paragraph, and table styles to a Word document.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    Document doc = new Document();
+    Section section = doc.AddSection();
+
+    Paragraph paragraph = section.AddParagraph();
+    TextRange textRange = paragraph.AppendText("Spire.Doc for .NET ");
+
+    ICharacterStyle characterStyle = (ICharacterStyle)doc.Styles.Add(StyleType.CharacterStyle, "MyCharacterStyle1");
+    characterStyle.CharacterFormat.FontName = "Arial";
+    characterStyle.CharacterFormat.FontSize = 14;
+    characterStyle.CharacterFormat.Bold = true;
+    characterStyle.CharacterFormat.TextColor = Color.Blue;
+
+    textRange.ApplyStyle(characterStyle.Name);
+    paragraph.AppendText("is a proven reliable MS Word API for .NET which enables to perform many Word document processing tasks.");
+
+    ParagraphStyle heading1Style = (ParagraphStyle)doc.Styles.Add(StyleType.ParagraphStyle, "MyParagraphStyle1");
+    heading1Style.ParagraphFormat.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Justify;
+    heading1Style.ParagraphFormat.LineSpacing = 18;
+    heading1Style.CharacterFormat.FontName = "Calibri";
+    heading1Style.CharacterFormat.FontSize = 12;
+    heading1Style.CharacterFormat.TextColor = Color.FromArgb(42, 123, 136);
+
+    paragraph = section.AddParagraph();
+    paragraph.AppendText("As an independent Word .NET API, Spire.Doc for .NET doesn't need Microsoft Word to be installed on neither the development nor target systems. However, it can incorporate Microsoft Word document creation capabilities into any developers' .NET applications.");
+    paragraph.ApplyStyle(heading1Style);
+
+    Table table = section.AddTable();
+    table.ResetCells(1, 4);
+
+    TableStyle tableStyle = (TableStyle)doc.Styles.Add(StyleType.TableStyle, "MyTableStyle1");
+    tableStyle.Borders.Color = Color.Black;
+    tableStyle.Borders.BorderType = Spire.Doc.Documents.BorderStyle.Double;
+    tableStyle.RowStripe = 3;
+    tableStyle.ConditionalStyles[TableConditionalStyleType.OddRowStripe].Shading.BackgroundPatternColor = Color.LightBlue;
+    tableStyle.ConditionalStyles[TableConditionalStyleType.EvenRowStripe].Shading.BackgroundPatternColor = Color.LightCyan;
+
+    tableStyle.ColumnStripe = 1;
+    tableStyle.ConditionalStyles[TableConditionalStyleType.EvenColumnStripe].Shading.BackgroundPatternColor = Color.LightYellow;
+
+    table.ApplyStyle(tableStyle);
+    table.Format.StyleOptions = table.Format.StyleOptions | TableStyleOptions.ColumnStripe;
+}
+```
+
+---
+
+# 12_Styles - CompareListLevels
+## Compare list levels between two list styles and return equality results.
+```csharp
+Document document = new Document();
+
+ListStyle listStyle_1 = document.Styles.Add(ListType.Bulleted, "bulletList1");
+ListLevelCollection Levels_1 = listStyle_1.ListRef.Levels;
+ListLevel L10 = Levels_1[0];
+ListLevel L11 = Levels_1[1];
+ListLevel L12 = Levels_1[2];
+
+ListStyle listStyle_2 = document.Styles.Add(ListType.Bulleted, "bulletList2");
+ListLevelCollection Levels_2 = listStyle_2.ListRef.Levels;
+ListLevel L20 = Levels_2[0];
+ListLevel L21 = Levels_2[1];
+ListLevel L22 = Levels_2[2];
+
+L10.ParagraphFormat.LineSpacing = 10 * 1.5f;
+L11.CharacterFormat.FontSize = 9;
+L11.IsLegalStyleNumbering = true;
+L11.PatternType = ListPatternType.Arabic;
+L11.FollowCharacter = FollowCharacterType.Nothing;
+L11.BulletCharacter = "\x006e";
+L11.NumberAlignment = ListNumberAlignment.Left;
+L11.NumberPosition = -10;
+L11.TabSpaceAfter = 0.5f;
+L11.TextPosition = 0.5f;
+L11.StartAt = 4;
+L11.NumberPrefix = "Chapter";
+L11.NoRestartByHigher = false;
+L11.UsePrevLevelPattern = false;
+L12.CharacterFormat.FontName = "Arial";
+
+L20.ParagraphFormat.LineSpacing = 10 * 1.5f;
+L21.CharacterFormat.FontSize = 9;
+L21.IsLegalStyleNumbering = true;
+L21.PatternType = ListPatternType.Arabic;
+L21.FollowCharacter = FollowCharacterType.Nothing;
+L21.BulletCharacter = "\x006e";
+L21.NumberAlignment = ListNumberAlignment.Left;
+L21.NumberPosition = -10;
+L21.TabSpaceAfter = 0.5f;
+L21.TextPosition = 0.5f;
+L21.StartAt = 4;
+L21.NumberPrefix = "Chapter";
+L21.NoRestartByHigher = false;
+L21.UsePrevLevelPattern = false;
+L21.CreatePictureBullet();
+L22.CharacterFormat.FontName = "Arial";
+
+bool r0 = L10.Equals(L20);
+bool r1 = L11.Equals(L21);
+bool r2 = L12.Equals(L22);
+```
+
+---
+
+# 12_Styles - CreatePictureBullet
+## Creates a bulleted list style with picture bullets for multiple list levels.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    Document document = new Document();
+    Section sec = document.AddSection();
+
+    Spire.Doc.Documents.Paragraph paragraph = sec.AddParagraph();
+
+    // Create a bulleted list style.
+    ListStyle listStyle = document.Styles.Add(ListType.Bulleted, "bulletList");
+    ListLevelCollection Levels = listStyle.ListRef.Levels;
+
+    // Configure picture bullets for the first two list levels.
+    Levels[0].CreatePictureBullet();
+    Levels[0].PictureBullet.LoadImage(@"..\..\..\..\..\..\Data\Word.png");
+
+    Levels[1].CreatePictureBullet();
+    Levels[1].PictureBullet.LoadImage(@"..\..\..\..\..\..\Data\logo.png");
+
+    // Apply the picture bullet list style to list items.
+    paragraph = sec.AddParagraph();
+    paragraph.AppendText("List Item 1");
+    paragraph.ListFormat.ApplyStyle(listStyle);
+
+    paragraph = sec.AddParagraph();
+    paragraph.AppendText("List Item 1.1");
+    paragraph.ListFormat.ApplyStyle(listStyle);
+    paragraph.ListFormat.ListLevelNumber = 1;
+}
+```
+
+---
+
+# 12_Styles - DeleteCustomStyles
+## Removes custom styles from paragraphs and tables in a Word document.
+```csharp
+public void DeleteCustomStyles(Spire.Doc.Document document)
+{
+    foreach (Spire.Doc.Section section in document.Sections)
+    {
+        foreach (Spire.Doc.Documents.Paragraph paragraph in section.Body.Paragraphs)
+        {
+            document.Styles[paragraph.StyleName].RemoveSelf();
+        }
+
+        foreach (Spire.Doc.Documents.Table table in section.Body.Tables)
+        {
+            document.Styles[table.Format.StyleName].RemoveSelf();
+
+            foreach (Spire.Doc.TableRow tableRow in table.Rows)
+            {
+                foreach (Spire.Doc.TableCell tableCell in tableRow.Cells)
+                {
+                    foreach (Spire.Doc.Documents.Paragraph cellParagraph in tableCell.Paragraphs)
+                    {
+                        document.Styles[cellParagraph.StyleName].RemoveSelf();
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# 12_Styles - DeletePictureBullet
+## Removes the picture bullet from a specified list level in a document.
+```csharp
+Document doc = new Document();
+
+ListCollection lists = doc.ListReferences;
+ListLevel listLevel = lists[0].Levels[1];
+
+listLevel.DeletePictureBullet();
+```
+
+---
+
+# 12_Styles - ModifyCustomStyles
+## Modifies custom paragraph and table styles in a Word document.
+```csharp
+IStyle style1 = document.Styles.FindByName("MyParagraphStyle1");
+
+if (style1 != null && style1 is ParagraphStyle)
+{
+    ParagraphStyle cStyle = style1 as ParagraphStyle;
+
+    cStyle.CharacterFormat.FontName = "Arial";
+    cStyle.CharacterFormat.FontSize = 18;
+    cStyle.CharacterFormat.Bold = false;
+    cStyle.CharacterFormat.TextColor = Color.Gray;
+}
+
+IStyle style2 = document.Styles.FindByName("MyTableStyle1");
+
+if (style2 != null && style2 is TableStyle)
+{
+    TableStyle tableStyle = style2 as TableStyle;
+
+    tableStyle.Borders.Color = Color.Gray;
+    tableStyle.Borders.BorderType = Spire.Doc.Documents.BorderStyle.Single;
+    tableStyle.Borders.LineWidth = 1;
+    tableStyle.RowStripe = 2;
+}
+```
+
+---
+
+# 14_Bookmarks - ObtainTableColumnsOfBookmark
+## Extract table column range of a bookmark and mark its start/end cells
+
+```csharp
+// Retrieve the bookmark from the document.
+Bookmark bookmark = document.Bookmarks.FindByName("tableTest");
+
+// Get the index of the first column covered by the bookmark.
+int firstColumn = bookmark.FirstColumn;
+
+// Get the index of the last column covered by the bookmark.
+int lastColumn = bookmark.LastColumn;
+
+// Obtain the table cell that contains the start of the bookmark.
+TableCell tableCell_start = bookmark.BookmarkStart.OwnerParagraph.Owner as TableCell;
+
+// Get the table row that owns the starting cell.
+TableRow tableRow_start = tableCell_start.OwnerRow;
+
+// Get the table that contains the starting row.
+Table table = tableRow_start.Owner as Table;
+
+// Determine the row index of the starting row within the table.
+int rowIndex_start = table.Rows.IndexOf(tableRow_start);
+
+// Obtain the table cell that contains the end of the bookmark.
+TableCell tableCell_end = bookmark.BookmarkEnd.OwnerParagraph.Owner as TableCell;
+
+// Get the table row that owns the ending cell.
+TableRow tableRow_end = tableCell_end.OwnerRow;
+
+// Determine the row index of the ending row within the table.
+int rowIndex_end = table.Rows.IndexOf(tableRow_end);
+
+// Set the text of the starting cell (first column of the start row) to indicate bookmark start.
+table.Rows[rowIndex_start].Cells[firstColumn].FirstParagraph.Text = "Bookmark starts";
+
+// Highlight the starting cell with a yellow background.
+table.Rows[rowIndex_start].Cells[firstColumn].CellFormat.Shading.BackgroundPatternColor = Color.Yellow;
+
+// Set the text of the ending cell (last column of the end row) to indicate bookmark completion.
+table.Rows[rowIndex_end].Cells[lastColumn].FirstParagraph.Text = "Bookmark completed";
+
+// Highlight the ending cell with a yellow background.
+table.Rows[rowIndex_end].Cells[lastColumn].CellFormat.Shading.BackgroundPatternColor = Color.Yellow;
+```
+
+---
+
+# 30_Macros - AddVBAMacro
+## Adds a VBA project and macro modules to a Word document.
+```csharp
+Document doc = new Document();
+
+doc.AddSection().AddParagraph().AppendText("Add VBA macro");
+
+VbaProject vbaProject = new VbaProject();
+vbaProject.Name = "SampleVBAMacro";
+doc.VbaProject = vbaProject;
+
+VbaModule vbaModule1 = doc.VbaProject.Modules.Add("SampleModule1", VbaModuleType.StdModule);
+vbaModule1.SourceCode = @"
+    Sub DocumnetInfo()
+        MsgBox ""create time: "" &Now()
+        MsgBox ""Pages:"" & ActiveDocument.Range.ComputeStatistics(wdStatisticPages)
+    End Sub
+
+    Sub WriteHello()
+        Selection.TypeText Text:=""Hello World!""
+    End Sub";
+
+VbaModule vbaModule2 = doc.VbaProject.Modules.Add("SampleModule2", VbaModuleType.StdModule);
+vbaModule2.SourceCode = @"
+    Sub InsertCurrentDate()
+        Selection.TypeText Text:=Format(Now(),""yyyy-mm-dd hh:mm:ss"")
+    End Sub
+
+    Sub IndentParagraph()
+        Selection.ParagraphFormat.LeftIndent = InchesToPoints(0.5)
+    End Sub";
+```
+
+---
+
+# 32_Page - ExtractPages
+## Extract a range of pages from a Word document into a new document
+```csharp
+// Create a new Document instance representing a Word document in memory
+Document document = new Document();
+
+// Extract pages 0 through 2 from the original document as a new Document object
+Document extractPage = document.ExtractPages(0, 2);
+
+// Release resources associated with the document
+document.Close();
+document.Dispose();
+```
+
+---
+
+# 34_DocumentNavigators - Characterformat
+## Demonstrate character formatting with DocumentNavigator, including push/pop and clearing formatting.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    Document doc = new Document();
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    navigator.Write("Write plain text into the document (without special formatting yet).");
+    navigator.InsertBreak(BreakType.LineBreak);
+
+    navigator.CharacterFormat.UnderlineColor = Color.OrangeRed;
+    navigator.CharacterFormat.UnderlineStyle = UnderlineStyle.Single;
+    navigator.CharacterFormat.Bold = true;
+    navigator.CharacterFormat.IsShadow = true;
+    navigator.CharacterFormat.TextColor = Color.Blue;
+
+    navigator.Write("Write formatted text using the current character formatting settings.");
+    navigator.InsertBreak(BreakType.LineBreak);
+
+    navigator.PushCharacterFormat();
+    navigator.CharacterFormat.ClearFormatting();
+
+    navigator.Write("Write text with cleared (default) formatting");
+    navigator.InsertBreak(BreakType.LineBreak);
+
+    navigator.PopCharacterFormat();
+    navigator.Write("Write text using the restored formatting.");
+}
+```
+
+---
+
+# 34_DocumentNavigators - InserHtml
+## Inserts HTML content into a Word document at the current cursor position using DocumentNavigator
+```csharp
+// Create a new Document object to represent an empty Word document.
+Document doc = new Document();
+
+// Initialize a DocumentNavigator instance to simplify content insertion and navigation within the document.
+DocumentNavigator navigator = new DocumentNavigator(doc);
+
+string html = "<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; padding: 20px; line-height: 1.6;\">\r\n    <h1 style=\"color: #2c3e50;\">Welcome to the Random English Page!</h1>\r\n    <p>This is a randomly generated HTML document containing English text.</p>\r\n    <p>The quick brown <span style=\"background-color: #fffacd; padding: 4px 8px; border-radius: 4px;\">fox jumps</span> over the lazy dog. This sentence contains every letter of the English alphabet.</p>\r\n    <p>Here are a few fun facts:</p>\r\n    <ul>\r\n        <li>English is spoken by over 1.5 billion people worldwide.</li>\r\n        <li>The word \"set\" has the most definitions in the English language.</li>\r\n        <li>\"Dreamt\" is the only English word that ends with \"mt\".</li>\r\n    </ul>\r\n    <p>Thank you for visiting! Have a wonderful day.</p>\r\n</body>";
+
+// Insert the HTML content into the document at the current cursor position.
+navigator.InsertHtml(html);
+```
+
+---
+
+# 34_DocumentNavigators - InsertCheckBox
+## Insert checkbox content controls at specific paragraph positions using DocumentNavigator
+
+```csharp
+// Create a new Document object to represent a Word document.
+Document doc = new Document();
+
+// Initialize a DocumentNavigator to assist with content insertion and navigation.
+DocumentNavigator navigator = new DocumentNavigator(doc);
+
+// Get the current section of the document where content will be added.
+Section section = navigator.CurrentSection;
+
+// Add a new paragraph to the section.
+Paragraph paragraph = section.AddParagraph();
+
+// Move the cursor to the beginning of the first paragraph (index 1, offset 0) to insert content precisely.
+navigator.MoveToParagraph(1, 0);
+
+// Insert an unchecked checkbox content control named "Checkbox1" with a size of 20 points.
+navigator.InsertCheckBox("Checkbox1", false, 20);
+
+// Add a new paragraph for the second checkbox example.
+paragraph = section.AddParagraph();
+
+// Move the cursor to the beginning of the second paragraph (index 2, offset 0).
+navigator.MoveToParagraph(2, 0);
+
+// Insert a checked checkbox content control named "Checkbox2" with a size of 20 points.
+navigator.InsertCheckBox("Checkbox2", true, 20);
+
+// Add a new paragraph for the third checkbox example.
+paragraph = section.AddParagraph();
+
+// Move the cursor to the beginning of the third paragraph (index 3, offset 0).
+navigator.MoveToParagraph(3, 0);
+
+// Insert a checkbox named "Checkbox3" that is initially unchecked (false), then programmatically marked as checked (true), with size 20.
+navigator.InsertCheckBox("Checkbox3", false, true, 20);
+
+// Add a new paragraph for the fourth checkbox example.
+paragraph = section.AddParagraph();
+
+// Move the cursor to the beginning of the fourth paragraph (index 4, offset 0).
+navigator.MoveToParagraph(4, 0);
+
+// Insert a checkbox named "Checkbox4" that appears checked (true) but is stored as unchecked (false), with size 20.
+navigator.InsertCheckBox("Checkbox4", true, false, 20);
+```
+
+---
+
+# 34_DocumentNavigators - InsertField
+## Demonstrates inserting PAGE fields with DocumentNavigator, including field formatting, custom result text, and visible/hidden field results.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    DocumentNavigator navigator = new DocumentNavigator();
+
+    navigator.InsertParagraph();
+
+    // Insert a PAGE field with numeric formatting.
+    navigator.InsertField("PAGE \\# \"Page 0\"");
+    navigator.Writeln();
+
+    // Insert the same PAGE field with custom result text.
+    navigator.InsertField("PAGE \\# \"Page 0\"", "3");
+    navigator.Writeln();
+
+    // Insert a built-in PAGE field and display the field result.
+    navigator.InsertField(FieldType.FieldPage, true);
+    navigator.Writeln();
+
+    // Insert a built-in PAGE field and display the field code instead of the result.
+    navigator.InsertField(FieldType.FieldPage, false);
+}
+```
+
+---
+
+# 34_DocumentNavigators - InsertImageWithNavigator
+## Insert images at the navigator position with optional size, offset, and wrapping style.
+```csharp
+public void InsertImagesWithNavigator(Document doc, string imagePath)
+{
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    navigator.InsertImage(imagePath);
+
+    doc.AddSection();
+    navigator.MoveToSection(1);
+
+    navigator.InsertImage(imagePath, 100, 100);
+
+    navigator.InsertImage(
+        imagePath,
+        HorizontalOrigin.LeftMarginArea,
+        100,
+        VerticalOrigin.Paragraph,
+        50,
+        100,
+        100,
+        TextWrappingStyle.Through);
+}
+```
+
+---
+
+# 34_DocumentNavigators - InsertOleObjects
+## Inserts embedded and linked OLE objects using DocumentNavigator.
+```csharp
+void InsertOleObjects(string dataPath, string imagePath, string progId)
+{
+    Document doc = new Document();
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    Image oleIcon = Image.FromFile(imagePath);
+
+    navigator.InsertOleObject(dataPath, progId, false, true, oleIcon);
+    navigator.InsertOleObject(dataPath, progId, true, true, oleIcon);
+    navigator.InsertOleObject(dataPath, true, true, oleIcon);
+
+    using (FileStream oleStream = new FileStream(dataPath, FileMode.Open, FileAccess.Read))
+    {
+        navigator.InsertOleObject(oleStream, progId, true, oleIcon);
+    }
+}
+```
+
+---
+
+# 34_DocumentNavigators - InsertTextFormField
+## Inserts calculation, number, and date text form fields using DocumentNavigator.
+
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    Document doc = new Document();
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    // Insert a calculation-type text form field.
+    navigator.Write("TextFormFieldType.Calculation: ");
+    navigator.InsertTextFormField("CalculationTextField", TextFormFieldType.Calculation, "0", "=3+1", 30);
+    navigator.Writeln();
+
+    // Insert a number-input text form field.
+    navigator.Write("TextFormFieldType.NumberText: ");
+    navigator.InsertTextFormField("NumberText", TextFormFieldType.NumberText, "0", "100", 30);
+    navigator.Writeln();
+
+    // Insert a date-formatted text form field.
+    navigator.Write("TextFormFieldType.DateText: ");
+    navigator.InsertTextFormField("DateText", TextFormFieldType.DateText, "yyyy/M/d", "2025/8/1", 30);
+
+    // Enable automatic field updating.
+    doc.IsUpdateFields = true;
+}
+```
+
+---
+
+# 34_DocumentNavigators - ListFormat
+## Demonstrates applying bullet list formatting to paragraphs via DocumentNavigator's ListFormat
+```csharp
+// Create a new document instance.
+Document doc = new Document();
+
+// Add a new section to the document.
+Section section = doc.AddSection();
+
+// Add paragraphs to the section as content to be formatted.
+Paragraph paragraph = section.AddParagraph();
+paragraph.AppendText("This is the first paragraph.");
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("This is the second paragraph.");
+
+paragraph = section.AddParagraph();
+paragraph.AppendText("This is the third paragraph.");
+
+// Create a document navigator to facilitate navigation and formatting.
+DocumentNavigator navigator = new DocumentNavigator(doc);
+
+// Apply bullet list style to the current position (first paragraph by default).
+navigator.ListFormat.ApplyBulletStyle();
+
+// Move the navigator's cursor to the third paragraph (index 2) at character offset 0.
+navigator.MoveToParagraph(2, 0);
+
+// Apply bullet list style to the third paragraph.
+navigator.ListFormat.ApplyBulletStyle();
+```
+
+---
+
+# 34_DocumentNavigators - MoveToDocument
+## Demonstrates moving the document cursor to the start and end, then inserting content.
+```csharp
+public void MoveToDocument()
+{
+    // Create a new empty document instance.
+    Document doc = new Document();
+
+    // Create a navigator to move within the document.
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    // Move the cursor to the beginning of the document.
+    navigator.MoveToDocumentStart();
+
+    // Insert content at the beginning of the document.
+    navigator.Writeln("Insert the content at the beginning of the document.");
+    navigator.Writeln("This is new content.");
+
+    // Move the cursor to the end of the document.
+    navigator.MoveToDocumentEnd();
+
+    // Insert a blank line and content at the end of the document.
+    navigator.Writeln();
+    navigator.Writeln("Insert the content at the end of the document.");
+}
+```
+
+---
+
+# 34_DocumentNavigators - MoveToHeaderAndFooter
+## Moves the document navigator to the first-page header and footer and writes text into them.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new empty document instance.
+    Document doc = new Document();
+
+    // Create a document navigator to navigate and modify the document content.
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    // Move the navigator cursor to the first section.
+    navigator.MoveToSection(0);
+
+    // Navigate to the footer of the first page.
+    navigator.MoveToHeaderFooter(HeaderFooterType.FooterFirstPage);
+
+    // Write text into the first-page footer.
+    navigator.Writeln("The footer on the first page.");
+
+    // Navigate to the header of the first page.
+    navigator.MoveToHeaderFooter(HeaderFooterType.HeaderFirstPage);
+
+    // Write text into the first-page header.
+    navigator.Writeln("The header on the first page.");
+}
+```
+
+---
+
+# 34_DocumentNavigators - MoveToParagraphs
+## Demonstrates moving a DocumentNavigator to a specific paragraph and inserting new content.
+
+```csharp
+// Create a new empty document instance.
+Document doc = new Document();
+
+// Create a document navigator to navigate and modify the document content.
+DocumentNavigator navigator = new DocumentNavigator(doc);
+
+// Move the navigator cursor to the first section (section index 0).
+navigator.MoveToSection(0);
+
+// Move the cursor to the third paragraph (index 2) in the current section at character offset 0.
+navigator.MoveToParagraph(2, 0);
+
+// Insert new text at the current cursor position.
+navigator.Write("This is new content......");
+```
+
+---
+
+# 34_DocumentNavigators - OperateTableCell
+## Demonstrates operating table cells using DocumentNavigator, including inserting cells, adding content, moving to a cell, writing text, and setting cell formatting.
+```csharp
+namespace OperateTableCell
+{
+    public partial class Form1 : Form
+    {
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Create a new document instance.
+            Document doc = new Document();
+
+            // Initialize a document navigator to navigate and modify the document content.
+            DocumentNavigator navigator = new DocumentNavigator(doc);
+
+            // Begin creating a new table in the document.
+            navigator.StartTable();
+
+            // Insert the first cell into the current row of the table and get its reference.
+            TableCell cell1 = navigator.InsertCell();
+
+            // Add content to the first cell of the first row.
+            addcellcontent(cell1, "Row 1, Cell 1");
+
+            // Insert the second cell into the current row of the table and get its reference.
+            TableCell cell2 = navigator.InsertCell();
+
+            // Add content to the second cell of the first row.
+            addcellcontent(cell2, "Row 1, Cell 2");
+
+            // Insert the third cell into the current row of the table and get its reference.
+            TableCell cell3 = navigator.InsertCell();
+
+            // Add content to the third cell of the first row.
+            addcellcontent(cell3, "Row 1, Cell 3");
+
+            // End the current row and move to the next row in the table.
+            navigator.EndRow();
+
+            // Insert the first cell into the new row of the table and get its reference.
+            TableCell cell4 = navigator.InsertCell();
+
+            // Add content to the first cell of the second row.
+            addcellcontent(cell4, "Row 2, Cell 1");
+
+            // End the table creation process.
+            navigator.EndTable();
+
+            // Move the navigator's cursor to a specific cell in the first table
+            navigator.MoveToCell(0, 0, 1, 0);
+
+            // Insert (overwrite) the text at the current cursor position inside the target cell.
+            navigator.Write("new content");
+
+            // Get the formatting object of the current cell where the navigator is positioned.
+            CellFormat cellformat = navigator.CellFormat;
+
+            // Clear all existing formatting applied to the current cell.
+            cellformat.ClearFormatting();
+
+            // Set the background (shading) color of the cell to GreenYellow.
+            cellformat.Shading.BackgroundPatternColor = Color.GreenYellow;
+        }
+
+        private void addcellcontent(TableCell cell, String Content)
+        {
+            // Add a new paragraph to the table cell.
+            Paragraph para = cell.AddParagraph();
+
+            // Append the specified text content to the paragraph inside the cell.
+            para.AppendText(Content);
+
+            // Center-align the text horizontally within the paragraph.
+            para.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+            // Set the background (shading) color of the table cell to CadetBlue.
+            cell.CellFormat.Shading.BackgroundPatternColor = Color.CadetBlue;
+
+            // Vertically center the content within the table cell.
+            cell.CellFormat.VerticalAlignment = VerticalAlignment.Middle;
+        }
+    }
+}
+```
+
+---
+
+# 34_DocumentNavigators - OperateTableRow
+## Demonstrates table row operations using DocumentNavigator: creates a table, adds cell content, and deletes a row.
+```csharp
+public partial class Form1 : Form
+{
+    private void button1_Click(object sender, EventArgs e)
+    {
+        // Create a new empty document instance.
+        Document doc = new Document();
+
+        // Create a document navigator to help navigate and modify the document content.
+        DocumentNavigator navigator = new DocumentNavigator(doc);
+
+        // Start creating a new table and get its reference.
+        Table table = navigator.StartTable();
+
+        // Initialize the table with 2 rows and 2 columns.
+        table.ResetCells(2, 2);
+
+        // Set the table width to 100% of the available page width.
+        table.PreferredWidth = new PreferredWidth(WidthType.Percentage, (short)100);
+
+        // Apply a single black border with line width 1 to all sides of the table.
+        table.Format.Borders.SetBordersAttribute(Spire.Doc.Documents.BorderStyle.Single, 1, Color.Black);
+
+        // Set the height of the first row to 30 points.
+        table.FirstRow.Height = 30f;
+
+        // Get a reference to the first cell in the first row (row 0, column 0).
+        TableCell cell1 = table.Rows[0].Cells[0];
+        addcellcontent
+
+---
+
+# 34_DocumentNavigators - PageFormat
+## Sets page margins and page size for a document section using DocumentNavigator.
+```csharp
+// Create a new empty document instance.
+Document doc = new Document();
+
+// Create a document navigator to help navigate and modify the document content.
+DocumentNavigator navigator = new DocumentNavigator(doc);
+
+// Move the navigator's cursor to the first section (section index 0) of the document.
+navigator.MoveToSection(0);
+
+// Set the page margins for the current section.
+navigator.PageSetup.Margins = new MarginsF(100, 80, 100, 80);
+
+// Set the page size of the current section to Letter.
+navigator.PageSetup.PageSize = PageSize.Letter;
+```
+
+---
+
+# 34_DocumentNavigators - ParagraphFormat
+## Applies paragraph formatting through DocumentNavigator, including line spacing, left indentation, and background color.
+```csharp
+private void ApplyParagraphFormat()
+{
+    Document doc = new Document();
+    DocumentNavigator navigator = new DocumentNavigator(doc);
+
+    navigator.MoveToSection(0);
+    navigator.MoveToParagraph(0, 0);
+
+    navigator.ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
+    navigator.ParagraphFormat.LineSpacing = 1.5F * 12F;
+    navigator.ParagraphFormat.LeftIndent = 5;
+
+    navigator.MoveToParagraph(2, 0);
+    navigator.ParagraphFormat.BackColor = Color.Blue;
+}
+```
+
+---
 
