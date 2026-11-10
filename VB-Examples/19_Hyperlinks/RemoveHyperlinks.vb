@@ -79,7 +79,7 @@ Namespace RemoveHyperlinks
 		   Dim endOwnerParaIndex As Integer = field.End.OwnerParagraph.OwnerTextBody.ChildObjects.IndexOf(field.End.OwnerParagraph)
 
 		   ' Format the text between the separator and the end of the field result
-		   FormatFieldResultText(field.Separator.OwnerParagraph.OwnerTextBody, sepOwnerParaIndex, endOwnerParaIndex, sepIndex, endIndex)
+		   FormatFieldResultText(CType(field.Separator.OwnerParagraph.OwnerTextBody, Body), sepOwnerParaIndex, endOwnerParaIndex, sepIndex, endIndex)
 
 		   ' Remove the end field marker
 		   field.End.OwnerParagraph.ChildObjects.RemoveAt(endIndex)

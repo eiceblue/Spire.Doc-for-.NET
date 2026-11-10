@@ -17,7 +17,7 @@ Namespace ReadTableFromTextBox
 			doc.LoadFromFile(input)
 
 			' Get the first textbox in the document
-			Dim textbox As Spire.Doc.Fields.TextBox = doc.TextBoxes(0)
+			Dim textbox As Spire.Doc.Fields.TextBox = CType(doc.TextBoxes(0), Spire.Doc.Fields.TextBox)
 
 			' Get the first table from the textbox
 			Dim table As Table = TryCast(textbox.Body.Tables(0), Table)

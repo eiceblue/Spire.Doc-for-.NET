@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Text
 Imports Spire.Doc
 Imports Spire.Doc.Documents
@@ -34,8 +34,8 @@ Namespace ResetPageNumber
 			For Each sec As Section In document1.Sections
 				For Each obj As DocumentObject In sec.HeadersFooters.Footer.ChildObjects
 					If obj.DocumentObjectType = DocumentObjectType.StructureDocumentTag Then
-						Dim para As DocumentObject = obj.ChildObjects(0)
-						For Each item As DocumentObject In para.ChildObjects
+						Dim para As DocumentObject = (CType(obj, CompositeDocumentObject)).ChildObjects(0)
+						For Each item As DocumentObject In (CType(para, CompositeDocumentObject)).ChildObjects
 							If item.DocumentObjectType = DocumentObjectType.Field Then
 								If (TryCast(item, Field)).Type = FieldType.FieldNumPages Then
 									TryCast(item, Field).Type = FieldType.FieldSectionPages

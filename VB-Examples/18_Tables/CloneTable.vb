@@ -36,7 +36,7 @@ Namespace CloneTable
 				lastRow.Cells(i).Paragraphs(0).Text = st(i)
 			Next i
 			'Add copied_Table in section
-			se.Tables.Add(copied_Table)
+			se.Tables.Add(CType(copied_Table, DocumentObject))
 
 			'Save and launch document
 			Dim output As String = "CloneTable.docx"

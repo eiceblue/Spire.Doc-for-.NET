@@ -147,8 +147,6 @@ Namespace GetContentControlProperty
 				For Each obj As DocumentObject In section.Body.ChildObjects
 					If obj.DocumentObjectType = DocumentObjectType.StructureDocumentTag Then
 						structureTags.tags.Add(TryCast(obj, StructureDocumentTag))
-
-
 					ElseIf obj.DocumentObjectType = DocumentObjectType.Paragraph Then
 						For Each pobj As DocumentObject In (TryCast(obj, Paragraph)).ChildObjects
 							If pobj.DocumentObjectType = DocumentObjectType.StructureDocumentTagInline Then
@@ -156,13 +154,21 @@ Namespace GetContentControlProperty
 							End If
 						Next pobj
 					ElseIf obj.DocumentObjectType = DocumentObjectType.Table Then
-						For Each row As TableRow In (TryCast(obj, Table)).Rows
-							If TypeOf row Is StructureDocumentTagRow Then
-								structureTags.rowTags.Add(TryCast(row, StructureDocumentTagRow))
+						For Each rowObj As DocumentObject In (TryCast(obj, Table)).ChildObjects
+							If rowObj.DocumentObjectType = DocumentObjectType.StructureDocumentTagRow Then
+								structureTags.rowTags.Add(TryCast(rowObj, StructureDocumentTagRow))
 							End If
-							For Each cell As TableCell In row.Cells
-								If TypeOf cell Is StructureDocumentTagCell Then
-									structureTags.cellTags.Add(TryCast(cell, StructureDocumentTagCell))
+							Dim row As TableRow = TryCast(rowObj, TableRow)
+							If row Is Nothing Then
+								Continue For
+							End If
+							For Each cellObj As DocumentObject In row.ChildObjects
+								If cellObj.DocumentObjectType = DocumentObjectType.StructureDocumentTagCell Then
+									structureTags.cellTags.Add(TryCast(cellObj, StructureDocumentTagCell))
+								End If
+								Dim cell As TableCell = TryCast(cellObj, TableCell)
+								If cell Is Nothing Then
+									Continue For
 								End If
 								For Each cellChild As DocumentObject In cell.ChildObjects
 									If cellChild.DocumentObjectType = DocumentObjectType.StructureDocumentTag Then
@@ -175,8 +181,8 @@ Namespace GetContentControlProperty
 										Next pobj
 									End If
 								Next cellChild
-							Next cell
-						Next row
+							Next cellObj
+						Next rowObj
 					End If
 				Next obj
 			Next section

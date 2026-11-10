@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Text
 Imports Spire.Doc
 Imports Spire.Doc.Documents
@@ -33,7 +33,7 @@ Namespace SetSpacing
 			para.Format.AfterSpacing = 10
 
 			' Insert the paragraph at index 1 in the first section's collection of paragraphs
-			document.Sections(0).Paragraphs.Insert(1, para)
+			document.Sections(0).Paragraphs.Insert(1, CType(para, DocumentObject))
 
 			' Specify the output file name for the modified document
 			Dim result As String = "Result-SetTheSpacing.docx"

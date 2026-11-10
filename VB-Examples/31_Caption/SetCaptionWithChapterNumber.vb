@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports Spire.Doc.Documents
 Imports Spire.Doc.Fields
 
@@ -57,7 +57,7 @@ Namespace SetCaptionWithChapterNumber
 							field2.NumberFormat = CaptionNumberingFormat.Number
 
 							' Insert the new paragraph after the owner paragraph
-							body.Paragraphs.Insert(imageIndex + 1, para)
+							body.Paragraphs.Insert(imageIndex + 1, CType(para, DocumentObject))
 						End If
 					End If
 				Next j

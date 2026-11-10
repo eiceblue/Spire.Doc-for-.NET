@@ -21,7 +21,7 @@ Namespace DeleteTableFromTextBox
 			doc.LoadFromFile(input)
 
 			' Access the first text box in the document
-			Dim textbox As Spire.Doc.Fields.TextBox = doc.TextBoxes(0)
+			Dim textbox As Spire.Doc.Fields.TextBox = CType(doc.TextBoxes(0), Spire.Doc.Fields.TextBox)
 
 			' Remove the table inside the text box
 			textbox.Body.Tables.RemoveAt(0)

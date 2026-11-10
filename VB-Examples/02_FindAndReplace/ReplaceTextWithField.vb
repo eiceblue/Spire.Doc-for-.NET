@@ -30,27 +30,18 @@ Namespace ReplaceTextWithField
 			' Retrieve the index of the text range within its owning paragraph.
 			Dim rangeIndex As Integer = ownParagraph.ChildObjects.IndexOf(textRange)
 
-			' Remove the text range from its owning paragraph.
-			ownParagraph.ChildObjects.RemoveAt(rangeIndex)
+            'Add the date field
+            Dim eqField As New Field(document)
+            eqField.Type = FieldType.FieldDate
+            eqField.Code = "DATE  \@" & """yyyyMMdd """
+            ownParagraph.ChildObjects.Insert(rangeIndex, eqField)
+            Dim mark As New FieldMark(document, FieldMarkType.FieldSeparator)
+            ownParagraph.ChildObjects.Insert(rangeIndex + 1, mark)
+            Dim [end] As New FieldMark(document, FieldMarkType.FieldEnd)
+            ownParagraph.ChildObjects.Insert(rangeIndex + 2, [end])
 
-			' Create a temporary list to store the removed ChildObjects.
-			Dim tempList As New List(Of DocumentObject)()
-
-			' Clone and remove ChildObjects starting from the range index until the end of the paragraph.
-			Dim i As Integer = rangeIndex
-			Do While i < ownParagraph.ChildObjects.Count
-				tempList.Add(ownParagraph.ChildObjects(rangeIndex).Clone())
-				ownParagraph.ChildObjects.RemoveAt(rangeIndex)
-				i += 1
-			Loop
-
-			' Append a field named "MyFieldName" of type FieldType.FieldMergeField to the owning paragraph.
-			ownParagraph.AppendField("MyFieldName", FieldType.FieldMergeField)
-
-			' Add back the cloned ChildObjects to the owning paragraph.
-			For Each obj As DocumentObject In tempList
-				ownParagraph.ChildObjects.Add(obj)
-			Next obj
+            ' Remove the selected text from the paragraph
+            ownParagraph.ChildObjects.Remove(textRange)
 
 			' Specify the output file name for saving the modified document.
 			Dim output As String = "ReplaceTextWithField_output.docx"

@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports System.Text
 Imports System.IO
 
@@ -29,7 +29,7 @@ Namespace GetRowCellIndex
 		   Dim collections As Spire.Doc.Collections.TableCollection = section.Tables
 
 		   ' Get the index of the table in the collection
-		   Dim tableIndex As Integer = collections.IndexOf(table)
+		   Dim tableIndex As Integer = collections.IndexOf(CType(table, DocumentObject))
 
 		   ' Get the last row in the table and its index
 		   Dim row As TableRow = table.LastRow

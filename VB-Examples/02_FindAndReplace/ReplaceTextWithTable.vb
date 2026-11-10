@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Text
 Imports Spire.Doc
 Imports Spire.Doc.Documents
@@ -31,7 +31,7 @@ Namespace ReplaceTextWithTable
 			Dim paragraph As Paragraph = range.OwnerParagraph
 
 			' Get the body that owns the paragraph.
-			Dim body As Body = paragraph.OwnerTextBody
+			Dim body As Body = CType(paragraph.OwnerTextBody, Body)
 
 			' Retrieve the index of the paragraph within its owning body.
 			Dim index As Integer = body.ChildObjects.IndexOf(paragraph)

@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports Spire.Doc.Documents
 
 Namespace CombineAndSplitTables
@@ -35,7 +35,7 @@ Namespace CombineAndSplitTables
 			Next i
 
 			'Remove the table2
-			section.Tables.Remove(table2)
+			section.Tables.Remove(CType(table2, DocumentObject))
 
 			'Save the Word file
 			Dim output As String = "CombineTables_out.docx"
@@ -78,7 +78,7 @@ Namespace CombineAndSplitTables
 			Next i
 
 			'Add the new table in section
-			section.Tables.Add(newTable)
+			section.Tables.Add(CType(newTable, DocumentObject))
 
 			'Save the Word file
 			Dim output As String = "SplitTable_out.docx"

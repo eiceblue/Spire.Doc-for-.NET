@@ -29,7 +29,7 @@ Namespace RemoveFootnote
 				Dim i As Integer = 0
 				Dim cnt As Integer = para.ChildObjects.Count
 				Do While i < cnt
-					Dim pBase As ParagraphBase = TryCast(para.ChildObjects(i), ParagraphBase)
+					Dim pBase As DocumentObject = TryCast(para.ChildObjects(i), DocumentObject)
 
 					If TypeOf pBase Is Footnote Then
 						index = i

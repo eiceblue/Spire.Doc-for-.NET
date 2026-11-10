@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Text
 Imports Spire.Doc
 Imports Spire.Doc.Documents
@@ -39,7 +39,7 @@ Namespace AddContentControls
 			sd.SDTProperties.ControlProperties = cb
 			Dim rt As New TextRange(document)
 			rt.Text = cb.ListItems(0).DisplayText
-			sd.SDTContent.ChildObjects.Add(rt)
+			sd.ChildObjects.Add(rt)
 
 			' Add an empty paragraph to the section
 			section.AddParagraph()
@@ -56,7 +56,7 @@ Namespace AddContentControls
 			sd.SDTProperties.ControlProperties = text
 			rt = New TextRange(document)
 			rt.Text = "Text"
-			sd.SDTContent.ChildObjects.Add(rt)
+			sd.ChildObjects.Add(rt)
 
 			' Add an empty paragraph to the section
 			section.AddParagraph()
@@ -77,7 +77,7 @@ Namespace AddContentControls
 			' =============================================================================
 			'pic.LoadImage("..\..\..\..\..\..\Data\logo.png")
 			' =============================================================================
-			sd.SDTContent.ChildObjects.Add(pic)
+			sd.ChildObjects.Add(pic)
 
 			' Add an empty paragraph to the section
 			section.AddParagraph()
@@ -96,7 +96,7 @@ Namespace AddContentControls
 			sd.SDTProperties.ControlProperties = [date]
 			rt = New TextRange(document)
 			rt.Text = "1990.02.08"
-			sd.SDTContent.ChildObjects.Add(rt)
+			sd.ChildObjects.Add(rt)
 
 			' Add an empty paragraph to the section
 			section.AddParagraph()
@@ -114,7 +114,7 @@ Namespace AddContentControls
 			sd.SDTProperties.ControlProperties = sddl
 			rt = New TextRange(document)
 			rt.Text = sddl.ListItems(0).DisplayText
-			sd.SDTContent.ChildObjects.Add(rt)
+			sd.ChildObjects.Add(rt)
 
 			' Specify the output file name
 			Dim resultfile As String = "Output.docx"

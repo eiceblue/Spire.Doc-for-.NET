@@ -28,7 +28,7 @@ Namespace InsertEndnote
 			Dim endnote As Footnote = p.AppendFootnote(FootnoteType.Endnote)
 
 			' Add a paragraph to the endnote's text body and append the reference text
-			Dim text As TextRange = endnote.TextBody.AddParagraph().AppendText("Reference: Wikipedia")
+			Dim text As TextRange = endnote.Body.AddParagraph().AppendText("Reference: Wikipedia")
 
 			' Set the font name, size, and text color of the reference text
 			text.CharacterFormat.FontName = "Impact"

@@ -1,6 +1,7 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Net.Mime.MediaTypeNames
 Imports System.Text
+Imports System.Drawing
 Imports Spire.Doc
 Imports Spire.Doc.Documents
 Namespace CopyParagraph
@@ -29,17 +30,17 @@ Namespace CopyParagraph
 
 			'Clone the first paragraph and add it to the paragraphs collection of s2
 			Dim NewPara1 As Paragraph = CType(p1.Clone(), Paragraph)
-			s2.Paragraphs.Add(NewPara1)
+			s2.Paragraphs.Add(CType(NewPara1, DocumentObject))
 
 			'Clone the second paragraph and add it to the paragraphs collection of s2
 			Dim NewPara2 As Paragraph = CType(p2.Clone(), Paragraph)
-			s2.Paragraphs.Add(NewPara2)
+			s2.Paragraphs.Add(CType(NewPara2, DocumentObject))
 
 			'Create a new PictureWatermark object and assign it to WM
 			Dim WM As New PictureWatermark()
 
 			'Load an image from the specified file path and assign it to the Picture property of WM
-			WM.Picture = Image.FromFile("..\..\..\..\..\..\Data\Logo.jpg")
+			WM.Picture = System.Drawing.Image.FromFile("..\..\..\..\..\..\Data\Logo.jpg")
 			' =============================================================================
 			' Use the following code for netstandard dlls
 			' =============================================================================

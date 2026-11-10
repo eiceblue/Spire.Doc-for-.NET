@@ -69,7 +69,7 @@ Namespace ReplaceWithHtml
 			Dim textRange As TextRange = location.Text
 			Dim index As Integer = location.Index
 			Dim paragraph As Paragraph = location.Owner
-			Dim sectionBody As Body = paragraph.OwnerTextBody
+			Dim sectionBody As Body = CType(paragraph.OwnerTextBody, Body)
 			Dim paragraphIndex As Integer = sectionBody.ChildObjects.IndexOf(paragraph)
 			Dim replacementIndex As Integer = -1
 

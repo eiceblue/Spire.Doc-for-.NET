@@ -34,6 +34,11 @@ Namespace ReplyToComment
 			'Load an image
 			Dim img As Image = Image.FromFile("..\..\..\..\..\..\Data\logo.png")
 			docPicture.LoadImage(img)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'docPicture.LoadImage("..\..\..\..\..\..\Data\logo.png")
+			' =============================================================================
 
 			'insert the picture in the comment
 			replyComment1.Body.Paragraphs(0).ChildObjects.Add(docPicture)

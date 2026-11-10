@@ -37,7 +37,7 @@ Namespace InsertFootnote
 			paragraph.ChildObjects.Insert(index + 1, footnote)
 
 			' Add a paragraph to the footnote's text body and append text to it
-			textRange = footnote.TextBody.AddParagraph().AppendText("Welcome to evaluate Spire.Doc")
+			textRange = footnote.Body.AddParagraph().AppendText("Welcome to evaluate Spire.Doc")
 
 			' Set the font name, size, and color for the appended text
 			textRange.CharacterFormat.FontName = "Arial Black"

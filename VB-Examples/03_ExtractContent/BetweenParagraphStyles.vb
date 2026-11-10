@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports Spire.Doc.Documents
 
 Namespace BetweenParagraphStyles
@@ -47,12 +47,12 @@ Namespace BetweenParagraphStyles
 					' Check if the current paragraph's style name matches stylename1.
 					If paragraph.StyleName = stylename1 Then
 						' Set the startindex variable to the index of the current paragraph within the section.
-						startindex = section.Body.Paragraphs.IndexOf(paragraph)
+						startindex = section.Body.Paragraphs.IndexOf(CType(paragraph, DocumentObject))
 					End If
 					' Check if the current paragraph's style name matches stylename2.
 					If paragraph.StyleName = stylename2 Then
 						' Set the endindex variable to the index of the current paragraph within the section.
-						endindex = section.Body.Paragraphs.IndexOf(paragraph)
+						endindex = section.Body.Paragraphs.IndexOf(CType(paragraph, DocumentObject))
 					End If
 				Next paragraph
 

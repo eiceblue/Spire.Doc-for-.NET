@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports Spire.Doc.Documents
 Imports Spire.Doc.Fields
 
@@ -58,7 +58,7 @@ Namespace CreateTableDirectly
 			cell2.CellFormat.VerticalAlignment = VerticalAlignment.Middle
 
 			' Add the table to the section
-			section.Tables.Add(table)
+			section.Tables.Add(CType(table, DocumentObject))
 
 			' Save the document to a file in Docx2013 format
 			Dim output As String = "CreateTableDirectly_out.docx"

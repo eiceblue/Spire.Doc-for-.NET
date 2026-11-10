@@ -41,7 +41,7 @@ Namespace LockContentControlContent
 				' Check if the object is a table
 				If obj.DocumentObjectType = DocumentObjectType.Table Then
 					' Clone and add the table to the StructureDocumentTag's content
-					sdt.SDTContent.ChildObjects.Add(obj.Clone())
+					sdt.ChildObjects.Add(obj.Clone())
 				End If
 			Next obj
 

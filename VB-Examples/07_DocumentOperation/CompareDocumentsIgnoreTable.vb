@@ -19,7 +19,7 @@ Namespace CompareDocumentsIgnoreTable
 			Dim compareoptions As CompareOptions = New CompareOptions()
 
 			' Set the option to ignore differences in tables during comparison
-			compareoptions.IgnoreTable = True
+			compareoptions.IgnoreTables = True
 
 			' Compare the two documents using the specified options, with "E-iceblue" as the author name for tracked changes
 			document1.Compare(document2, "E-iceblue", compareoptions)

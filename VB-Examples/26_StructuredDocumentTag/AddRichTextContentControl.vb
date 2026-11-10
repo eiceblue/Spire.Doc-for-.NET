@@ -1,4 +1,4 @@
-Imports Spire.Doc
+﻿Imports Spire.Doc
 Imports Spire.Doc.Documents
 Imports Spire.Doc.Fields
 
@@ -44,13 +44,13 @@ Namespace AddRichTextContentControl
 			Dim rt As New TextRange(document)
 			rt.Text = "Welcome to use "
 			rt.CharacterFormat.TextColor = Color.Green
-			sdt.SDTContent.ChildObjects.Add(rt)
+			sdt.ChildObjects.Add(rt)
 
 			' Create another TextRange object and set its text and text color, then add it to the SDT's content
 			rt = New TextRange(document)
 			rt.Text = "Spire.Doc"
 			rt.CharacterFormat.TextColor = Color.OrangeRed
-			sdt.SDTContent.ChildObjects.Add(rt)
+			sdt.ChildObjects.Add(rt)
 
 			' Save the document to a file in Docx format
 			document.SaveToFile("Output.docx", FileFormat.Docx)

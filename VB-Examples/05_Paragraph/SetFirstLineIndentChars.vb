@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports Spire.Doc
 Imports Spire.Doc.Documents
 Imports Spire.Doc.Fields
@@ -35,7 +35,7 @@ Namespace SetFirstLineIndentChars
 			para.Format.SetFirstLineIndentChars(0)
 
 			' Insert the paragraph at index 1 in the first section of the document
-			document.Sections(0).Paragraphs.Insert(1, para)
+			document.Sections(0).Paragraphs.Insert(1, CType(para, DocumentObject))
 
 			' Specify the file name for the resulting document
 			Dim result As String = "Result-SetFirstLineIndentChars.docx"
